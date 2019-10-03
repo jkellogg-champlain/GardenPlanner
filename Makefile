@@ -1,5 +1,5 @@
 # Video that helped make this makefile: https://youtu.be/YjMrj_FbDGU (has stuff about sfml renderwindow class, too)
-OBJS = main.o
+OBJS = main.cpp Application.cpp Display.cpp
 CXX = g++
 LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
@@ -7,4 +7,4 @@ app: $(OBJS)
 	$(CXX) -o garden_planner $(OBJS) $(LDLIBS)
 
 clean:
-	$(RM) garden_planner $(OBJS)
+	$(RM) garden_planner *.o
