@@ -21,17 +21,17 @@ int main()
 	sf::Font ubuntu;
 	ubuntu.loadFromFile("Ubuntu-M.ttf");
 
-	Button selectMapBtn("Select Map", {200, 50}, background, sf::Color::Black);
-	selectMapBtn.SetPosition({100, 20});
+	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
+	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
 	selectMapBtn.SetFont(ubuntu);
-	Button createMapBtn("Create Map", {200, 50}, background, sf::Color::Black);
-	createMapBtn.SetPosition({400, 20});
+	Button createMapBtn("Create Map", mainWindow, background, sf::Color::Black);
+	createMapBtn.SetPosition(topNavBar.GetSize(), .3f, .96f);
 	createMapBtn.SetFont(ubuntu);
-	Button addPlantBtn("Add Plant", {200, 50}, background, sf::Color::Black);
-	addPlantBtn.SetPosition({700, 20});
+	Button addPlantBtn("Add Plant", mainWindow, background, sf::Color::Black);
+	addPlantBtn.SetPosition(topNavBar.GetSize(), .52f, .96f);
 	addPlantBtn.SetFont(ubuntu);
-	Button editPlantBtn("Edit Plant", {200, 50}, background, sf::Color::Black);
-	editPlantBtn.SetPosition({1000, 20});
+	Button editPlantBtn("Edit Plant", mainWindow, background, sf::Color::Black);
+	editPlantBtn.SetPosition(topNavBar.GetSize(), .74f, .96f);
 	editPlantBtn.SetFont(ubuntu);
 	Button navButtons [4] = {selectMapBtn, createMapBtn, addPlantBtn, editPlantBtn};
 
