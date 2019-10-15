@@ -15,3 +15,8 @@ void ContentContainer::Draw(sf::RenderWindow& window)
 {
   window.draw(m_container);
 }
+
+sf::Vector2f ContentContainer::GetSize()
+{
+  return m_container.getSize();
+}

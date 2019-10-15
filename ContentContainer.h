@@ -7,7 +7,7 @@ public:
   ~ContentContainer();
 
   void Draw(sf::RenderWindow& window);
-
+  sf::Vector2f GetSize();
 private:
   sf::RectangleShape m_container;
 };
