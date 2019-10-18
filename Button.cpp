@@ -1,4 +1,5 @@
 #include "Button.h"
+//#include <iostream>
 
 Button::Button(std::string name, sf::RenderWindow& window, sf::Color color, sf::Color textColor)
 {
@@ -8,6 +9,11 @@ Button::Button(std::string name, sf::RenderWindow& window, sf::Color color, sf::
   m_text.setFillColor(textColor);
   m_button.setOutlineColor(sf::Color(42, 85, 34, 255));
 	m_button.setOutlineThickness(3.0f);
+  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  {
+    std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
+  };
+  m_text.setFont(m_ubuntu);
 }
 
 Button::~Button() { }
@@ -21,11 +27,6 @@ void Button::Draw(sf::RenderWindow& window)
 void Button::SetColor(sf::Color color)
 {
   m_button.setFillColor(color);
-}
-
-void Button::SetFont(sf::Font &font)
-{
-  m_text.setFont(font);
 }
 
 bool Button::mouseOver(sf::RenderWindow &window)
@@ -51,7 +52,7 @@ void Button::SetPosition(sf::Vector2f area, float ratioX, float ratioY)
   sf::Vector2f position = {area.x * ratioX, (area.y * ratioY) / 2.5f};
   m_button.setPosition(position);
 
-  float xPos = position.x + ((m_button.getGlobalBounds().width - m_text.getGlobalBounds().width) / 2) * .25;
-  float yPos = position.y + ((m_button.getGlobalBounds().height - m_text.getGlobalBounds().height) / 2) * .25;
+  float xPos = position.x + ((m_button.getGlobalBounds().width - m_text.getGlobalBounds().width) / 2);
+  float yPos = position.y + ((m_button.getGlobalBounds().height - m_text.getGlobalBounds().height)) * .25;
   m_text.setPosition(xPos, yPos);
 }

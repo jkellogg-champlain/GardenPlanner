@@ -1,7 +1,7 @@
-//#include <iostream>
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <string>
-//#include "ContentContainer.h"
+
 
 class Button
 {
@@ -13,8 +13,9 @@ public:
   void SetPosition(sf::Vector2f area, float ratioX, float ratioY);
   void SetColor(sf::Color color);
   bool mouseOver(sf::RenderWindow &window);
-  void SetFont(sf::Font &font);
+
 private:
   sf::RectangleShape m_button;
   sf::Text m_text;
+  sf::Font m_ubuntu;
 };
