@@ -18,21 +18,24 @@ int main()
 	ContentContainer leftColumn(mainWindow, .25f, .86f, .02f, .12f, foreground);
 	ContentContainer mainContent(mainWindow, .72f, .86f, .54f, .12f, background);
 
-	sf::Font ubuntu;
-	ubuntu.loadFromFile("Ubuntu-M.ttf");
+	sf::View mainView;
+	mainView.reset(sf::FloatRect(0, 0, (float)mainWindow.getSize().x, (float)mainWindow.getSize().y));
+
+	sf::View welcomeView;
+	welcomeView.setSize(400.f, 400.f);
+	welcomeView.setCenter(92.f, 152.f);
+
+	sf::RectangleShape test(sf::Vector2f(288.f, 344.f));
+	test.setFillColor(sf::Color::Blue);
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
-	selectMapBtn.SetFont(ubuntu);
 	Button createMapBtn("Create Map", mainWindow, background, sf::Color::Black);
 	createMapBtn.SetPosition(topNavBar.GetSize(), .3f, .96f);
-	createMapBtn.SetFont(ubuntu);
 	Button addPlantBtn("Add Plant", mainWindow, background, sf::Color::Black);
 	addPlantBtn.SetPosition(topNavBar.GetSize(), .52f, .96f);
-	addPlantBtn.SetFont(ubuntu);
 	Button editPlantBtn("Edit Plant", mainWindow, background, sf::Color::Black);
 	editPlantBtn.SetPosition(topNavBar.GetSize(), .74f, .96f);
-	editPlantBtn.SetFont(ubuntu);
 	Button navButtons [4] = {selectMapBtn, createMapBtn, addPlantBtn, editPlantBtn};
 
 	sf::Event event;
@@ -49,6 +52,7 @@ int main()
 		}
 
 		mainWindow.clear(background);
+		mainWindow.setView(mainView);
 		topNavBar.Draw(mainWindow);
 		for (Button btn : navButtons)
 		{
@@ -64,6 +68,8 @@ int main()
 		}
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
+		mainWindow.setView(welcomeView);
+		mainWindow.draw(test);
 		mainWindow.display();
 }
 }
