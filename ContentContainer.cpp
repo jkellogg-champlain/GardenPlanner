@@ -20,3 +20,8 @@ sf::Vector2f ContentContainer::GetSize()
 {
   return m_container.getSize();
 }
+
+sf::Vector2f ContentContainer::GetPosition()
+{
+  return m_container.getPosition();
+}

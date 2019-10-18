@@ -8,6 +8,7 @@ public:
 
   void Draw(sf::RenderWindow& window);
   sf::Vector2f GetSize();
+  sf::Vector2f GetPosition();
 private:
   sf::RectangleShape m_container;
 };
