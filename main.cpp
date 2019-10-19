@@ -18,14 +18,18 @@ int main()
 	ContentContainer leftColumn(mainWindow, .25f, .86f, .02f, .12f, foreground);
 	ContentContainer mainContent(mainWindow, .72f, .86f, .54f, .12f, background);
 
-	sf::View mainView;
-	mainView.reset(sf::FloatRect(0, 0, (float)mainWindow.getSize().x, (float)mainWindow.getSize().y));
+	std::cout<<"X Size: " << mainContent.GetSize().x << " Y Size: "<< mainContent.GetSize().y << std::endl;
+	std::cout<<"X Postion: " << mainContent.GetPosition().x << " Y Position " << mainContent.GetPosition().y << std::endl;
 
-	sf::View welcomeView;
-	welcomeView.setSize(400.f, 400.f);
-	welcomeView.setCenter(92.f, 152.f);
+	sf::View staticView;
+	staticView.reset(sf::FloatRect(0, 0, (float)mainWindow.getSize().x, (float)mainWindow.getSize().y));
 
-	sf::RectangleShape test(sf::Vector2f(288.f, 344.f));
+	sf::View contentView;
+	contentView.setSize(mainContent.GetSize().x, mainContent.GetSize().y);
+	contentView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
+	contentView.setViewport(sf::FloatRect(.27f, .12f, .7199f, .86f));
+
+	sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
 	test.setFillColor(sf::Color::Blue);
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
@@ -52,7 +56,7 @@ int main()
 		}
 
 		mainWindow.clear(background);
-		mainWindow.setView(mainView);
+		mainWindow.setView(staticView);
 		topNavBar.Draw(mainWindow);
 		for (Button btn : navButtons)
 		{
@@ -68,7 +72,7 @@ int main()
 		}
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
-		mainWindow.setView(welcomeView);
+		mainWindow.setView(contentView);
 		mainWindow.draw(test);
 		mainWindow.display();
 }
