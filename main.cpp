@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "ContentContainer.h"
 #include "Button.h"
+#include "Content.h"
 
 int main()
 {
@@ -29,8 +30,15 @@ int main()
 	contentView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 	contentView.setViewport(sf::FloatRect(.27f, .12f, .7199f, .86f));
 
-	sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
-	test.setFillColor(sf::Color::Blue);
+	/*sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
+	test.setFillColor(sf::Color::Blue);*/
+
+	Content WelcomeScreen;
+	WelcomeScreen.AddText("WelcomeScreen.txt");
+
+	Content AddPlantScreen;
+	AddPlantScreen.AddText("AddPlantScreen.txt");
+	AddPlantScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .4f - 10.f);
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
@@ -73,7 +81,10 @@ int main()
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
 		mainWindow.setView(contentView);
-		mainWindow.draw(test);
+		//mainWindow.draw(test);
+		//WelcomeScreen.DrawText(mainWindow);
+		AddPlantScreen.DrawText(mainWindow);
+		AddPlantScreen.DrawInputField(mainWindow);
 		mainWindow.display();
 }
 }
