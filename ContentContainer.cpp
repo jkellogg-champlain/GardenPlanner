@@ -9,7 +9,7 @@ ContentContainer::ContentContainer(sf::RenderWindow& mainWindow, float sizeXRati
 	m_container.setOutlineThickness(2.0f);
 }
 
-ContentContainer::~ContentContainer() { };
+ContentContainer::~ContentContainer() { }
 
 void ContentContainer::Draw(sf::RenderWindow& window)
 {
