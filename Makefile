@@ -1,5 +1,5 @@
 # Video that helped make this makefile: https://youtu.be/YjMrj_FbDGU (has stuff about sfml renderwindow class, too)
-OBJS = main.cpp ContentContainer.cpp Button.cpp
+OBJS = main.cpp ContentContainer.cpp Button.cpp Content.cpp
 CXX = g++
 CPPFLAGS = -WALL
 LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
