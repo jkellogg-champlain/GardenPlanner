@@ -3,6 +3,7 @@
 #include "ContentContainer.h"
 #include "Button.h"
 #include "Content.h"
+#include "InputBox.h"
 
 int main()
 {
@@ -40,6 +41,9 @@ int main()
 	AddPlantScreen.AddText("AddPlantScreen.txt");
 	AddPlantScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .4f - 10.f);
 
+	InputBox testBox(true);
+	testBox.setPosition({60.f, mainContent.GetSize().y * .4f + 20.f});
+
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
 	Button createMapBtn("Create Map", mainWindow, background, sf::Color::Black);
@@ -59,7 +63,8 @@ int main()
 			switch(event.type) {
 				case sf::Event::Closed:
 					mainWindow.close();
-					break;
+				case sf::Event::TextEntered:
+					testBox.typdedOn(event);
 			}
 		}
 
@@ -85,6 +90,7 @@ int main()
 		//WelcomeScreen.DrawText(mainWindow);
 		AddPlantScreen.DrawText(mainWindow);
 		AddPlantScreen.DrawInputField(mainWindow);
+		testBox.Draw(mainWindow);
 		mainWindow.display();
 }
 }
