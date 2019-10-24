@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <sstream>
@@ -9,21 +10,23 @@
 class InputBox
 {
 public:
-  InputBox(bool sel);
+  InputBox();
   ~InputBox();
 
-  void setPosition(sf::Vector2f pos);
+  void SetPosition(sf::Vector2f pos);
   void setSelected(bool sel);
   std::string getText();
-  void typdedOn(sf::Event input);
+  void SetHeader(std::string header);
+  void typedOn(sf::Event input);
+  void clickedOn(sf::RenderWindow &window);
   void Draw(sf::RenderWindow &window);
+  bool m_isSelected;
 
 private:
   sf::RectangleShape m_container;
   sf::Text m_textBox;
   sf::Text m_inputHeader;
   std::ostringstream m_text;
-  bool m_isSelected;
   bool m_hasLimit;
   int m_limit;
   sf::Font a_Futurica;
