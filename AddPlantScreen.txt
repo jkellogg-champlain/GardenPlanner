@@ -1,7 +1,8 @@
-Need to add another plant to the database?  You can do that here.  Simply
-  fill in the data fields below and click the "Add" button.  Plant names
-  should be general (like "Tomato"), and variety should be more specific
-  (like "Sun Gold").  Measurements are in feet, so if spacing is done in
-  inches, select 1 foot for spacing and add the number of plants that fit
-  in a square foot.  So if plant spacing is two inches, make Plant Spacing
-                 1 foot and number of Plants per Square Foot 6. 
+Need to add another plant to the database?  You can do that here.
+Simply fill in the data fields below and click the "Add" button.
+Plant names should be general (like "Tomato"), and variety should
+be more specific (like "Sun Gold").  Measurements are in feet, so
+if spacing is done in inches, select 1 foot for spacing and add
+the number of plants that fit in a square foot.  So if plant
+spacing is two inches, make Plant Spacing 1 foot and number of
+Plants per Square Foot 6.
