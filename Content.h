@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "InputBox.h"
+#include "Button.h"
 
 
 class Content
@@ -21,7 +22,11 @@ public:
     std::string header4, sf::Vector2f pos4);
   void FocusOnBox(sf::RenderWindow &window);
   void EnterText(sf::Event input);
+  bool GetActiveStatus();
+  void MakeActive();
+  void MakeInactive();
   void DrawInputField(sf::RenderWindow &window);
+
 private:
   sf::Text m_contentText;
   std::string m_contentString;
@@ -33,4 +38,5 @@ private:
   InputBox m_inputBox2;
   InputBox m_inputBox3;
   InputBox m_inputBox4;
+  bool m_isActive;
 };

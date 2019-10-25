@@ -1,7 +1,10 @@
 #include "Content.h"
 
-Content::Content() { };
-Content::~Content() { };
+Content::Content()
+{
+  m_isActive = false;
+}
+Content::~Content() { }
 
 void Content::AddText(std::string fileName)
 {
@@ -73,6 +76,21 @@ void Content::EnterText(sf::Event input)
   {
     m_inputBox4.typedOn(input);
   }
+}
+
+bool Content::GetActiveStatus()
+{
+  return m_isActive;
+}
+
+void Content::MakeActive()
+{
+  m_isActive = true;
+}
+
+void Content::MakeInactive()
+{
+  m_isActive = false;
 }
 
 void Content::DrawText(sf::RenderWindow &window)
