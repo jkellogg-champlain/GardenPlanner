@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -16,6 +17,6 @@ public:
 
 private:
   sf::RectangleShape m_button;
-  sf::Text m_text;
   sf::Font m_ubuntu;
+  sf::Text m_text;
 };

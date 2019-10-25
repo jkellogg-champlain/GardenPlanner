@@ -47,6 +47,7 @@ bool Button::mouseOver(sf::RenderWindow &window)
   return false;
 }
 
+
 void Button::SetPosition(sf::Vector2f area, float ratioX, float ratioY)
 {
   sf::Vector2f position = {area.x * ratioX, (area.y * ratioY) / 2.5f};
