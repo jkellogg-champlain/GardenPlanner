@@ -50,6 +50,7 @@ void Content::AddInputBoxes(std::string header1, sf::Vector2f pos1,
   m_inputBox4.SetHeader(header4 + ":");
 }
 
+
 void Content::FocusOnBox(sf::RenderWindow &window)
 {
   m_inputBox1.clickedOn(window);
@@ -98,6 +99,13 @@ void Content::DrawText(sf::RenderWindow &window)
   window.draw(m_contentText);
 }
 
+void Content::AddInputButton(std::string name, sf::RenderWindow& window,
+  sf::Vector2f area, float ratioX, float ratioY)
+{
+  m_inputButton.SetButton(name, window);
+  m_inputButton.SetPosition(area, ratioX, ratioY);
+}
+
 void Content::DrawInputField(sf::RenderWindow &window)
 {
   window.draw(m_input_container);
@@ -105,4 +113,13 @@ void Content::DrawInputField(sf::RenderWindow &window)
   m_inputBox2.Draw(window);
   m_inputBox3.Draw(window);
   m_inputBox4.Draw(window);
+  if(m_inputButton.ContentBtnMouseOver(window))
+  {
+    m_inputButton.SetColor(sf::Color(238, 244, 177, 255));
+  }
+  else
+  {
+    m_inputButton.SetColor(sf::Color(228, 243, 127, 255));
+  }
+  m_inputButton.Draw(window);
 }

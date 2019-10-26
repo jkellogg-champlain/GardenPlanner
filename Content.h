@@ -25,6 +25,8 @@ public:
   bool GetActiveStatus();
   void MakeActive();
   void MakeInactive();
+  void AddInputButton(std::string name, sf::RenderWindow& window,
+    sf::Vector2f area, float ratioX, float ratioY);
   void DrawInputField(sf::RenderWindow &window);
 
 private:
@@ -39,4 +41,5 @@ private:
   InputBox m_inputBox3;
   InputBox m_inputBox4;
   bool m_isActive;
+  Button m_inputButton;
 };
