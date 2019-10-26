@@ -1,6 +1,8 @@
 #include "Button.h"
 //#include <iostream>
 
+Button::Button() { }
+
 Button::Button(std::string name, sf::RenderWindow& window, sf::Color color, sf::Color textColor)
 {
   m_text.setString(name);
@@ -17,6 +19,21 @@ Button::Button(std::string name, sf::RenderWindow& window, sf::Color color, sf::
 }
 
 Button::~Button() { }
+
+void Button::SetButton(std::string name, sf::RenderWindow& window)
+{
+  m_text.setString(name);
+  m_button.setSize(sf::Vector2f((float)(window.getSize().x * .16f), (float)(window.getSize().y * .06f)));
+  m_button.setFillColor(sf::Color(228, 243, 127, 255));
+  m_text.setFillColor(sf::Color::Black);
+  m_button.setOutlineColor(sf::Color(42, 85, 34, 255));
+	m_button.setOutlineThickness(3.0f);
+  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  {
+    std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
+  };
+  m_text.setFont(m_ubuntu);
+}
 
 void Button::Draw(sf::RenderWindow& window)
 {
@@ -47,6 +64,23 @@ bool Button::mouseOver(sf::RenderWindow &window)
   return false;
 }
 
+bool Button::ContentBtnMouseOver(sf::RenderWindow &window)
+{
+  float mouseX = sf::Mouse::getPosition(window).x;
+  float mouseY = sf::Mouse::getPosition(window).y;
+
+  float btnPosX = m_button.getPosition().x * 1.935f;
+  float btnPosY = m_button.getPosition().y * 1.15f;
+
+  float btnXPosWidth = btnPosX + m_button.getGlobalBounds().width;
+  float btnYPosHeight = btnPosY + m_button.getGlobalBounds().height;
+
+  if(mouseX < btnXPosWidth && mouseX > btnPosX && mouseY < btnYPosHeight && mouseY > btnPosY)
+  {
+    return true;
+  }
+  return false;
+}
 
 void Button::SetPosition(sf::Vector2f area, float ratioX, float ratioY)
 {
