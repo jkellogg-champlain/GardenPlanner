@@ -4,6 +4,7 @@
 #include "Button.h"
 #include "Content.h"
 #include "InputBox.h"
+#include "ContentToDisplay.h"
 
 int main()
 {
@@ -37,6 +38,18 @@ int main()
 
 	Content WelcomeScreen;
 	WelcomeScreen.AddText("WelcomeScreen.txt");
+	WelcomeScreen.MakeActive();
+
+	Content SelectMapScreen;
+	SelectMapScreen.AddText("SelectMapScreen.txt");
+
+	Content CreateMapScreen;
+	CreateMapScreen.AddText("CreateMapScreen.txt");
+	CreateMapScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .3f);
+	CreateMapScreen.AddInputBoxes("Name", {70.f, mainContent.GetSize().y * .32f + 20.f},
+	"Length", {70.f, mainContent.GetSize().y * .32f + 90.f},
+	"Width", {70.f, mainContent.GetSize().y * .32f + 160.f},
+	"Year", {70.f, mainContent.GetSize().y * .32f + 230.f});
 
 	Content AddPlantScreen;
 	AddPlantScreen.AddText("AddPlantScreen.txt");
@@ -45,8 +58,19 @@ int main()
 	"Plant Variety", {70.f, mainContent.GetSize().y * .4f + 90.f},
 	"Plant Spacing", {70.f, mainContent.GetSize().y * .4f + 160.f},
 	"Plants/Sqr Foot", {70.f, mainContent.GetSize().y * .4f + 230.f});
+	//AddPlantScreen.MakeActive();
 	/*InputBox testBox;
 	testBox.SetPosition({60.f, mainContent.GetSize().y * .4f + 20.f});*/
+
+	Content EditPlantScreen;
+	EditPlantScreen.AddText("EditPlantScreen.txt");
+	EditPlantScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .3f - 10.f);
+	EditPlantScreen.AddInputBoxes("Plant Name", {70.f, mainContent.GetSize().y * .32f + 20.f},
+	"Plant Variety", {70.f, mainContent.GetSize().y * .32f + 90.f},
+	"Plant Spacing", {70.f, mainContent.GetSize().y * .32f + 160.f},
+	"Plants/Sqr Foot", {70.f, mainContent.GetSize().y * .32f + 230.f});
+
+	ContentToDisplay contentDisplay;
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
@@ -71,12 +95,61 @@ int main()
 					testBox.typdedOn(event);
 					break;*/
 				case sf::Event::MouseButtonPressed:
-					AddPlantScreen.FocusOnBox(mainWindow);
-					//std::cout << "Mouse button was pressed" << std::endl;
+					if(event.mouseButton.button == sf::Mouse::Left)
+					{
+						CreateMapScreen.FocusOnBox(mainWindow);
+						AddPlantScreen.FocusOnBox(mainWindow);
+						EditPlantScreen.FocusOnBox(mainWindow);
+
+
+						if(selectMapBtn.mouseOver(mainWindow))
+						{
+							SelectMapScreen.MakeActive();
+							CreateMapScreen.MakeInactive();
+							AddPlantScreen.MakeInactive();
+							WelcomeScreen.MakeInactive();
+							EditPlantScreen.MakeInactive();
+						}
+						else if(createMapBtn.mouseOver(mainWindow))
+						{
+							CreateMapScreen.MakeActive();
+							AddPlantScreen.MakeInactive();
+							WelcomeScreen.MakeInactive();
+							SelectMapScreen.MakeInactive();
+							EditPlantScreen.MakeInactive();
+						}
+						else if(addPlantBtn.mouseOver(mainWindow))
+						{
+							AddPlantScreen.MakeActive();
+							WelcomeScreen.MakeInactive();
+							SelectMapScreen.MakeInactive();
+							CreateMapScreen.MakeInactive();
+							EditPlantScreen.MakeInactive();
+						}
+						else if(editPlantBtn.mouseOver(mainWindow))
+						{
+							EditPlantScreen.MakeActive();
+							AddPlantScreen.MakeInactive();
+							WelcomeScreen.MakeInactive();
+							SelectMapScreen.MakeInactive();
+							CreateMapScreen.MakeInactive();
+						}
+					}
 					break;
 				//case sf::Event::MouseButtonPressed:
 				case sf::Event::TextEntered:
-					AddPlantScreen.EnterText(event);
+					if(AddPlantScreen.GetActiveStatus())
+						{
+							AddPlantScreen.EnterText(event);
+						}
+					else if(CreateMapScreen.GetActiveStatus())
+					{
+						CreateMapScreen.EnterText(event);
+					}
+					else if(EditPlantScreen.GetActiveStatus())
+					{
+						EditPlantScreen.EnterText(event);
+					}
 					break;
 				case sf::Event::MouseMoved:
 					sf::Vector2i mousePos = sf::Mouse::getPosition();
@@ -104,8 +177,10 @@ int main()
 		mainWindow.setView(contentView);
 		//mainWindow.draw(test);
 		//WelcomeScreen.DrawText(mainWindow);
-		AddPlantScreen.DrawText(mainWindow);
-		AddPlantScreen.DrawInputField(mainWindow);
+		/*AddPlantScreen.DrawText(mainWindow);
+		AddPlantScreen.DrawInputField(mainWindow);*/
+		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
+			CreateMapScreen, AddPlantScreen, EditPlantScreen);
 		//testBox.Draw(mainWindow);
 		mainWindow.display();
 }
