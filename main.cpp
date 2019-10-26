@@ -50,6 +50,7 @@ int main()
 	"Length", {70.f, mainContent.GetSize().y * .32f + 90.f},
 	"Width", {70.f, mainContent.GetSize().y * .32f + 160.f},
 	"Year", {70.f, mainContent.GetSize().y * .32f + 230.f});
+	CreateMapScreen.AddInputButton("CREATE MAP", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
 	Content AddPlantScreen;
 	AddPlantScreen.AddText("AddPlantScreen.txt");
@@ -58,6 +59,7 @@ int main()
 	"Plant Variety", {70.f, mainContent.GetSize().y * .4f + 90.f},
 	"Plant Spacing", {70.f, mainContent.GetSize().y * .4f + 160.f},
 	"Plants/Sqr Foot", {70.f, mainContent.GetSize().y * .4f + 230.f});
+	AddPlantScreen.AddInputButton("ADD PLANT", mainWindow, mainContent.GetSize(), .4f, 2.2f);
 	//AddPlantScreen.MakeActive();
 	/*InputBox testBox;
 	testBox.SetPosition({60.f, mainContent.GetSize().y * .4f + 20.f});*/
@@ -69,6 +71,7 @@ int main()
 	"Plant Variety", {70.f, mainContent.GetSize().y * .32f + 90.f},
 	"Plant Spacing", {70.f, mainContent.GetSize().y * .32f + 160.f},
 	"Plants/Sqr Foot", {70.f, mainContent.GetSize().y * .32f + 230.f});
+	EditPlantScreen.AddInputButton("SUBMIT EDIT", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
 	ContentToDisplay contentDisplay;
 
