@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "ContentContainer.h"
@@ -5,6 +6,12 @@
 #include "Content.h"
 #include "InputBox.h"
 #include "ContentToDisplay.h"
+
+/*#include "mysql_connection.h"
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>*/
 
 int main()
 {
@@ -104,7 +111,6 @@ int main()
 						AddPlantScreen.FocusOnBox(mainWindow);
 						EditPlantScreen.FocusOnBox(mainWindow);
 
-
 						if(selectMapBtn.mouseOver(mainWindow))
 						{
 							SelectMapScreen.MakeActive();
@@ -152,6 +158,12 @@ int main()
 					else if(EditPlantScreen.GetActiveStatus())
 					{
 						EditPlantScreen.EnterText(event);
+					}
+					break;
+				case sf::Event::MouseButtonReleased:
+					if(AddPlantScreen.GetActiveStatus())
+					{
+						AddPlantScreen.SubmitData(mainWindow);
 					}
 					break;
 				case sf::Event::MouseMoved:
