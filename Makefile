@@ -2,7 +2,7 @@
 OBJS = main.cpp ContentContainer.cpp Button.cpp Content.cpp InputBox.cpp ContentToDisplay.cpp
 CXX = g++
 CPPFLAGS = -WALL
-LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
+LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system -lmysqlcppconn
 
 app: $(OBJS)
 	$(CXX) -o garden_planner $(OBJS) $(LDLIBS)
