@@ -106,8 +106,34 @@ void Content::AddInputButton(std::string name, sf::RenderWindow& window,
   m_inputButton.SetPosition(area, ratioX, ratioY);
 }
 
-void Content::DrawInputField(sf::RenderWindow &window)
+void Content::SubmitData(sf::RenderWindow &window)
 {
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+
+  if(m_inputButton.ContentBtnMouseOver(window))
+  {
+    prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
+    //VALUES("+m_inputBox1.GetText()+", "+m_inputBox2.GetText()+", "+std::stoi(m_inputBox3.GetText())+", "+std::stoi(m_inputBox4.GetText())+")");
+    prep_stmt->setString(1, m_inputBox1.GetText());
+    prep_stmt->setString(2, m_inputBox2.GetText());
+    prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
+    prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
+    prep_stmt->execute();
+
+    m_inputBox1.ClearContent();
+    m_inputBox2.ClearContent();
+    m_inputBox3.ClearContent();
+    m_inputBox4.ClearContent();
+  }
+  delete con;
+  delete prep_stmt;
+}
+
+void Content::DrawInputField(sf::RenderWindow &window, sf::Event event)
+{
+  int loopOnce = 0;
   window.draw(m_input_container);
   m_inputBox1.Draw(window);
   m_inputBox2.Draw(window);

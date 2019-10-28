@@ -6,6 +6,12 @@
 #include "InputBox.h"
 #include "Button.h"
 
+#include "mysql_connection.h"
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/prepared_statement.h>
+
 
 class Content
 {
@@ -27,7 +33,8 @@ public:
   void MakeInactive();
   void AddInputButton(std::string name, sf::RenderWindow& window,
     sf::Vector2f area, float ratioX, float ratioY);
-  void DrawInputField(sf::RenderWindow &window);
+  void SubmitData(sf::RenderWindow &window);
+  void DrawInputField(sf::RenderWindow &window, sf::Event event);
 
 private:
   sf::Text m_contentText;
@@ -42,4 +49,8 @@ private:
   InputBox m_inputBox4;
   bool m_isActive;
   Button m_inputButton;
+  sql::Driver *driver;
+  sql::Connection *con;
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
 };
