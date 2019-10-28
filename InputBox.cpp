@@ -4,7 +4,7 @@ InputBox::InputBox()
 {
   m_isSelected = false;
   m_hasLimit = true;
-  m_limit = 40;
+  m_limit = 30;
   m_textBox.setFillColor(sf::Color::Black);
   m_container.setSize({450.f, 40.f});
   m_container.setOutlineColor(sf::Color::Black);
@@ -66,9 +66,14 @@ void InputBox::SetHeader(std::string header)
   m_inputHeader.setString(header);
 }
 
-std::string InputBox::getText()
+std::string InputBox::GetText()
 {
   return m_text.str();
+}
+
+void InputBox::ClearContent()
+{
+  m_textBox.setString("");
 }
 
 void InputBox::typedOn(sf::Event input)
