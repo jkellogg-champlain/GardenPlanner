@@ -131,7 +131,7 @@ void Content::SubmitData(sf::RenderWindow &window)
   delete prep_stmt;
 }
 
-void Content::DrawInputField(sf::RenderWindow &window, sf::Event event)
+void Content::DrawInputField(sf::RenderWindow &window)
 {
   int loopOnce = 0;
   window.draw(m_input_container);

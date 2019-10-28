@@ -34,7 +34,7 @@ public:
   void AddInputButton(std::string name, sf::RenderWindow& window,
     sf::Vector2f area, float ratioX, float ratioY);
   void SubmitData(sf::RenderWindow &window);
-  void DrawInputField(sf::RenderWindow &window, sf::Event event);
+  void DrawInputField(sf::RenderWindow &window);
 
 private:
   sf::Text m_contentText;
