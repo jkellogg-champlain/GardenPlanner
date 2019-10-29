@@ -71,7 +71,7 @@ bool MessageWindow::MessageDismissHover(sf::RenderWindow &window)
   float mouseX = sf::Mouse::getPosition(window).x;
   float mouseY = sf::Mouse::getPosition(window).y;
 
-  float boxPosX = m_messageButton.getPosition().x * 1.99;
+  float boxPosX = m_messageButton.getPosition().x + window.getSize().x / 3.7f;
   float boxPosY = m_messageButton.getPosition().y + window.getSize().y / 8.523;
   //std::cout << window.getSize().y << std::endl;
 
@@ -94,7 +94,7 @@ void MessageWindow::clickedOn(sf::RenderWindow &window)
   float mouseX = sf::Mouse::getPosition(window).x;
   float mouseY = sf::Mouse::getPosition(window).y;
 
-  float boxPosX = m_messageButton.getPosition().x * 1.99;
+  float boxPosX = m_messageButton.getPosition().x + window.getSize().x / 3.7f;
   float boxPosY = m_messageButton.getPosition().y + window.getSize().y / 8.523;
   //std::cout << window.getSize().y << std::endl;
 
