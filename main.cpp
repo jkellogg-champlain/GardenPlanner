@@ -109,6 +109,7 @@ int main()
 					{
 						CreateMapScreen.FocusOnBox(mainWindow);
 						AddPlantScreen.FocusOnBox(mainWindow);
+						AddPlantScreen.MessageDismissed(mainWindow);
 						EditPlantScreen.FocusOnBox(mainWindow);
 
 						if(selectMapBtn.mouseOver(mainWindow))
@@ -190,13 +191,8 @@ int main()
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
 		mainWindow.setView(contentView);
-		//mainWindow.draw(test);
-		//WelcomeScreen.DrawText(mainWindow);
-		/*AddPlantScreen.DrawText(mainWindow);
-		AddPlantScreen.DrawInputField(mainWindow);*/
 		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
 			CreateMapScreen, AddPlantScreen, EditPlantScreen);
-		//testBox.Draw(mainWindow);
 		mainWindow.display();
 }
 }
