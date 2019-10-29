@@ -59,6 +59,11 @@ void Content::FocusOnBox(sf::RenderWindow &window)
   m_inputBox4.clickedOn(window);
 }
 
+void Content::MessageDismissed(sf::RenderWindow &window)
+{
+  m_messageDisplay.clickedOn(window);
+}
+
 void Content::EnterText(sf::Event input)
 {
   if(m_inputBox1.m_isSelected)
@@ -114,13 +119,24 @@ void Content::SubmitData(sf::RenderWindow &window)
 
   if(m_inputButton.ContentBtnMouseOver(window))
   {
-    prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
-    //VALUES("+m_inputBox1.GetText()+", "+m_inputBox2.GetText()+", "+std::stoi(m_inputBox3.GetText())+", "+std::stoi(m_inputBox4.GetText())+")");
-    prep_stmt->setString(1, m_inputBox1.GetText());
-    prep_stmt->setString(2, m_inputBox2.GetText());
-    prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
-    prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
-    prep_stmt->execute();
+    std::string box1 = m_inputBox1.GetText();
+    std::string box2 = m_inputBox2.GetText();
+    std::string box3 = m_inputBox3.GetText();
+    std::string box4 = m_inputBox4.GetText();
+    if(box1.length() < 1 || box2.length() < 1 || box3.length() < 1 || box4.length() < 1)
+    {
+      m_messageDisplay.SetDisplay(true);
+      m_messageDisplay.AddMessage("One or more fields haven't been filled in. \n All fields are required.");
+    }
+    else
+    {
+      prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
+      prep_stmt->setString(1, m_inputBox1.GetText());
+      prep_stmt->setString(2, m_inputBox2.GetText());
+      prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
+      prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
+      prep_stmt->execute();
+    }
 
     m_inputBox1.ClearContent();
     m_inputBox2.ClearContent();
@@ -148,4 +164,16 @@ void Content::DrawInputField(sf::RenderWindow &window)
     m_inputButton.SetColor(sf::Color(228, 243, 127, 255));
   }
   m_inputButton.Draw(window);
+  if(m_messageDisplay.GetDisplay())
+  {
+    if(m_messageDisplay.MessageDismissHover(window))
+    {
+      m_messageDisplay.SetButtonColor(sf::Color::White);
+    }
+    else
+    {
+      m_messageDisplay.SetButtonColor(sf::Color(200, 200, 200, 255));
+    }
+    m_messageDisplay.Draw(window);
+  }
 }

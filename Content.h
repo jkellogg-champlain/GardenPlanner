@@ -5,6 +5,7 @@
 #include <iostream>
 #include "InputBox.h"
 #include "Button.h"
+#include "MessageWindow.h"
 
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -27,6 +28,7 @@ public:
     std::string header3, sf::Vector2f pos3,
     std::string header4, sf::Vector2f pos4);
   void FocusOnBox(sf::RenderWindow &window);
+  void MessageDismissed(sf::RenderWindow &window);
   void EnterText(sf::Event input);
   bool GetActiveStatus();
   void MakeActive();
@@ -49,6 +51,7 @@ private:
   InputBox m_inputBox4;
   bool m_isActive;
   Button m_inputButton;
+  MessageWindow m_messageDisplay;
   sql::Driver *driver;
   sql::Connection *con;
   sql::PreparedStatement *prep_stmt;
