@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <exception>
 #include "InputBox.h"
 #include "Button.h"
 #include "MessageWindow.h"

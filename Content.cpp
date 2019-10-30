@@ -113,38 +113,64 @@ void Content::AddInputButton(std::string name, sf::RenderWindow& window,
 
 void Content::SubmitData(sf::RenderWindow &window)
 {
-  driver = get_driver_instance();
-  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
-  con->setSchema("garden_space_planner");
-
-  if(m_inputButton.ContentBtnMouseOver(window))
+  try
   {
-    std::string box1 = m_inputBox1.GetText();
-    std::string box2 = m_inputBox2.GetText();
-    std::string box3 = m_inputBox3.GetText();
-    std::string box4 = m_inputBox4.GetText();
-    if(box1.length() < 1 || box2.length() < 1 || box3.length() < 1 || box4.length() < 1)
+    if(m_inputButton.ContentBtnMouseOver(window))
     {
-      m_messageDisplay.SetDisplay(true);
-      m_messageDisplay.AddMessage("One or more fields haven't been filled in. \n All fields are required.");
-    }
-    else
-    {
-      prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
-      prep_stmt->setString(1, m_inputBox1.GetText());
-      prep_stmt->setString(2, m_inputBox2.GetText());
-      prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
-      prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
-      prep_stmt->execute();
+      std::string box1 = m_inputBox1.GetText();
+      std::string box2 = m_inputBox2.GetText();
+      std::string box3 = m_inputBox3.GetText();
+      std::string box4 = m_inputBox4.GetText();
+
+      if(box1.length() < 1 || box2.length() < 1 || box3.length() < 1 || box4.length() < 1)
+      {
+        m_messageDisplay.SetDisplay(true);
+        m_messageDisplay.AddMessage("One or more fields haven't been filled in. \n All fields are required.");
+      }
+      else if (std::stoi(box3) < 1 || std::stoi(box4) < 1)
+      {
+        m_messageDisplay.SetDisplay(true);
+        m_messageDisplay.AddMessage("Number fields can't be less than 1.  Check to make \n sure no fields are less than 1.");
+      }
+      else if (std::stoi(box3) > 120 || std::stoi(box4) > 120)
+      {
+        m_messageDisplay.SetDisplay(true);
+        m_messageDisplay.AddMessage("This program can't process gardens larger\nthan 120 square feet.  Therefore all numerical\nvalues must be less than 100");
+      }
+      else
+      {
+        driver = get_driver_instance();
+        con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+        con->setSchema("garden_space_planner");
+        prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
+        prep_stmt->setString(1, m_inputBox1.GetText());
+        prep_stmt->setString(2, m_inputBox2.GetText());
+        prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
+        prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
+        prep_stmt->execute();
+        m_inputBox1.ClearContent();
+        m_inputBox2.ClearContent();
+        m_inputBox3.ClearContent();
+        m_inputBox4.ClearContent();
+        delete con;
+        delete prep_stmt;
+        //delete driver;
+        m_messageDisplay.SetDisplay(true);
+        m_messageDisplay.AddMessage("The Database has been updated!");
+      }
     }
 
-    m_inputBox1.ClearContent();
-    m_inputBox2.ClearContent();
-    m_inputBox3.ClearContent();
-    m_inputBox4.ClearContent();
   }
-  delete con;
-  delete prep_stmt;
+  catch(std::invalid_argument)
+  {
+    m_messageDisplay.SetDisplay(true);
+    m_messageDisplay.AddMessage("You entered text into a field that requires a number!");
+  }
+  catch(...)
+  {
+    m_messageDisplay.SetDisplay(true);
+    m_messageDisplay.AddMessage("An Unexpected Error Occured!");
+  }
 }
 
 void Content::DrawInputField(sf::RenderWindow &window)
