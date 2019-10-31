@@ -54,19 +54,19 @@ int main()
 	CreateMapScreen.AddText("CreateMapScreen.txt");
 	CreateMapScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .3f);
 	CreateMapScreen.AddInputBoxes("Name", {70.f, mainContent.GetSize().y * .32f + 20.f},
-	"Length", {70.f, mainContent.GetSize().y * .32f + 90.f},
-	"Width", {70.f, mainContent.GetSize().y * .32f + 160.f},
-	"Year", {70.f, mainContent.GetSize().y * .32f + 230.f});
+	"Year", {70.f, mainContent.GetSize().y * .32f + 90.f},
+	"Length", {70.f, mainContent.GetSize().y * .32f + 160.f},
+	"Width", {70.f, mainContent.GetSize().y * .32f + 230.f});
 	CreateMapScreen.AddInputButton("CREATE MAP", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
 	Content AddPlantScreen;
 	AddPlantScreen.AddText("AddPlantScreen.txt");
-	AddPlantScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .4f - 10.f);
+	AddPlantScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .35f - 10.f);
 	AddPlantScreen.AddInputBoxes("Plant Name", {70.f, mainContent.GetSize().y * .4f + 20.f},
 	"Plant Variety", {70.f, mainContent.GetSize().y * .4f + 90.f},
-	"Plant Spacing", {70.f, mainContent.GetSize().y * .4f + 160.f},
-	"Plants/Sqr Foot", {70.f, mainContent.GetSize().y * .4f + 230.f});
-	AddPlantScreen.AddInputButton("ADD PLANT", mainWindow, mainContent.GetSize(), .4f, 2.2f);
+	"Plant Spacing/inch", {70.f, mainContent.GetSize().y * .4f + 160.f},
+	"Row Spacing/foot", {70.f, mainContent.GetSize().y * .4f + 230.f});
+	AddPlantScreen.AddInputButton("ADD PLANT", mainWindow, mainContent.GetSize(), .4f, 2.f);
 	//AddPlantScreen.MakeActive();
 	/*InputBox testBox;
 	testBox.SetPosition({60.f, mainContent.GetSize().y * .4f + 20.f});*/
@@ -108,9 +108,11 @@ int main()
 					if(event.mouseButton.button == sf::Mouse::Left)
 					{
 						CreateMapScreen.FocusOnBox(mainWindow);
+						CreateMapScreen.MessageDismissed(mainWindow);
 						AddPlantScreen.FocusOnBox(mainWindow);
 						AddPlantScreen.MessageDismissed(mainWindow);
 						EditPlantScreen.FocusOnBox(mainWindow);
+						EditPlantScreen.MessageDismissed(mainWindow);
 
 						if(selectMapBtn.mouseOver(mainWindow))
 						{
@@ -164,7 +166,11 @@ int main()
 				case sf::Event::MouseButtonReleased:
 					if(AddPlantScreen.GetActiveStatus())
 					{
-						AddPlantScreen.SubmitData(mainWindow);
+						AddPlantScreen.SubmitData(mainWindow, "plants");
+					}
+					else if (CreateMapScreen.GetActiveStatus())
+					{
+						CreateMapScreen.SubmitData(mainWindow, "maps");
 					}
 					break;
 				case sf::Event::MouseMoved:
