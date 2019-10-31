@@ -7,12 +7,14 @@
 #include "InputBox.h"
 #include "Button.h"
 #include "MessageWindow.h"
+#include "Plant.h"
+#include "Map.h"
 
-#include "mysql_connection.h"
+/*#include "mysql_connection.h"
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
-#include <cppconn/prepared_statement.h>
+#include <cppconn/prepared_statement.h>*/
 
 
 class Content
@@ -36,7 +38,7 @@ public:
   void MakeInactive();
   void AddInputButton(std::string name, sf::RenderWindow& window,
     sf::Vector2f area, float ratioX, float ratioY);
-  void SubmitData(sf::RenderWindow &window);
+  void SubmitData(sf::RenderWindow &window, std::string databaseName);
   void DrawInputField(sf::RenderWindow &window);
 
 private:
@@ -53,8 +55,10 @@ private:
   bool m_isActive;
   Button m_inputButton;
   MessageWindow m_messageDisplay;
-  sql::Driver *driver;
+  Plant m_plant;
+  Map m_map;
+  /*sql::Driver *driver;
   sql::Connection *con;
   sql::PreparedStatement *prep_stmt;
-  sql::ResultSet *res;
+  sql::ResultSet *res;*/
 };

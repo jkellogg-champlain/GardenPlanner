@@ -111,7 +111,7 @@ void Content::AddInputButton(std::string name, sf::RenderWindow& window,
   m_inputButton.SetPosition(area, ratioX, ratioY);
 }
 
-void Content::SubmitData(sf::RenderWindow &window)
+void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
 {
   try
   {
@@ -139,7 +139,27 @@ void Content::SubmitData(sf::RenderWindow &window)
       }
       else
       {
-        driver = get_driver_instance();
+        if(databaseName == "plants")
+        {
+          m_plant.SetName(box1);
+          m_plant.SetVariety(box2);
+          m_plant.SetSpacing(std::stoi(box3));
+          m_plant.SetRowSpacing(std::stoi(box4));
+          m_plant.AddToDatabase();
+          m_messageDisplay.SetDisplay(true);
+          m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nPlant Name: " + box1 +"\nPlant Variety: " + box2 + "\nPlant Spacing: " + box3 + "\nRow Spacing: " + box4);
+        }
+        else if(databaseName == "maps")
+        {
+          m_map.SetName(box1);
+          m_map.SetYear(box2);
+          m_map.SetLength(std::stoi(box3));
+          m_map.SetWidth(std::stoi(box4));
+          m_map.AddToDatabase();
+          m_messageDisplay.SetDisplay(true);
+          m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nMap Name: " + box1 +"\nMap Year : " + box2 + "\nMap Length: " + box3 + "\nMap Width: " + box4);
+        }
+        /*driver = get_driver_instance();
         con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
         con->setSchema("garden_space_planner");
         prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
@@ -147,19 +167,17 @@ void Content::SubmitData(sf::RenderWindow &window)
         prep_stmt->setString(2, m_inputBox2.GetText());
         prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
         prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
-        prep_stmt->execute();
+        prep_stmt->execute();*/
         m_inputBox1.ClearContent();
         m_inputBox2.ClearContent();
         m_inputBox3.ClearContent();
         m_inputBox4.ClearContent();
-        delete con;
+        /*delete con;
         delete prep_stmt;
-        //delete driver;
         m_messageDisplay.SetDisplay(true);
-        m_messageDisplay.AddMessage("The Database has been updated!");
+        m_messageDisplay.AddMessage("The Database has been updated!");*/
       }
     }
-
   }
   catch(std::invalid_argument)
   {
@@ -175,7 +193,7 @@ void Content::SubmitData(sf::RenderWindow &window)
 
 void Content::DrawInputField(sf::RenderWindow &window)
 {
-  int loopOnce = 0;
+  //int loopOnce = 0;
   window.draw(m_input_container);
   m_inputBox1.Draw(window);
   m_inputBox2.Draw(window);
