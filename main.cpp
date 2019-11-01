@@ -6,6 +6,7 @@
 #include "Content.h"
 #include "InputBox.h"
 #include "ContentToDisplay.h"
+#include "LeftColumnContent.h"
 
 /*#include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -35,13 +36,24 @@ int main()
 	sf::View staticView;
 	staticView.reset(sf::FloatRect(0, 0, (float)mainWindow.getSize().x, (float)mainWindow.getSize().y));
 
+	sf::View leftColumnView;
+	leftColumnView.setSize(leftColumn.GetSize().x, leftColumn.GetSize().y);
+	leftColumnView.setCenter(leftColumn.GetSize().x / 2, leftColumn.GetSize().y / 2);
+	leftColumnView.setViewport(sf::FloatRect(.018f, .133f, .235f, .835f));
+	sf::RectangleShape leftColumnViewBorder;
+	leftColumnViewBorder.setSize({leftColumn.GetSize().x * .94f, leftColumn.GetSize().y * .971f});
+	std::cout << "X border size: " << leftColumnViewBorder.getSize().x << "\nY border size: " << leftColumnViewBorder.getSize().y << std::endl;
+	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x + 10, leftColumn.GetPosition().y + 11.5f});
+	leftColumnViewBorder.setOutlineColor(sf::Color(42, 85, 34, 255));
+	leftColumnViewBorder.setOutlineThickness(1);
+
 	sf::View contentView;
 	contentView.setSize(mainContent.GetSize().x, mainContent.GetSize().y);
 	contentView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 	contentView.setViewport(sf::FloatRect(.27f, .12f, .7199f, .86f));
 
-	/*sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
-	test.setFillColor(sf::Color::Blue);*/
+	sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
+	test.setFillColor(sf::Color::Blue);
 
 	Content WelcomeScreen;
 	WelcomeScreen.AddText("WelcomeScreen.txt");
@@ -81,6 +93,10 @@ int main()
 	EditPlantScreen.AddInputButton("SUBMIT EDIT", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
 	ContentToDisplay contentDisplay;
+
+	LeftColumnContent leftColumnDisplay;
+	leftColumnDisplay.AddDisplayArea(leftColumn);
+	leftColumnDisplay.AddScrollBar();
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
@@ -196,9 +212,13 @@ int main()
 		}
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
+		mainWindow.draw(leftColumnViewBorder);
 		mainWindow.setView(contentView);
 		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
 			CreateMapScreen, AddPlantScreen, EditPlantScreen);
+		mainWindow.setView(leftColumnView);
+		//mainWindow.draw(test);
+		leftColumnDisplay.Draw(mainWindow);
 		mainWindow.display();
 }
 }
