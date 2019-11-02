@@ -38,11 +38,11 @@ int main()
 
 	sf::View leftColumnView;
 	leftColumnView.setSize(leftColumn.GetSize().x, leftColumn.GetSize().y);
-	leftColumnView.setCenter(leftColumn.GetSize().x / 2, leftColumn.GetSize().y / 2);
+	//leftColumnView.setCenter(leftColumn.GetSize().x / 2, leftColumn.GetSize().y / 2);
 	leftColumnView.setViewport(sf::FloatRect(.018f, .133f, .235f, .835f));
 	sf::RectangleShape leftColumnViewBorder;
 	leftColumnViewBorder.setSize({leftColumn.GetSize().x * .94f, leftColumn.GetSize().y * .971f});
-	std::cout << "X border size: " << leftColumnViewBorder.getSize().x << "\nY border size: " << leftColumnViewBorder.getSize().y << std::endl;
+	//std::cout << "X border size: " << leftColumnViewBorder.getSize().x << "\nY border size: " << leftColumnViewBorder.getSize().y << std::endl;
 	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x + 10, leftColumn.GetPosition().y + 11.5f});
 	leftColumnViewBorder.setOutlineColor(sf::Color(42, 85, 34, 255));
 	leftColumnViewBorder.setOutlineThickness(1);
@@ -162,6 +162,11 @@ int main()
 							SelectMapScreen.MakeInactive();
 							CreateMapScreen.MakeInactive();
 						}
+						else if(leftColumnDisplay.MouseOverScroll(mainWindow))
+						{
+							leftColumnDisplay.Scroll(mainWindow);
+							//leftColumnDisplay.ChangeColorTest(sf::Color::Red);
+						}
 					}
 					break;
 				//case sf::Event::MouseButtonPressed:
@@ -188,6 +193,10 @@ int main()
 					{
 						CreateMapScreen.SubmitData(mainWindow, "maps");
 					}
+					/*else if(leftColumnDisplay.MouseOverScroll(mainWindow))
+					{
+						leftColumnDisplay.ChangeColorTest(sf::Color::Blue);
+					}*/
 					break;
 				case sf::Event::MouseMoved:
 					sf::Vector2i mousePos = sf::Mouse::getPosition();
@@ -217,6 +226,15 @@ int main()
 		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
 			CreateMapScreen, AddPlantScreen, EditPlantScreen);
 		mainWindow.setView(leftColumnView);
+		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
+		if(leftColumnDisplay.MouseOverScroll(mainWindow))
+		{
+			leftColumnDisplay.ChangeColorTest(sf::Color::Red);
+		}
+		else
+		{
+			leftColumnDisplay.ChangeColorTest(sf::Color::Blue);
+		}
 		//mainWindow.draw(test);
 		leftColumnDisplay.Draw(mainWindow);
 		mainWindow.display();
