@@ -41,9 +41,9 @@ int main()
 	//leftColumnView.setCenter(leftColumn.GetSize().x / 2, leftColumn.GetSize().y / 2);
 	leftColumnView.setViewport(sf::FloatRect(.018f, .133f, .235f, .835f));
 	sf::RectangleShape leftColumnViewBorder;
-	leftColumnViewBorder.setSize({leftColumn.GetSize().x * .94f, leftColumn.GetSize().y * .971f});
+	leftColumnViewBorder.setSize({leftColumn.GetSize().x * .94f, leftColumn.GetSize().y * .968f});
 	//std::cout << "X border size: " << leftColumnViewBorder.getSize().x << "\nY border size: " << leftColumnViewBorder.getSize().y << std::endl;
-	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x + 10, leftColumn.GetPosition().y + 11.5f});
+	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x * 1.81f, leftColumn.GetPosition().y * 1.13f});
 	leftColumnViewBorder.setOutlineColor(sf::Color(42, 85, 34, 255));
 	leftColumnViewBorder.setOutlineThickness(1);
 
@@ -52,8 +52,8 @@ int main()
 	contentView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 	contentView.setViewport(sf::FloatRect(.27f, .12f, .7199f, .86f));
 
-	sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
-	test.setFillColor(sf::Color::Blue);
+	/*sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
+	test.setFillColor(sf::Color::Blue);*/
 
 	Content WelcomeScreen;
 	WelcomeScreen.AddText("WelcomeScreen.txt");
@@ -164,8 +164,10 @@ int main()
 						}
 						else if(leftColumnDisplay.MouseOverScroll(mainWindow))
 						{
-							leftColumnDisplay.Scroll(mainWindow);
-							//leftColumnDisplay.ChangeColorTest(sf::Color::Red);
+							//leftColumnDisplay.Scroll(mainWindow);
+							leftColumnDisplay.ChangeColorTest(sf::Color::Red);
+							leftColumnDisplay.SetScrolling(true);
+							//std::cout << "Scrolling is true" << std::endl;
 						}
 					}
 					break;
@@ -185,6 +187,7 @@ int main()
 					}
 					break;
 				case sf::Event::MouseButtonReleased:
+					leftColumnDisplay.SetScrolling(false);
 					if(AddPlantScreen.GetActiveStatus())
 					{
 						AddPlantScreen.SubmitData(mainWindow, "plants");
@@ -195,6 +198,7 @@ int main()
 					}
 					/*else if(leftColumnDisplay.MouseOverScroll(mainWindow))
 					{
+						leftColumnDisplay.SetScrolling(false);
 						leftColumnDisplay.ChangeColorTest(sf::Color::Blue);
 					}*/
 					break;
@@ -225,16 +229,43 @@ int main()
 		mainWindow.setView(contentView);
 		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
 			CreateMapScreen, AddPlantScreen, EditPlantScreen);
+
 		mainWindow.setView(leftColumnView);
 		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
-		if(leftColumnDisplay.MouseOverScroll(mainWindow))
+		if(leftColumnDisplay.GetScrolling())
+		{
+			leftColumnDisplay.Scroll(mainWindow);
+			//std::cout << leftColumnDisplay.GetScrolling() << "Should be true" << std::endl;
+		}
+		/*else if(!leftColumnDisplay.GetScrolling())
+		{
+			std::cout << leftColumnDisplay.GetScrolling() << "Should be false" << std::endl;
+		}*/
+
+		/*if(leftColumnDisplay.MouseOverScroll(mainWindow))
 		{
 			leftColumnDisplay.ChangeColorTest(sf::Color::Red);
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				leftColumnDisplay.SetScrolling(true);
+				std::cout << "Scrolling is true" << std::endl;
+			}
+			else if(event.MouseButtonReleased)
+			{
+				leftColumnDisplay.SetScrolling(false);
+				std::cout << "Scrolling is false" << std::endl;
+			}
+
+			if (leftColumnDisplay.GetScrolling())
+			{
+				std::cout << "GetScrolling called" << std::endl;
+				leftColumnDisplay.Scroll(mainWindow);
+			}
 		}
 		else
 		{
 			leftColumnDisplay.ChangeColorTest(sf::Color::Blue);
-		}
+		}*/
 		//mainWindow.draw(test);
 		leftColumnDisplay.Draw(mainWindow);
 		mainWindow.display();
