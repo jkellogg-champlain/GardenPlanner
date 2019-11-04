@@ -11,14 +11,14 @@ public:
   LeftColumnContent();
   ~LeftColumnContent();
 
-  void AddScrollBar();
-  void Scroll(sf::RenderWindow &window);
+  void AddScrollBar(sf::View &container);
+  void Scroll(sf::RenderWindow &window, sf::View &container);
   bool MouseOverScroll(sf::RenderWindow &window);
   sf::Vector2f GetScrollPosition(ContentContainer &container);
   void SetScrolling(bool toScroll);
   bool GetScrolling();
   void ChangeColorTest(sf::Color color);
-  void AddDisplayArea(ContentContainer &container);
+  void AddDisplayArea(sf::View &container);
   void Draw(sf::RenderWindow &window);
 
 
@@ -30,8 +30,10 @@ private:
   float mouseY;
   float mouseYNew;
   float mouseYOld;
+  float mouseDifference;
   float newPosY;
   float oldPosY;
+  sf::RectangleShape m_centerScreen;
   sf::RectangleShape m_scrollContainer;
   sf::RectangleShape m_displayArea;
   bool m_isScrolling;

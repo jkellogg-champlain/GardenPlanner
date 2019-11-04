@@ -37,13 +37,13 @@ int main()
 	staticView.reset(sf::FloatRect(0, 0, (float)mainWindow.getSize().x, (float)mainWindow.getSize().y));
 
 	sf::View leftColumnView;
-	leftColumnView.setSize(leftColumn.GetSize().x, leftColumn.GetSize().y);
+	leftColumnView.setSize(leftColumn.GetSize().x * .99f, leftColumn.GetSize().y * .99f);
 	//leftColumnView.setCenter(leftColumn.GetSize().x / 2, leftColumn.GetSize().y / 2);
-	leftColumnView.setViewport(sf::FloatRect(.018f, .133f, .235f, .835f));
+	leftColumnView.setViewport(sf::FloatRect(.0172f, .133f, .235f, .835f));
 	sf::RectangleShape leftColumnViewBorder;
 	leftColumnViewBorder.setSize({leftColumn.GetSize().x * .94f, leftColumn.GetSize().y * .968f});
 	//std::cout << "X border size: " << leftColumnViewBorder.getSize().x << "\nY border size: " << leftColumnViewBorder.getSize().y << std::endl;
-	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x * 1.81f, leftColumn.GetPosition().y * 1.13f});
+	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x * 1.7f, leftColumn.GetPosition().y * 1.13f});
 	leftColumnViewBorder.setOutlineColor(sf::Color(42, 85, 34, 255));
 	leftColumnViewBorder.setOutlineThickness(1);
 
@@ -95,8 +95,8 @@ int main()
 	ContentToDisplay contentDisplay;
 
 	LeftColumnContent leftColumnDisplay;
-	leftColumnDisplay.AddDisplayArea(leftColumn);
-	leftColumnDisplay.AddScrollBar();
+	leftColumnDisplay.AddDisplayArea(leftColumnView);
+	leftColumnDisplay.AddScrollBar(leftColumnView);
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
@@ -234,7 +234,7 @@ int main()
 		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
 		if(leftColumnDisplay.GetScrolling())
 		{
-			leftColumnDisplay.Scroll(mainWindow);
+			leftColumnDisplay.Scroll(mainWindow, leftColumnView);
 			//std::cout << leftColumnDisplay.GetScrolling() << "Should be true" << std::endl;
 		}
 		/*else if(!leftColumnDisplay.GetScrolling())
