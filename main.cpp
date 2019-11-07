@@ -94,9 +94,9 @@ int main()
 
 	ContentToDisplay contentDisplay;
 
-	LeftColumnContent leftColumnDisplay;
-	leftColumnDisplay.AddDisplayArea(leftColumnView);
-	leftColumnDisplay.AddScrollBar(leftColumnView);
+	LeftColumnContent leftColumnDisplay(leftColumnView);
+	leftColumnDisplay.AddDisplayArea();
+	leftColumnDisplay.AddScrollBar();
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
@@ -165,8 +165,9 @@ int main()
 						else if(leftColumnDisplay.MouseOverScroll(mainWindow))
 						{
 							//leftColumnDisplay.Scroll(mainWindow);
-							leftColumnDisplay.ChangeColorTest(sf::Color::Red);
+							leftColumnDisplay.ChangeColor(sf::Color(150, 150, 150, 255));
 							leftColumnDisplay.SetScrolling(true);
+							leftColumnDisplay.SetFirstClick(true);
 							//std::cout << "Scrolling is true" << std::endl;
 						}
 					}
@@ -188,6 +189,7 @@ int main()
 					break;
 				case sf::Event::MouseButtonReleased:
 					leftColumnDisplay.SetScrolling(false);
+					leftColumnDisplay.ChangeColor(sf::Color(175, 175, 175, 255));
 					if(AddPlantScreen.GetActiveStatus())
 					{
 						AddPlantScreen.SubmitData(mainWindow, "plants");
@@ -234,7 +236,7 @@ int main()
 		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
 		if(leftColumnDisplay.GetScrolling())
 		{
-			leftColumnDisplay.Scroll(mainWindow, leftColumnView);
+			leftColumnDisplay.Scroll(mainWindow, leftColumnViewBorder);
 			//std::cout << leftColumnDisplay.GetScrolling() << "Should be true" << std::endl;
 		}
 		/*else if(!leftColumnDisplay.GetScrolling())

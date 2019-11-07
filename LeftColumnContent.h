@@ -8,17 +8,19 @@
 class LeftColumnContent
 {
 public:
-  LeftColumnContent();
+  LeftColumnContent(sf::View &view);
   ~LeftColumnContent();
 
-  void AddScrollBar(sf::View &container);
-  void Scroll(sf::RenderWindow &window, sf::View &container);
+  void AddScrollBar();
+  void SetFirstClick(bool click);
+  bool GetFirstClick();
+  void Scroll(sf::RenderWindow &window, sf::RectangleShape &viewborder);
   bool MouseOverScroll(sf::RenderWindow &window);
   sf::Vector2f GetScrollPosition(ContentContainer &container);
   void SetScrolling(bool toScroll);
   bool GetScrolling();
-  void ChangeColorTest(sf::Color color);
-  void AddDisplayArea(sf::View &container);
+  void ChangeColor(sf::Color color);
+  void AddDisplayArea();
   void Draw(sf::RenderWindow &window);
 
 
@@ -33,8 +35,13 @@ private:
   float mouseDifference;
   float newPosY;
   float oldPosY;
+  float m_offset;
+  float m_startPostion;
   sf::RectangleShape m_centerScreen;
   sf::RectangleShape m_scrollContainer;
   sf::RectangleShape m_displayArea;
   bool m_isScrolling;
+  bool m_firstClick;
+  sf::View m_leftColumnView;
+  float m_screenToViewRatio;
 };
