@@ -41,7 +41,7 @@ bool LeftColumnContent::GetFirstClick()
 void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &viewborder)
 {
   mouseY = sf::Mouse::getPosition(window).y;
-  mouseYNew = mouseY * 2.f;
+  mouseYNew = mouseY * m_screenToViewRatio;
 
   if(m_firstClick)
   {
@@ -49,10 +49,11 @@ void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &vie
     //m_offset = mouseY - (newPosY + viewborder.getPosition().y + m_scrollMinimum.y);
     m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
     mouseYOld = mouseYNew;
+    //std::cout << "newPosY is: " << newPosY << "\nm_scrollMinimum is: " << m_scrollMinimum.y << std::endl;
   }
   else if (newPosY + m_scrollMinimum.y < m_scrollMinimum.y)
   {
-    std::cout << "newPosY is: " << newPosY << "\nm_scrollMinimum is: " << m_scrollMinimum.y << std::endl;
+    //std::cout << "newPosY is: " << newPosY << "\nm_scrollMinimum is: " << m_scrollMinimum.y << std::endl;
     m_scrollElement.setPosition(m_scrollMinimum);
     m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
   }
@@ -63,6 +64,10 @@ void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &vie
   }
   else if (newPosY >= m_scrollMinimum.y && newPosY <= m_scrollMaximum.y - (m_scrollElement.getSize().y /** m_screenToViewRatio*/))
   {
+    std::cout << "newPosY is " << newPosY << std::endl;
+    //std::cout << "oldPosY is " << oldPosY << std::endl;
+    std::cout << "Actual position is " << m_scrollElement.getPosition().y << std::endl;
+    std::cout << "Mouse difference is: " << mouseDifference << std::endl;
     m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
     if(newPosY > m_scrollMinimum.y/* + m_scrollElement.getSize().y*/)
     {
@@ -74,10 +79,22 @@ void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &vie
     }*/
   }
 
-
+  /*if(mouseYNew > mouseYOld)
+  {
+    mouseDifference = mouseYNew - mouseYOld;
+  }
+  else if (mouseYNew < mouseYOld)
+  {
+    mouseDifference = -1*(mouseYOld - mouseYNew);
+    std::cout << "newPosY is: " << newPosY << "\nm_scrollMinimum is: " << m_scrollMinimum.y << std::endl;
+  }
+  else
+  {
+    mouseDifference = 0;
+  }*/
   mouseDifference = mouseYNew - mouseYOld;
-  newPosY = oldPosY + (mouseDifference * m_screenToViewRatio);
-  oldPosY = newPosY;
+  newPosY = m_scrollElement.getPosition().y + (mouseDifference * m_screenToViewRatio);
+  //oldPosY = newPosY;
   mouseYOld = mouseYNew;
   m_firstClick = false;
 
@@ -107,18 +124,18 @@ void LeftColumnContent::ChangeColor(sf::Color color)
 bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window)
 {
   float mouseX = sf::Mouse::getPosition(window).x;
-  float mouseY = sf::Mouse::getPosition(window).y;
+  mouseY = sf::Mouse::getPosition(window).y;
 
   float scrollPosX = m_scrollElement.getPosition().x * 1.03f;
-  float scrollPosY = m_scrollElement.getPosition().y + (window.getSize().y / 7.9f);
+  //float scrollPosY = m_scrollElement.getPosition().y + (window.getSize().y * .125/* / 7.9f*/);
   //std::cout << "Scroll Y Postition: " << m_scrollElement.getPosition().y << std::endl;
 
   //std::cout << "Mouse Position X: " << mouseX << "\nMouse Position Y: " << mouseY << "\nScoll Element Position: " << scrollPosX << "\nScroll Position Y: " << scrollPosY << std::endl;
 
   float scrollXPosWidth = scrollPosX + m_scrollElement.getGlobalBounds().width;
-  float scrollYPosHeight = scrollPosY + m_scrollElement.getGlobalBounds().height;
+  float scrollYPosHeight = newPosY + m_scrollElement.getGlobalBounds().height;
 
-  if(mouseX < scrollXPosWidth && mouseX > scrollPosX && mouseY < scrollYPosHeight && mouseY > scrollPosY)
+  if(mouseX < scrollXPosWidth && mouseX > scrollPosX && mouseY < scrollYPosHeight && mouseY > newPosY)
   {
     return true;
   }
