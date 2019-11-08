@@ -63,42 +63,19 @@ void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &vie
     m_scrollElement.setPosition(m_scrollMinimum);
     m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
   }
-  else if (newPosY > m_scrollMaximum.y/*- (m_scrollElement.getSize().y * m_screenToViewRatio)*/)
+  /*else if (newPosY > m_scrollMaximum.y - m_scrollElement.getSize().y)
   {
-    //std::cout << "Ran" << std::endl;
     m_scrollElement.setPosition(m_scrollMaximum.x, m_scrollMaximum.y - m_scrollElement.getSize().y);
-    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, /*(m_leftColumnView.getSize().y / 2.f) +*/ m_scrollMaximum.y);
-  }
+    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, m_scrollMaximum.y - m_scrollElement.getSize().y + 5.f);
+  }*/
   else if (newPosY >= m_scrollMinimum.y && newPosY <= m_scrollMaximum.y - (m_scrollElement.getSize().y /** m_screenToViewRatio*/))
   {
     /*std::cout << "newPosY is " << newPosY << std::endl;
     std::cout << "oldPosY is " << oldPosY << std::endl;
     std::cout << "Actual position is " << m_scrollElement.getPosition().y << std::endl;
     std::cout << "Mouse difference is: " << mouseDifference << std::endl;*/
-    if(newPosY > m_scrollMinimum.y && newPosY < m_scrollMaximum.y /* + m_scrollElement.getSize().y*/)
-    {
-
-      if(newPosY >= m_scrollMaximum.y - (m_scrollElement.getSize().y + (m_scrollElement.getSize().y * .29)))
-      {
-        m_scrollElement.setPosition(m_scrollMaximum.x, m_scrollElement.getPosition().y + mouseDifference * m_screenToViewRatio);
-      }
-      else if(newPosY + (m_scrollElement.getSize().y / 2) >= m_displayArea.getSize().y / 2)
-      {
-        //std::cout << "Ran" << std::endl;
-        m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference));
-        m_scrollElement.setPosition(m_scrollMinimum.x, m_scrollElement.getPosition().y + mouseDifference);
-      }
-      /*if(newPosY > m_scrollMaximum.y - (m_scrollElement.getSize().y * m_screenToViewRatio))
-      {
-        m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference));
-        m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
-      }*/
-      else
-      {
-        m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference * (1/m_screenToViewRatio)));
-        m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
-      }
-    }
+    m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference * .65));
+    m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
     /*else
     {
       m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference));
@@ -158,8 +135,8 @@ bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window, sf::RectangleS
 void LeftColumnContent::AddDisplayArea()
 {
   m_displayArea.setFillColor(sf::Color(228, 243, 127, 255));
-  m_displayArea.setSize({m_leftColumnView.getSize().x * .996f, m_leftColumnView.getSize().y * 1.995f});
-  m_displayArea.setPosition({1, 4});
+  m_displayArea.setSize({m_leftColumnView.getSize().x * .995f, m_leftColumnView.getSize().y * 2.995f});
+  m_displayArea.setPosition({1, 3});
   //m_displayArea.setOutlineColor(sf::Color(42, 85, 34, 255));
   m_displayArea.setOutlineColor(sf::Color::Red);
   m_displayArea.setOutlineThickness(1.f);
