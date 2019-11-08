@@ -162,7 +162,7 @@ int main()
 							SelectMapScreen.MakeInactive();
 							CreateMapScreen.MakeInactive();
 						}
-						else if(leftColumnDisplay.MouseOverScroll(mainWindow))
+						else if(leftColumnDisplay.MouseOverScroll(mainWindow, leftColumnViewBorder))
 						{
 							//leftColumnDisplay.Scroll(mainWindow);
 							leftColumnDisplay.ChangeColor(sf::Color(150, 150, 150, 255));
