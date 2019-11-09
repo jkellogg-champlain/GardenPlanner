@@ -10,11 +10,15 @@ LeftColumnContent::~LeftColumnContent() { }
 
 void LeftColumnContent::AddScrollBar()
 {
-  m_scrollContainer.setSize({m_displayArea.getSize().x * .07f, m_displayArea.getSize().y});
+  m_scrollContainer.setSize({m_leftColumnView.getSize().x * .07f, m_displayArea.getSize().y});
   m_scrollContainer.setPosition({m_displayArea.getPosition().x + (m_displayArea.getSize().x - m_scrollContainer.getSize().x), m_displayArea.getPosition().y});
   m_scrollContainer.setFillColor(sf::Color(220, 220, 220, 255));
 
-  m_screenToViewRatio = m_scrollContainer.getSize().y / m_leftColumnView.getSize().y;
+  m_screenToViewRatio = m_displayArea.getSize().y / m_leftColumnView.getSize().y;
+  std::cout << "m_displayArea: " << m_displayArea.getSize().y << "\nm_scrollContainer: " << m_scrollContainer.getSize().y << "\nm_screenToViewRatio: " << m_screenToViewRatio << std::endl;
+  std::cout << "LeftColumn view size is: " << m_leftColumnView.getSize().y << std::endl;
+
+
 
   m_scrollElement.setSize({m_scrollContainer.getSize().x * .75f, m_leftColumnView.getSize().y / m_screenToViewRatio});
   m_scrollMinimum.x = m_scrollContainer.getPosition().x * 1.01f;
@@ -24,6 +28,7 @@ void LeftColumnContent::AddScrollBar()
   //std::cout << "Maximum is: " << m_scrollMaximum.y << std::endl;
   m_scrollElement.setPosition(m_scrollMinimum);
   m_scrollElement.setFillColor(sf::Color(175, 175, 175, 255));
+  std::cout << "Element size is: " << m_scrollElement.getSize().y << std::endl;
 
   m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
 }
@@ -45,47 +50,54 @@ void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &vie
 
   mouseYNew = mouseViewPosition.y;
 
-  std::cout << "NewPosY: " << newPosY << std::endl;
-  std::cout << "m_scrollMaximum.y is : " << m_scrollMaximum.y << std::endl;
-  std::cout << "m_scrollElement.getSize().y: " << m_scrollElement.getSize().y << std::endl;
-  std::cout << "m_screenToViewRatio is: " << m_screenToViewRatio << std::endl;
+  std::cout << "Scroll Element is at: " << m_scrollElement.getPosition().y  << std::endl;
+  std::cout << "m_centerScreen is at : " << m_centerScreen.getPosition().y << std::endl;
+  std::cout << "m_scrollMinimum is " << m_scrollMinimum.y << std::endl;
+  std::cout << "mouseYNew is: " << mouseYNew << std::endl;
+
   if(m_firstClick)
   {
-    newPosY = m_scrollElement.getPosition().y;
-    //m_offset = mouseY - (newPosY + viewborder.getPosition().y + m_scrollMinimum.y);
-    m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
     mouseYOld = mouseYNew;
-    //std::cout << "newPosY is: " << newPosY << "\nm_scrollMinimum is: " << m_scrollMinimum.y << std::endl;
-  }
-  else if (newPosY /*+ m_scrollMinimum.y */< m_scrollMinimum.y)
-  {
-    //std::cout << "newPosY is: " << newPosY << "\nm_scrollMinimum is: " << m_scrollMinimum.y << std::endl;
-    m_scrollElement.setPosition(m_scrollMinimum);
-    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
-  }
-  /*else if (newPosY > m_scrollMaximum.y - m_scrollElement.getSize().y)
-  {
-    m_scrollElement.setPosition(m_scrollMaximum.x, m_scrollMaximum.y - m_scrollElement.getSize().y);
-    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, m_scrollMaximum.y - m_scrollElement.getSize().y + 5.f);
-  }*/
-  else if (newPosY >= m_scrollMinimum.y && newPosY <= m_scrollMaximum.y - (m_scrollElement.getSize().y /** m_screenToViewRatio*/))
-  {
-    /*std::cout << "newPosY is " << newPosY << std::endl;
-    std::cout << "oldPosY is " << oldPosY << std::endl;
-    std::cout << "Actual position is " << m_scrollElement.getPosition().y << std::endl;
-    std::cout << "Mouse difference is: " << mouseDifference << std::endl;*/
-    m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference * .65));
-    m_scrollElement.setPosition(m_scrollMinimum.x, newPosY);
-    /*else
-    {
-      m_centerScreen.setPosition(m_centerScreen.getPosition().x, (m_centerScreen.getPosition().y + mouseDifference));
-    }*/
+    m_offset = mouseYNew - m_scrollElement.getPosition().y;
   }
 
   mouseDifference = mouseYNew - mouseYOld;
-  newPosY = m_scrollElement.getPosition().y + mouseDifference;
-  //oldPosY = newPosY;
   mouseYOld = mouseYNew;
+
+  if(mouseYNew - m_offset > m_scrollContainer.getPosition().y)
+  {
+    m_scrollElement.setPosition(m_scrollElement.getPosition().x, mouseYNew - m_offset);
+    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, m_leftColumnView.getSize().y / 2 + m_scrollElement.getPosition().y * (1/m_screenToViewRatio));
+  }
+  else
+  {
+    m_scrollElement.setPosition(m_scrollMinimum);
+    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
+  }
+
+
+  /*if(m_scrollElement.getPosition().y < m_scrollMinimum.y)
+  {
+    m_scrollElement.setPosition(m_scrollMinimum);
+
+  }
+
+  if(m_scrollElement.getPosition().y > m_scrollMaximum.y)
+  {
+    m_scrollElement.setPosition(m_scrollMaximum);
+  }
+
+  m_scrollElement.setPosition(m_scrollElement.getPosition().x, m_scrollElement.getPosition().y + mouseDifference)*/
+  /*if(m_scrollElement.getPosition().y >= m_scrollMinimum.y)
+  {
+    m_scrollElement.setPosition(m_scrollMinimum.x, m_scrollElement.getPosition().y + mouseDifference);
+    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, m_leftColumnView.getSize().y / 2 + m_scrollElement.getPosition().y * (1/m_screenToViewRatio));
+  }
+  if(m_scrollElement.getPosition().y < m_scrollMinimum.y)
+  {
+    m_scrollElement.setPosition(m_scrollMinimum);
+    m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, m_leftColumnView.getSize().y / 2.f);
+  }*/
   m_firstClick = false;
 
   //std::cout << "Mouse Y is at: " << mouseY << "\nm_scrollMinimum is at: " << m_scrollMinimum.y << "\nScroll Element Y is at: " << m_scrollElement.getPosition().y << std::endl;
