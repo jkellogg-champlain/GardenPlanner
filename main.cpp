@@ -78,7 +78,7 @@ int main()
 	"Plant Variety", {70.f, mainContent.GetSize().y * .4f + 90.f},
 	"Plant Spacing/inch", {70.f, mainContent.GetSize().y * .4f + 160.f},
 	"Row Spacing/foot", {70.f, mainContent.GetSize().y * .4f + 230.f});
-	AddPlantScreen.AddInputButton("ADD PLANT", mainWindow, mainContent.GetSize(), .4f, 2.f);
+	AddPlantScreen.AddInputButton("ADD PLANT", mainWindow, mainContent.GetSize(), .4f, 2.11f);
 	//AddPlantScreen.MakeActive();
 	/*InputBox testBox;
 	testBox.SetPosition({60.f, mainContent.GetSize().y * .4f + 20.f});*/
@@ -95,8 +95,10 @@ int main()
 	ContentToDisplay contentDisplay;
 
 	LeftColumnContent leftColumnDisplay(leftColumnView);
+	leftColumnDisplay.SetPlantVector();
 	leftColumnDisplay.AddDisplayArea();
 	leftColumnDisplay.AddScrollBar();
+	leftColumnDisplay.DisplayPlants();
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
