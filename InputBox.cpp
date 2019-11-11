@@ -74,6 +74,7 @@ std::string InputBox::GetText()
 void InputBox::ClearContent()
 {
   m_textBox.setString("");
+  m_text.str("");
 }
 
 void InputBox::typedOn(sf::Event input)
