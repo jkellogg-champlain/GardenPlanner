@@ -43,6 +43,16 @@ int Plant::GetRowSpacing()
   return m_rowSpacing;
 }
 
+void Plant::SetID(int id)
+{
+  m_plantID = id;
+}
+
+int Plant::GetID()
+{
+  return m_plantID;
+}
+
 void Plant::AddToDatabase()
 {
   driver = get_driver_instance();

@@ -21,6 +21,8 @@ public:
   int GetSpacing();
   void SetRowSpacing(int rowSpacing);
   int GetRowSpacing();
+  void SetID(int id);
+  int GetID();
   void AddToDatabase();
 
 private:
@@ -28,9 +30,11 @@ private:
   std::string m_variety;
   int m_spacing;
   int m_rowSpacing;
+  int m_plantID;
   sql::Driver *driver;
   sql::Connection *con;
   sql::PreparedStatement *prep_stmt;
+  sql::Statement *stmt;
   sql::ResultSet *res;
 
 };
