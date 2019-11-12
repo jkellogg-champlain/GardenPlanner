@@ -16,6 +16,8 @@ public:
   void SetPosition(sf::Vector2f pos);
   void setSelected(bool sel);
   std::string GetText();
+  void AddText(std::string s);
+  //void AddInt(int i);
   void ClearContent();
   void SetHeader(std::string header);
   void typedOn(sf::Event input);

@@ -11,11 +11,11 @@
 #include "Map.h"
 #include "LeftColumnContent.h"
 
-/*#include "mysql_connection.h"
+#include "mysql_connection.h"
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
-#include <cppconn/prepared_statement.h>*/
+#include <cppconn/prepared_statement.h>
 
 
 class Content
@@ -41,7 +41,7 @@ public:
     sf::Vector2f area, float ratioX, float ratioY);
   void SubmitData(sf::RenderWindow &window, std::string databaseName);
   //void GetPlantVector(std::vector<Plant> plantVector);
-  //void EnterPlantData();
+  void GetSelectedPlant();
   //void GetCurrentPlantName();
   void DrawInputField(sf::RenderWindow &window);
 
@@ -60,12 +60,15 @@ private:
   Button m_inputButton;
   MessageWindow m_messageDisplay;
   Plant m_plant;
+  int m_currentPlantID;
+  int m_previousPlantID;
   Map m_map;
   LeftColumnContent m_leftColumnAPI;
   //std::string m_currentPlantName;
   //std::vector<Plant> m_plantList;
-  /*sql::Driver *driver;
+  sql::Driver *driver;
   sql::Connection *con;
+  sql::Statement *stmt;
   sql::PreparedStatement *prep_stmt;
-  sql::ResultSet *res;*/
+  sql::ResultSet *res;
 };

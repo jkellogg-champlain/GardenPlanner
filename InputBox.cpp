@@ -71,6 +71,16 @@ std::string InputBox::GetText()
   return m_text.str();
 }
 
+void InputBox::AddText(std::string s)
+{
+  m_textBox.setString(s);
+}
+
+/*void InputBox::AddInt(int i)
+{
+  m_textBox.setInt(i);
+}*/
+
 void InputBox::ClearContent()
 {
   m_textBox.setString("");

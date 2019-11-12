@@ -267,7 +267,7 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
       if(event.mouseButton.button == sf::Mouse::Left)
       {
         //m_plantContainer.setFillColor(sf::Color::White);
-        m_plants[i].SetSelectedDatabase(true);
+        m_plants[i].SetSelectedDatabase(true, m_plants[i].GetID());
         m_currentPlant.SetName(m_plants[i].GetName());
         m_currentPlant.SetVariety(m_plants[i].GetVariety());
         m_currentPlant.SetSpacing(m_plants[i].GetSpacing());
@@ -275,11 +275,11 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
 
         for(int j = i + 1; j < m_plantDisplayList.size(); j++)
         {
-          m_plants[j].SetSelectedDatabase(false);
+          m_plants[j].SetSelectedDatabase(false, m_plants[j].GetID());
         }
         for(int k = i - 1; k >= 0; k--)
         {
-          m_plants[k].SetSelectedDatabase(false);
+          m_plants[k].SetSelectedDatabase(false, m_plants[k].GetID());
         }
         //std::cout << m_plants[i].GetName() << " is " << m_plants[i].GetSelectedDatabase() << std::endl;
       }
@@ -292,9 +292,9 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
     {
       m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
     }
-    if(m_plants[i].GetSelectedDatabase())
+    if(m_plants[i].IsSelected())
     {
-      m_plantContainer.setFillColor(sf::Color(255, 255, 255, 255));
+      m_plantContainer.setFillColor(sf::Color(86, 225, 58, 255));
     }
 
     m_plantTxtName.setString(m_plants[i].GetName());

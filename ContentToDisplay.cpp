@@ -32,6 +32,7 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
     /*editplant.GetPlantVector(m_leftColumnAPI.GetPlantVector());
     editplant.EnterPlantData();*/
     //editplant.GetCurrentPlantName();
+    editplant.GetSelectedPlant();
     editplant.DrawText(window);
     editplant.DrawInputField(window);
   }

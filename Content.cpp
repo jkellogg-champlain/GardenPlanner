@@ -191,6 +191,30 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
   }
 }
 
+void Content::GetSelectedPlant()
+{
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  stmt = con->createStatement();
+  res = stmt->executeQuery("SELECT * FROM plants WHERE is_selected=true;");
+  while(res->next())
+  {
+    m_currentPlantID = res->getInt("plant_id");
+    if(m_currentPlantID != m_previousPlantID)
+    {
+      m_inputBox1.AddText(res->getString("plant_name"));
+      m_inputBox2.AddText(res->getString("plant_variety"));
+      m_inputBox3.AddText(res->getString("plant_spacing_width"));
+      m_inputBox4.AddText(res->getString("plant_spacing_length"));
+      m_previousPlantID = m_currentPlantID;
+    }
+
+  }
+
+  delete stmt;
+  delete con;
+}
 /*void Content::GetPlantVector(std::vector<Plant> plantVector)
 {
   for(int i = 0; i < plantVector.size(); i++)
@@ -205,17 +229,7 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
     m_plantList.push_back(m_plant);
   }
 }
-
-void Content::EnterPlantData()
-{
-  for(int i = 0; i < m_plantList.size(); i++)
-  {
-    if(m_plantList[i].GetSelectedDatabase())
-    {
-      std::cout << m_plantList[i].GetName() << " is selected" << std::endl;
-    }
-  }
-}*/
+*/
 
 /*void Content::GetCurrentPlantName()
 {

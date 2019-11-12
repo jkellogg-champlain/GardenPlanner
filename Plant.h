@@ -23,8 +23,8 @@ public:
   int GetRowSpacing();
   void SetID(int id);
   int GetID();
-  void SetSelectedDatabase(bool selected/*, int plantID*/);
-  bool GetSelectedDatabase();
+  void SetSelectedDatabase(bool selected, int plantID);
+  bool IsSelected();
   void AddToDatabase();
 
 private:
