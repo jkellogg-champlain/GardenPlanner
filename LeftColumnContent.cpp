@@ -1,5 +1,6 @@
 #include "LeftColumnContent.h"
 
+LeftColumnContent::LeftColumnContent() { }
 LeftColumnContent::LeftColumnContent(sf::View &view)
 {
   m_isScrolling = false;
@@ -130,10 +131,29 @@ bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window, sf::RectangleS
   return false;
 }
 
+bool LeftColumnContent::MouseOverPlantContainer(sf::RenderWindow &window)
+{
+  //std::cout << "Ran" << std::endl;
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+
+  float containerPosX = m_plantContainer.getPosition().x;
+  float containerPosY = m_plantContainer.getPosition().y;
+
+  float containerXPosWidth = containerPosX + m_plantContainer.getGlobalBounds().width;
+  float containerYPosHeight = containerPosY + m_plantContainer.getGlobalBounds().height;
+
+  if(mouseViewPosition.x < containerXPosWidth && mouseViewPosition.x > containerPosX && mouseViewPosition.y < containerYPosHeight && mouseViewPosition.y > containerPosY)
+  {
+    return true;
+  }
+  return false;
+}
+
 void LeftColumnContent::AddDisplayArea()
 {
   m_plantContainer.setSize({m_leftColumnView.getSize().x - (m_leftColumnView.getSize().x * .07f), m_leftColumnView.getSize().y / 4});
-  m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
+  //m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
   m_plantContainer.setOutlineColor(sf::Color(42, 85, 34, 255));
   m_plantContainer.setOutlineThickness(1.f);
 
@@ -183,12 +203,12 @@ void LeftColumnContent::SetPlantVector()
   delete con;
 }
 
-void LeftColumnContent::GetPlants()
+/*void LeftColumnContent::GetPlants()
 {
 
-}
+}*/
 
-void LeftColumnContent::DisplayPlants()
+void LeftColumnContent::SetPlantContainerVector()
 {
   m_plantDisplayPos = (m_displayArea.getPosition());
   //float plantBoxPosX = m_displayArea.getPosition().x;
@@ -205,7 +225,35 @@ void LeftColumnContent::DisplayPlants()
   }
 }
 
-void LeftColumnContent::Draw(sf::RenderWindow &window)
+/*void LeftColumnContent::CheckContainerHover(sf::RenderWindow &window)
+{
+  for (container : )
+  if(MouseOverPlantContainer(window))
+  {
+    m_plantContainer.setFillColor(sf::Color::Red);
+  }
+  else
+  {
+    m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
+  }
+}*/
+
+/*void SetPlantContainerColor(sf::Color color)
+{
+  m_plantContainer.setFillColor(color);
+}*/
+
+/*std::vector<Plant> LeftColumnContent::GetPlantVector()
+{
+  return m_plants;
+}*/
+
+std::string LeftColumnContent::GetCurrentPlantName()
+{
+  return m_currentPlant.GetName();
+}
+
+void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
 {
   window.draw(m_displayArea);
   window.draw(m_scrollContainer);
@@ -213,6 +261,41 @@ void LeftColumnContent::Draw(sf::RenderWindow &window)
   for(int i = 0; i < m_plantDisplayList.size(); i++)
   {
     m_plantContainer.setPosition(m_plantDisplayList[i]);
+    if(MouseOverPlantContainer(window))
+    {
+      m_plantContainer.setFillColor(sf::Color(238, 244, 177, 255));
+      if(event.mouseButton.button == sf::Mouse::Left)
+      {
+        //m_plantContainer.setFillColor(sf::Color::White);
+        m_plants[i].SetSelectedDatabase(true);
+        m_currentPlant.SetName(m_plants[i].GetName());
+        m_currentPlant.SetVariety(m_plants[i].GetVariety());
+        m_currentPlant.SetSpacing(m_plants[i].GetSpacing());
+        m_currentPlant.SetRowSpacing(m_plants[i].GetRowSpacing());
+
+        for(int j = i + 1; j < m_plantDisplayList.size(); j++)
+        {
+          m_plants[j].SetSelectedDatabase(false);
+        }
+        for(int k = i - 1; k >= 0; k--)
+        {
+          m_plants[k].SetSelectedDatabase(false);
+        }
+        //std::cout << m_plants[i].GetName() << " is " << m_plants[i].GetSelectedDatabase() << std::endl;
+      }
+      /*else
+      {
+        m_plants[i].SetSelectedDatabase(false);
+      }*/
+    }
+    else
+    {
+      m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
+    }
+    if(m_plants[i].GetSelectedDatabase())
+    {
+      m_plantContainer.setFillColor(sf::Color(255, 255, 255, 255));
+    }
 
     m_plantTxtName.setString(m_plants[i].GetName());
     m_plantTxtName.setPosition((m_plantContainer.getSize().x / 2) - (m_plantTxtName.getGlobalBounds().width / 2), (m_plantDisplayList[i].y + ( m_plantContainer.getSize().y / 4)) - (m_plantTxtName.getGlobalBounds().height));

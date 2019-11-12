@@ -15,6 +15,7 @@
 class LeftColumnContent
 {
 public:
+  LeftColumnContent();
   LeftColumnContent(sf::View &view);
   ~LeftColumnContent();
 
@@ -23,6 +24,7 @@ public:
   bool GetFirstClick();
   void Scroll(sf::RenderWindow &window, sf::RectangleShape &viewborder);
   bool MouseOverScroll(sf::RenderWindow &window, sf::RectangleShape &border);
+  bool MouseOverPlantContainer(sf::RenderWindow &window);
   sf::Vector2f GetScrollPosition(ContentContainer &container);
   void SetScrolling(bool toScroll);
   bool GetScrolling();
@@ -30,8 +32,12 @@ public:
   void AddDisplayArea();
   void SetPlantVector();
   void GetPlants();
-  void DisplayPlants();
-  void Draw(sf::RenderWindow &window);
+  void SetPlantContainerVector();
+  //std::vector<Plant> GetPlantVector();
+  std::string GetCurrentPlantName();
+  //void CheckContainerHover(sf::RenderWindow &window);
+  //void SetPlantContainerColor(sf::Color color);
+  void Draw(sf::RenderWindow &window, sf::Event event);
 
 
 
@@ -52,12 +58,15 @@ private:
   sf::RectangleShape m_scrollContainer;
   sf::RectangleShape m_displayArea;
   sf::RectangleShape m_plantContainer;
+  //bool m_hoveredContainer;
+  bool m_containerClicked;
   bool m_isScrolling;
   bool m_firstClick;
   sf::View m_leftColumnView;
   float m_screenToViewRatio;
   Plant m_plant;
   std::vector<Plant> m_plants;
+  Plant m_currentPlant;
   std::vector<sf::Vector2f> m_plantDisplayList;
   sf::Vector2f m_plantDisplayPos;
   sf::Text m_plantTxtName;

@@ -191,6 +191,38 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
   }
 }
 
+/*void Content::GetPlantVector(std::vector<Plant> plantVector)
+{
+  for(int i = 0; i < plantVector.size(); i++)
+  {
+    m_plant.SetName(plantVector[i].GetName());
+    m_plant.SetVariety(plantVector[i].GetVariety());
+    m_plant.SetSpacing(plantVector[i].GetSpacing());
+    m_plant.SetRowSpacing(plantVector[i].GetRowSpacing());
+
+    std::cout << m_plant.GetName() << " was added" << std::endl;
+
+    m_plantList.push_back(m_plant);
+  }
+}
+
+void Content::EnterPlantData()
+{
+  for(int i = 0; i < m_plantList.size(); i++)
+  {
+    if(m_plantList[i].GetSelectedDatabase())
+    {
+      std::cout << m_plantList[i].GetName() << " is selected" << std::endl;
+    }
+  }
+}*/
+
+/*void Content::GetCurrentPlantName()
+{
+  m_currentPlantName = m_leftColumnAPI.GetCurrentPlantName();
+  std::cout << "Current plant is: " + m_currentPlantName << std::endl;
+}*/
+
 void Content::DrawInputField(sf::RenderWindow &window)
 {
   //int loopOnce = 0;

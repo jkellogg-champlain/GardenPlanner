@@ -8,12 +8,6 @@
 #include "ContentToDisplay.h"
 #include "LeftColumnContent.h"
 
-/*#include "mysql_connection.h"
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>*/
-
 int main()
 {
 	sf::RenderWindow mainWindow;
@@ -52,9 +46,6 @@ int main()
 	contentView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 	contentView.setViewport(sf::FloatRect(.27f, .12f, .7199f, .86f));
 
-	/*sf::RectangleShape test(sf::Vector2f(999.6f, 888.7f));
-	test.setFillColor(sf::Color::Blue);*/
-
 	Content WelcomeScreen;
 	WelcomeScreen.AddText("WelcomeScreen.txt");
 	WelcomeScreen.MakeActive();
@@ -79,9 +70,6 @@ int main()
 	"Plant Spacing/inch", {70.f, mainContent.GetSize().y * .4f + 160.f},
 	"Row Spacing/foot", {70.f, mainContent.GetSize().y * .4f + 230.f});
 	AddPlantScreen.AddInputButton("ADD PLANT", mainWindow, mainContent.GetSize(), .4f, 2.11f);
-	//AddPlantScreen.MakeActive();
-	/*InputBox testBox;
-	testBox.SetPosition({60.f, mainContent.GetSize().y * .4f + 20.f});*/
 
 	Content EditPlantScreen;
 	EditPlantScreen.AddText("EditPlantScreen.txt");
@@ -98,7 +86,7 @@ int main()
 	leftColumnDisplay.SetPlantVector();
 	leftColumnDisplay.AddDisplayArea();
 	leftColumnDisplay.AddScrollBar();
-	leftColumnDisplay.DisplayPlants();
+	leftColumnDisplay.SetPlantContainerVector();
 
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
@@ -119,9 +107,6 @@ int main()
 			switch(event.type) {
 				case sf::Event::Closed:
 					mainWindow.close();
-				/*case sf::Event::TextEntered:
-					testBox.typdedOn(event);
-					break;*/
 				case sf::Event::MouseButtonPressed:
 					if(event.mouseButton.button == sf::Mouse::Left)
 					{
@@ -200,11 +185,6 @@ int main()
 					{
 						CreateMapScreen.SubmitData(mainWindow, "maps");
 					}
-					/*else if(leftColumnDisplay.MouseOverScroll(mainWindow))
-					{
-						leftColumnDisplay.SetScrolling(false);
-						leftColumnDisplay.ChangeColorTest(sf::Color::Blue);
-					}*/
 					break;
 				case sf::Event::MouseMoved:
 					sf::Vector2i mousePos = sf::Mouse::getPosition();
@@ -239,39 +219,8 @@ int main()
 		if(leftColumnDisplay.GetScrolling())
 		{
 			leftColumnDisplay.Scroll(mainWindow, leftColumnViewBorder);
-			//std::cout << leftColumnDisplay.GetScrolling() << "Should be true" << std::endl;
 		}
-		/*else if(!leftColumnDisplay.GetScrolling())
-		{
-			std::cout << leftColumnDisplay.GetScrolling() << "Should be false" << std::endl;
-		}*/
-
-		/*if(leftColumnDisplay.MouseOverScroll(mainWindow))
-		{
-			leftColumnDisplay.ChangeColorTest(sf::Color::Red);
-			if (event.mouseButton.button == sf::Mouse::Left)
-			{
-				leftColumnDisplay.SetScrolling(true);
-				std::cout << "Scrolling is true" << std::endl;
-			}
-			else if(event.MouseButtonReleased)
-			{
-				leftColumnDisplay.SetScrolling(false);
-				std::cout << "Scrolling is false" << std::endl;
-			}
-
-			if (leftColumnDisplay.GetScrolling())
-			{
-				std::cout << "GetScrolling called" << std::endl;
-				leftColumnDisplay.Scroll(mainWindow);
-			}
-		}
-		else
-		{
-			leftColumnDisplay.ChangeColorTest(sf::Color::Blue);
-		}*/
-		//mainWindow.draw(test);
-		leftColumnDisplay.Draw(mainWindow);
+		leftColumnDisplay.Draw(mainWindow, event);
 		mainWindow.display();
 }
 }

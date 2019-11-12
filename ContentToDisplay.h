@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Content.h"
+//#include "LeftColumnContent.h"
 
 class ContentToDisplay
 {
@@ -16,6 +17,5 @@ public:
 
 
 private:
-
-
+  //LeftColumnContent m_leftColumnAPI;
 };

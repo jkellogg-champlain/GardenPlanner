@@ -29,6 +29,9 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   }
   else if (editplant.GetActiveStatus())
   {
+    /*editplant.GetPlantVector(m_leftColumnAPI.GetPlantVector());
+    editplant.EnterPlantData();*/
+    //editplant.GetCurrentPlantName();
     editplant.DrawText(window);
     editplant.DrawInputField(window);
   }

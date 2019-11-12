@@ -9,6 +9,7 @@
 #include "MessageWindow.h"
 #include "Plant.h"
 #include "Map.h"
+#include "LeftColumnContent.h"
 
 /*#include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -39,6 +40,9 @@ public:
   void AddInputButton(std::string name, sf::RenderWindow& window,
     sf::Vector2f area, float ratioX, float ratioY);
   void SubmitData(sf::RenderWindow &window, std::string databaseName);
+  //void GetPlantVector(std::vector<Plant> plantVector);
+  //void EnterPlantData();
+  //void GetCurrentPlantName();
   void DrawInputField(sf::RenderWindow &window);
 
 private:
@@ -57,6 +61,9 @@ private:
   MessageWindow m_messageDisplay;
   Plant m_plant;
   Map m_map;
+  LeftColumnContent m_leftColumnAPI;
+  //std::string m_currentPlantName;
+  //std::vector<Plant> m_plantList;
   /*sql::Driver *driver;
   sql::Connection *con;
   sql::PreparedStatement *prep_stmt;

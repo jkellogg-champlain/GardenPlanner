@@ -23,6 +23,8 @@ public:
   int GetRowSpacing();
   void SetID(int id);
   int GetID();
+  void SetSelectedDatabase(bool selected/*, int plantID*/);
+  bool GetSelectedDatabase();
   void AddToDatabase();
 
 private:
@@ -31,6 +33,7 @@ private:
   int m_spacing;
   int m_rowSpacing;
   int m_plantID;
+  bool m_isSelected;
   sql::Driver *driver;
   sql::Connection *con;
   sql::PreparedStatement *prep_stmt;

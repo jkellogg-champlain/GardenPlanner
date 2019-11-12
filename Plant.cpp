@@ -53,6 +53,35 @@ int Plant::GetID()
   return m_plantID;
 }
 
+void Plant::SetSelectedDatabase(bool selected/*, int plantID*/)
+{
+  /*driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("UPDATE plants SET is_selected=? WHERE plant_id=?");
+  prep_stmt->setBoolean(1, selected);
+  prep_stmt->setInt(2, plantID);
+  prep_stmt->execute();
+  delete con;
+  delete prep_stmt;*/
+  m_isSelected = selected;
+}
+
+bool Plant::GetSelectedDatabase()
+{
+  /*driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("SELECT is_selected FROM plants WHERE plant_id=?");
+  prep_stmt->setInt(1, m_plantID);
+  m_isSelected = prep_stmt->executeQuery();
+
+  delete prep_stmt;
+  delete con;*/
+
+  return m_isSelected;
+}
+
 void Plant::AddToDatabase()
 {
   driver = get_driver_instance();
