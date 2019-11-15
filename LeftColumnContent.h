@@ -23,7 +23,7 @@ public:
   void SetFirstClick(bool click);
   bool GetFirstClick();
   void Scroll(sf::RenderWindow &window, sf::RectangleShape &viewborder);
-  bool MouseOverScroll(sf::RenderWindow &window, sf::RectangleShape &border);
+  bool MouseOverScroll(sf::RenderWindow &window/*, sf::RectangleShape &border*/);
   bool MouseOverPlantContainer(sf::RenderWindow &window);
   sf::Vector2f GetScrollPosition(ContentContainer &container);
   void SetScrolling(bool toScroll);

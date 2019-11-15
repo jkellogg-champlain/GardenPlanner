@@ -116,7 +116,7 @@ void LeftColumnContent::ChangeColor(sf::Color color)
   m_scrollElement.setFillColor(color);
 }
 
-bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window, sf::RectangleShape &border)
+bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window/*, sf::RectangleShape &border*/)
 {
   sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
   sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);

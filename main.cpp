@@ -60,6 +60,7 @@ int main()
 
 	Content CreateMapScreen;
 	CreateMapScreen.AddText("CreateMapScreen.txt");
+	CreateMapScreen.SetView(contentView);
 	CreateMapScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .3f);
 	CreateMapScreen.AddInputBoxes("Name", {70.f, mainContent.GetSize().y * .32f + 20.f},
 	"Year", {70.f, mainContent.GetSize().y * .32f + 90.f},
@@ -155,7 +156,7 @@ int main()
 							SelectMapScreen.MakeInactive();
 							CreateMapScreen.MakeInactive();
 						}
-						else if(leftColumnDisplay.MouseOverScroll(mainWindow, leftColumnViewBorder))
+						else if(leftColumnDisplay.MouseOverScroll(mainWindow/*, leftColumnViewBorder*/))
 						{
 							//leftColumnDisplay.Scroll(mainWindow);
 							leftColumnDisplay.ChangeColor(sf::Color(150, 150, 150, 255));
@@ -166,10 +167,10 @@ int main()
 						else if(SelectMapScreen.MouseOverScroll(mainWindow))
 						{
 							//leftColumnDisplay.Scroll(mainWindow);
-							//SelectMapScreen.ChangeColor(sf::Color(150, 150, 150, 255));
+							SelectMapScreen.ChangeColor(sf::Color(150, 150, 150, 255));
 							SelectMapScreen.SetScrolling(true);
 							SelectMapScreen.SetFirstClick(true);
-							//std::cout << "Scrolling is true" << std::endl;
+							std::cout << "Scrolling is true" << std::endl;
 						}
 					}
 					break;
@@ -192,6 +193,7 @@ int main()
 					leftColumnDisplay.SetScrolling(false);
 					leftColumnDisplay.ChangeColor(sf::Color(175, 175, 175, 255));
 					SelectMapScreen.SetScrolling(false);
+					SelectMapScreen.ChangeColor(sf::Color(175, 175, 175, 255));
 					if(AddPlantScreen.GetActiveStatus())
 					{
 						AddPlantScreen.SubmitData(mainWindow, "plants");
@@ -212,6 +214,7 @@ int main()
 		}
 
 		mainWindow.clear(background);
+		mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.setView(staticView);
 		topNavBar.Draw(mainWindow);
 		for (Button btn : navButtons)
@@ -229,14 +232,14 @@ int main()
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
 		mainWindow.draw(leftColumnViewBorder);
-		mainWindow.setView(contentView);
-		if(SelectMapScreen.GetScrolling())
-		{
-			SelectMapScreen.Scroll(mainWindow);
-		}
-		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
-			CreateMapScreen, AddPlantScreen, EditPlantScreen);
 
+		mainWindow.setView(mainWindow.getDefaultView());
+		mainWindow.setView(contentView);
+		contentView.setCenter(SelectMapScreen.GetScrollPosition(mainContent));
+		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
+			CreateMapScreen, AddPlantScreen, EditPlantScreen, mainContent);
+
+		mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.setView(leftColumnView);
 		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
 		if(leftColumnDisplay.GetScrolling())

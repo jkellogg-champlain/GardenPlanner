@@ -10,6 +10,7 @@
 #include "Plant.h"
 #include "Map.h"
 #include "LeftColumnContent.h"
+#include "ContentContainer.h"
 
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -49,12 +50,15 @@ public:
   void SetMapContainerVector();
   void DrawMapMenu(sf::RenderWindow &window);
   void SetView(sf::View &view);
+  sf::View GetView();
   void Scroll(sf::RenderWindow &window);
   void SetScrolling(bool toScroll);
   bool GetScrolling();
   void SetFirstClick(bool click);
   bool GetFirstClick();
   bool MouseOverScroll(sf::RenderWindow &window);
+  sf::Vector2f GetScrollPosition(ContentContainer &container);
+  void ChangeColor(sf::Color color);
   void DrawInputField(sf::RenderWindow &window);
 
 private:

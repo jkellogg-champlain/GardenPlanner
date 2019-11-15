@@ -312,7 +312,7 @@ void Content::AddScrollBar()
   m_screenToViewRatio = m_displayArea.getSize().y / m_contentView.getSize().y;
 
   m_scrollElement.setSize({m_scrollContainer.getSize().x * .75f, m_contentView.getSize().y / m_screenToViewRatio});
-  m_scrollMinimum.x = m_scrollContainer.getPosition().x/* * 1.015f*/;
+  m_scrollMinimum.x = m_scrollContainer.getPosition().x * 1.0032f;
   m_scrollMinimum.y =  m_scrollContainer.getPosition().y;
   m_scrollMaximum.x = m_scrollContainer.getPosition().x * 1.01f;
   m_scrollMaximum.y = m_scrollContainer.getGlobalBounds().height;
@@ -334,6 +334,7 @@ bool Content::GetFirstClick()
 
 void Content::Scroll(sf::RenderWindow &window)
 {
+  std::cout << "Scroll has tiggered" << std::endl;
   sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
   sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
 
@@ -396,6 +397,11 @@ void Content::SetView(sf::View &view)
   //std::cout << "SetView ran" << std::endl;
 }
 
+sf::View Content::GetView()
+{
+  return m_contentView;
+}
+
 void Content::DrawMapMenu(sf::RenderWindow &window)
 {
   window.draw(m_displayArea);
@@ -410,17 +416,44 @@ void Content::DrawMapMenu(sf::RenderWindow &window)
 
 bool Content::MouseOverScroll(sf::RenderWindow &window)
 {
-  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+  //std::cout << "MouseOverScroll triggered" << std::endl;
+  sf::Vector2i mouseWindowPosition = sf::Mouse::getPosition(window);
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPosition);
+  //std::cout << "Mouse view postion x before: " << mouseViewPosition.x << std::endl;
+  float offset = window.getSize().x * .304;
+  mouseViewPosition.x -= offset;
+  //std::cout << "offset is " << offset << std::endl;
+  //mouseViewPosition.y += 128.f;
+  //mouseWindowPosition.y -= 115.f;
+  //std::cout << "window sie: " << window.getSize().x << std::endl;
+
 
   float scrollPosX = m_scrollElement.getPosition().x;
   float scrollXPosWidth = scrollPosX + m_scrollElement.getGlobalBounds().width;
+  //m_scrollElement.setFillColor(sf::Color::Red);
+  /*std::cout << "Mouse Window X Postion is: " << mouseWindowPosition.x << " Y postion is: " << mouseWindowPosition.y << std::endl;
+  std::cout << "Mouse View X Postion is: " << mouseViewPosition.x << " Y postion is: " << mouseViewPosition.y << std::endl;
+  std::cout << "Scroll X Postion is: " << scrollPosX << std::endl;
+  std::cout << "Scroll Y Postion is: " << m_scrollElement.getPosition().y << std::endl;
+  std::cout << "Scroll Y Size is: " << m_scrollElement.getSize().y << std::endl;
+  std::cout << "Scroll Container postion is: " << m_scrollContainer.getPosition().y << std::endl;
+  std::cout << "Display area x is:  " << m_displayArea.getPosition().x << std::endl;*/
 
   if(mouseViewPosition.x < scrollXPosWidth && mouseViewPosition.x > scrollPosX && mouseViewPosition.y < m_scrollElement.getPosition().y + m_scrollElement.getSize().y && mouseViewPosition.y > m_scrollContainer.getPosition().y)
   {
     return true;
   }
   return false;
+}
+
+void Content::ChangeColor(sf::Color color)
+{
+  m_scrollElement.setFillColor(color);
+}
+
+sf::Vector2f Content::GetScrollPosition(ContentContainer &container)
+{
+  return {m_centerScreen.getPosition().x, m_centerScreen.getPosition().y};
 }
 
 void Content::DrawInputField(sf::RenderWindow &window)

@@ -13,7 +13,8 @@ public:
     Content &selectmap,
     Content &createmap,
     Content &addplant,
-    Content &editplant);
+    Content &editplant,
+    ContentContainer &container);
 
 
 private:

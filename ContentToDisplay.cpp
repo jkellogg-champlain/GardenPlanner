@@ -7,7 +7,8 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   Content &selectmap,
   Content &createmap,
   Content &addplant,
-  Content &editplant)
+  Content &editplant,
+  ContentContainer &container)
 {
   if(welcome.GetActiveStatus())
   {
@@ -16,6 +17,12 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   else if(selectmap.GetActiveStatus())
   {
     //selectmap.DrawText(window);
+    //selectmap.GetView().setCenter(selectmap.GetScrollPosition(container));
+    //std::cout << "Get Scrolling is: " << std::endl;
+    if(selectmap.GetScrolling())
+		{
+			selectmap.Scroll(window);
+		}
     selectmap.DrawMapMenu(window);
   }
   else if(createmap.GetActiveStatus())
