@@ -72,8 +72,6 @@ bool Plant::IsSelected()
   return m_isSelected;
 }
 
-
-
 void Plant::AddToDatabase()
 {
   driver = get_driver_instance();
@@ -87,4 +85,30 @@ void Plant::AddToDatabase()
   prep_stmt->execute();
   delete con;
   delete prep_stmt;
+}
+
+void Plant::UpdateDatabase()
+{
+  try
+  {
+    driver = get_driver_instance();
+    con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+    con->setSchema("garden_space_planner");
+    prep_stmt = con->prepareStatement("UPDATE plants SET plant_name=?, plant_variety=?, plant_spacing_width=?, plant_spacing_length=? WHERE is_selected=true");
+    prep_stmt->setString(1, m_name);
+    prep_stmt->setString(2, m_variety);
+    prep_stmt->setInt(3, m_spacing);
+    prep_stmt->setInt(4, m_rowSpacing);
+    prep_stmt->execute();
+    delete con;
+    delete prep_stmt;
+  }
+  catch (sql::SQLException &e)
+  {
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+  }
 }

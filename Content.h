@@ -43,6 +43,18 @@ public:
   //void GetPlantVector(std::vector<Plant> plantVector);
   void GetSelectedPlant();
   //void GetCurrentPlantName();
+  void SetMapList();
+  void AddScrollArea();
+  void AddScrollBar();
+  void SetMapContainerVector();
+  void DrawMapMenu(sf::RenderWindow &window);
+  void SetView(sf::View &view);
+  void Scroll(sf::RenderWindow &window);
+  void SetScrolling(bool toScroll);
+  bool GetScrolling();
+  void SetFirstClick(bool click);
+  bool GetFirstClick();
+  bool MouseOverScroll(sf::RenderWindow &window);
   void DrawInputField(sf::RenderWindow &window);
 
 private:
@@ -63,7 +75,23 @@ private:
   int m_currentPlantID;
   int m_previousPlantID;
   Map m_map;
-  LeftColumnContent m_leftColumnAPI;
+  sf::RectangleShape m_mapSelectContainer;
+  sf::View m_contentView;
+  sf::RectangleShape m_displayArea;
+  std::vector<Map> m_mapList;
+  std::vector<sf::Vector2f> m_mapContainerList;
+  sf::Vector2f m_mapContainerDisplayPos;
+  sf::RectangleShape m_scrollContainer;
+  sf::RectangleShape m_scrollElement;
+  sf::Vector2f m_scrollMinimum;
+  sf::Vector2f m_scrollMaximum;
+  sf::RectangleShape m_centerScreen;
+  float m_screenToViewRatio;
+  bool m_isScrolling;
+  bool m_firstClick;
+  float mouseYNew;
+  float m_offset;
+  //LeftColumnContent m_leftColumnAPI;
   //std::string m_currentPlantName;
   //std::vector<Plant> m_plantList;
   sql::Driver *driver;

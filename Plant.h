@@ -26,6 +26,7 @@ public:
   void SetSelectedDatabase(bool selected, int plantID);
   bool IsSelected();
   void AddToDatabase();
+  void UpdateDatabase();
 
 private:
   std::string m_name;

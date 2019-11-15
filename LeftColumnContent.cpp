@@ -6,6 +6,22 @@ LeftColumnContent::LeftColumnContent(sf::View &view)
   m_isScrolling = false;
   m_firstClick = false;
   m_leftColumnView = view;
+
+  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  {
+    std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
+  };
+  m_plantTxtName.setFont(m_ubuntu);
+  m_plantTxtName.setFillColor(sf::Color::Black);
+  m_plantTxtVariety.setFont(m_ubuntu);
+  m_plantTxtVariety.setFillColor(sf::Color::Black);
+  m_plantTxtVariety.setCharacterSize(23);
+  m_plantTxtSpacing.setFont(m_ubuntu);
+  m_plantTxtSpacing.setFillColor(sf::Color::Black);
+  m_plantTxtSpacing.setCharacterSize(15);
+  m_plantTxtRow.setFont(m_ubuntu);
+  m_plantTxtRow.setFillColor(sf::Color::Black);
+  m_plantTxtRow.setCharacterSize(15);
 }
 LeftColumnContent::~LeftColumnContent() { }
 
@@ -27,22 +43,6 @@ void LeftColumnContent::AddScrollBar()
   m_scrollElement.setFillColor(sf::Color(175, 175, 175, 255));
   //std::cout << "Element size is: " << m_scrollElement.getSize().y << std::endl;
   m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
-
-  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
-  {
-    std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
-  };
-  m_plantTxtName.setFont(m_ubuntu);
-  m_plantTxtName.setFillColor(sf::Color::Black);
-  m_plantTxtVariety.setFont(m_ubuntu);
-  m_plantTxtVariety.setFillColor(sf::Color::Black);
-  m_plantTxtVariety.setCharacterSize(23);
-  m_plantTxtSpacing.setFont(m_ubuntu);
-  m_plantTxtSpacing.setFillColor(sf::Color::Black);
-  m_plantTxtSpacing.setCharacterSize(15);
-  m_plantTxtRow.setFont(m_ubuntu);
-  m_plantTxtRow.setFillColor(sf::Color::Black);
-  m_plantTxtRow.setCharacterSize(15);
 }
 
 void LeftColumnContent::SetFirstClick(bool click)

@@ -51,15 +51,20 @@ int main()
 	WelcomeScreen.MakeActive();
 
 	Content SelectMapScreen;
-	SelectMapScreen.AddText("SelectMapScreen.txt");
+	//SelectMapScreen.AddText("SelectMapScreen.txt");
+	SelectMapScreen.SetView(contentView);
+	SelectMapScreen.SetMapList();
+	SelectMapScreen.AddScrollArea();
+	SelectMapScreen.AddScrollBar();
+	SelectMapScreen.SetMapContainerVector();
 
 	Content CreateMapScreen;
 	CreateMapScreen.AddText("CreateMapScreen.txt");
 	CreateMapScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .3f);
 	CreateMapScreen.AddInputBoxes("Name", {70.f, mainContent.GetSize().y * .32f + 20.f},
 	"Year", {70.f, mainContent.GetSize().y * .32f + 90.f},
-	"Length", {70.f, mainContent.GetSize().y * .32f + 160.f},
-	"Width", {70.f, mainContent.GetSize().y * .32f + 230.f});
+	"Length/foot", {70.f, mainContent.GetSize().y * .32f + 160.f},
+	"Width/foot", {70.f, mainContent.GetSize().y * .32f + 230.f});
 	CreateMapScreen.AddInputButton("CREATE MAP", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
 	Content AddPlantScreen;
@@ -76,8 +81,8 @@ int main()
 	EditPlantScreen.AddInputArea(mainContent.GetSize().x - 20.f, mainContent.GetSize().y * .6f, 10.f, mainContent.GetSize().y * .3f - 10.f);
 	EditPlantScreen.AddInputBoxes("Plant Name", {70.f, mainContent.GetSize().y * .32f + 20.f},
 	"Plant Variety", {70.f, mainContent.GetSize().y * .32f + 90.f},
-	"Plant Spacing", {70.f, mainContent.GetSize().y * .32f + 160.f},
-	"Plants/Sqr Foot", {70.f, mainContent.GetSize().y * .32f + 230.f});
+	"Plant Spacing/inch", {70.f, mainContent.GetSize().y * .32f + 160.f},
+	"Row Spacing/foot", {70.f, mainContent.GetSize().y * .32f + 230.f});
 	EditPlantScreen.AddInputButton("SUBMIT EDIT", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
 	ContentToDisplay contentDisplay;
@@ -120,6 +125,7 @@ int main()
 						if(selectMapBtn.mouseOver(mainWindow))
 						{
 							SelectMapScreen.MakeActive();
+							SelectMapScreen.SetMapList();
 							CreateMapScreen.MakeInactive();
 							AddPlantScreen.MakeInactive();
 							WelcomeScreen.MakeInactive();
@@ -157,6 +163,14 @@ int main()
 							leftColumnDisplay.SetFirstClick(true);
 							//std::cout << "Scrolling is true" << std::endl;
 						}
+						else if(SelectMapScreen.MouseOverScroll(mainWindow))
+						{
+							//leftColumnDisplay.Scroll(mainWindow);
+							//SelectMapScreen.ChangeColor(sf::Color(150, 150, 150, 255));
+							SelectMapScreen.SetScrolling(true);
+							SelectMapScreen.SetFirstClick(true);
+							//std::cout << "Scrolling is true" << std::endl;
+						}
 					}
 					break;
 				//case sf::Event::MouseButtonPressed:
@@ -177,13 +191,18 @@ int main()
 				case sf::Event::MouseButtonReleased:
 					leftColumnDisplay.SetScrolling(false);
 					leftColumnDisplay.ChangeColor(sf::Color(175, 175, 175, 255));
+					SelectMapScreen.SetScrolling(false);
 					if(AddPlantScreen.GetActiveStatus())
 					{
 						AddPlantScreen.SubmitData(mainWindow, "plants");
 					}
-					else if (CreateMapScreen.GetActiveStatus())
+					else if(CreateMapScreen.GetActiveStatus())
 					{
 						CreateMapScreen.SubmitData(mainWindow, "maps");
+					}
+					else if(EditPlantScreen.GetActiveStatus())
+					{
+						EditPlantScreen.SubmitData(mainWindow, "edit_plants");
 					}
 					break;
 				case sf::Event::MouseMoved:
@@ -211,6 +230,10 @@ int main()
 		mainContent.Draw(mainWindow);
 		mainWindow.draw(leftColumnViewBorder);
 		mainWindow.setView(contentView);
+		if(SelectMapScreen.GetScrolling())
+		{
+			SelectMapScreen.Scroll(mainWindow);
+		}
 		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
 			CreateMapScreen, AddPlantScreen, EditPlantScreen);
 
@@ -220,6 +243,7 @@ int main()
 		{
 			leftColumnDisplay.Scroll(mainWindow, leftColumnViewBorder);
 		}
+
 		leftColumnDisplay.Draw(mainWindow, event);
 		mainWindow.display();
 }

@@ -7,7 +7,7 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   Content &selectmap,
   Content &createmap,
   Content &addplant,
-  Content & editplant)
+  Content &editplant)
 {
   if(welcome.GetActiveStatus())
   {
@@ -15,7 +15,8 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   }
   else if(selectmap.GetActiveStatus())
   {
-    selectmap.DrawText(window);
+    //selectmap.DrawText(window);
+    selectmap.DrawMapMenu(window);
   }
   else if(createmap.GetActiveStatus())
   {

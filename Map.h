@@ -13,6 +13,8 @@ public:
   Map();
   ~Map();
 
+  void SetMapID(int id);
+  int GetMapID();
   void SetName(std::string name);
   std::string GetName();
   void SetYear(std::string year);
@@ -24,12 +26,14 @@ public:
   void AddToDatabase();
 
 private:
+  int m_mapID;
   std::string m_name;
   std::string m_year;
   int m_length;
   int m_width;
   sql::Driver *driver;
   sql::Connection *con;
+  sql::Statement *stmt;
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 };

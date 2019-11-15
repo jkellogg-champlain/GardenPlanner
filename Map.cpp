@@ -3,6 +3,16 @@
 Map::Map() { }
 Map::~Map() { }
 
+void Map::SetMapID(int id)
+{
+  m_mapID = id;
+}
+
+int Map::GetMapID()
+{
+  return m_mapID;
+}
+
 void Map::SetName(std::string name)
 {
   m_name = name;

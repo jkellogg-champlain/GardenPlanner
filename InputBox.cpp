@@ -74,6 +74,7 @@ std::string InputBox::GetText()
 void InputBox::AddText(std::string s)
 {
   m_textBox.setString(s);
+  m_text.str(s);
 }
 
 /*void InputBox::AddInt(int i)

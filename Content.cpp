@@ -3,6 +3,8 @@
 Content::Content()
 {
   m_isActive = false;
+  m_isScrolling = false;
+  m_firstClick = false;
 }
 Content::~Content() { }
 
@@ -159,6 +161,16 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
           m_messageDisplay.SetDisplay(true);
           m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nMap Name: " + box1 +"\nMap Year : " + box2 + "\nMap Length: " + box3 + "\nMap Width: " + box4);
         }
+        else if(databaseName == "edit_plants")
+        {
+          m_plant.SetName(box1);
+          m_plant.SetVariety(box2);
+          m_plant.SetSpacing(std::stoi(box3));
+          m_plant.SetRowSpacing(std::stoi(box4));
+          m_plant.UpdateDatabase();
+          m_messageDisplay.SetDisplay(true);
+          m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nPlant Name: " + box1 +"\nPlant Variety: " + box2 + "\nPlant Spacing: " + box3 + "\nRow Spacing: " + box4);
+        }
         /*driver = get_driver_instance();
         con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
         con->setSchema("garden_space_planner");
@@ -197,7 +209,7 @@ void Content::GetSelectedPlant()
   con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
   con->setSchema("garden_space_planner");
   stmt = con->createStatement();
-  res = stmt->executeQuery("SELECT * FROM plants WHERE is_selected=true;");
+  res = stmt->executeQuery("SELECT * FROM plants WHERE is_selected=true");
   while(res->next())
   {
     m_currentPlantID = res->getInt("plant_id");
@@ -209,7 +221,6 @@ void Content::GetSelectedPlant()
       m_inputBox4.AddText(res->getString("plant_spacing_length"));
       m_previousPlantID = m_currentPlantID;
     }
-
   }
 
   delete stmt;
@@ -236,6 +247,181 @@ void Content::GetSelectedPlant()
   m_currentPlantName = m_leftColumnAPI.GetCurrentPlantName();
   std::cout << "Current plant is: " + m_currentPlantName << std::endl;
 }*/
+
+void Content::SetMapList()
+{
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  stmt = con->createStatement();
+  res = stmt->executeQuery("SELECT * FROM maps");
+
+  while (res->next())
+  {
+    m_map.SetMapID(res->getInt("map_id"));
+    m_map.SetName(res->getString("map_name"));
+    m_map.SetYear(res->getString("map_year"));
+    m_map.SetLength(res->getInt("map_length"));
+    m_map.SetWidth(res->getInt("map_width"));
+
+    std::cout << m_map.GetMapID() << std::endl;
+    std::cout << m_map.GetName() << std::endl;
+    std::cout << m_map.GetYear() << std::endl;
+    std::cout << m_map.GetLength() << std::endl;
+    std::cout << m_map.GetWidth() << std::endl;
+
+    m_mapList.push_back(m_map);
+  }
+
+  delete res;
+  delete stmt;
+  delete con;
+}
+
+void Content::AddScrollArea()
+{
+  //std::cout << "AddScrollArea ran" << std::endl;
+  m_mapSelectContainer.setSize({m_contentView.getSize().x, m_contentView.getSize().y / 4});
+  //m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
+  m_mapSelectContainer.setOutlineColor(sf::Color(42, 85, 34, 255));
+  m_mapSelectContainer.setOutlineThickness(1.f);
+
+  m_displayArea.setFillColor(sf::Color::White/*(228, 243, 127, 255)*/);
+  m_displayArea.setSize({m_contentView.getSize().x, m_mapSelectContainer.getSize().y * m_mapList.size()/*m_contentView.getSize().y * 2.995f*/});
+  m_displayArea.setPosition({0.f, 0.f});
+  m_displayArea.setOutlineColor(sf::Color::Red);
+  m_displayArea.setOutlineThickness(1.f);
+}
+
+void Content::SetScrolling(bool toScroll)
+{
+  m_isScrolling = toScroll;
+}
+
+bool Content::GetScrolling()
+{
+  return m_isScrolling;
+}
+
+void Content::AddScrollBar()
+{
+  m_scrollContainer.setSize({m_contentView.getSize().x * .02f, m_displayArea.getSize().y});
+  m_scrollContainer.setPosition({m_displayArea.getPosition().x + (m_displayArea.getSize().x - m_scrollContainer.getSize().x), m_displayArea.getPosition().y});
+  m_scrollContainer.setFillColor(sf::Color(220, 220, 220, 255));
+
+  m_screenToViewRatio = m_displayArea.getSize().y / m_contentView.getSize().y;
+
+  m_scrollElement.setSize({m_scrollContainer.getSize().x * .75f, m_contentView.getSize().y / m_screenToViewRatio});
+  m_scrollMinimum.x = m_scrollContainer.getPosition().x/* * 1.015f*/;
+  m_scrollMinimum.y =  m_scrollContainer.getPosition().y;
+  m_scrollMaximum.x = m_scrollContainer.getPosition().x * 1.01f;
+  m_scrollMaximum.y = m_scrollContainer.getGlobalBounds().height;
+  m_scrollElement.setPosition(m_scrollMinimum);
+  m_scrollElement.setFillColor(sf::Color(175, 175, 175, 255));
+  //std::cout << "Element size is: " << m_scrollElement.getSize().y << std::endl;
+  m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f));
+}
+
+void Content::SetFirstClick(bool click)
+{
+  m_firstClick = click;
+}
+
+bool Content::GetFirstClick()
+{
+  return m_firstClick;
+}
+
+void Content::Scroll(sf::RenderWindow &window)
+{
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+
+  mouseYNew = mouseViewPosition.y;
+
+  /*std::cout << "Scroll Element is at: " << m_scrollElement.getPosition().y  << std::endl;
+  std::cout << "Scroll Element size is: " << m_scrollElement.getSize().y << std::endl;
+  std::cout << "m_centerScreen is at : " << m_centerScreen.getPosition().y << std::endl;
+  std::cout << "m_scrollMinimum is " << m_scrollMinimum.y << std::endl;
+  std::cout << "mouseYNew is: " << mouseYNew << std::endl;
+  std::cout << "m_scrollContainer is: " << m_scrollContainer.getSize().y << std::endl;
+  std::cout << "m_offset is: " << m_offset << std::endl;
+  std::cout << "View Size is: " << m_leftColumnView.getSize().y << std::endl;*/
+
+  if(m_firstClick)
+  {
+    m_offset = mouseYNew - m_scrollElement.getPosition().y;
+  }
+
+  float viewScrollSpeed = (m_scrollContainer.getSize().y - m_contentView.getSize().y) / (m_scrollContainer.getSize().y - m_scrollElement.getSize().y);
+
+  if(mouseYNew - m_offset > m_scrollContainer.getPosition().y && mouseYNew - m_offset < m_scrollContainer.getSize().y - m_scrollElement.getSize().y)
+  {
+    m_scrollElement.setPosition(m_scrollElement.getPosition().x, mouseYNew - m_offset);
+    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, m_contentView.getSize().y / 2 + m_scrollElement.getPosition().y * viewScrollSpeed);
+  }
+  else if(mouseYNew - m_offset > m_scrollContainer.getSize().y)
+  {
+    m_scrollElement.setPosition(m_scrollMaximum);
+    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f) + m_scrollMaximum.y);
+  }
+  else if (mouseYNew - m_offset < m_scrollContainer.getPosition().y)
+  {
+    m_scrollElement.setPosition(m_scrollMinimum);
+    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f));
+  }
+  m_firstClick = false;
+}
+
+void Content::SetMapContainerVector()
+{
+  m_mapContainerDisplayPos = (m_displayArea.getPosition());
+  //float plantBoxPosX = m_displayArea.getPosition().x;
+  //float plantBoxPosY = m_displayArea.getPosition().y;
+  for(int i = 0; i < m_mapList.size(); i++)
+  {
+    m_mapContainerList.push_back(m_mapContainerDisplayPos);
+    /*std::cout << m_plants[i].GetID() << "   ";
+    std::cout << m_plants[i].GetName() << "   ";
+    std::cout << m_plants[i].GetVariety() << "   ";
+    std::cout << m_plants[i].GetSpacing() << "   ";
+    std::cout << m_plants[i].GetRowSpacing() << std::endl;*/
+    m_mapContainerDisplayPos.y += m_mapSelectContainer.getSize().y;
+  }
+}
+
+void Content::SetView(sf::View &view)
+{
+  m_contentView = view;
+  //std::cout << "SetView ran" << std::endl;
+}
+
+void Content::DrawMapMenu(sf::RenderWindow &window)
+{
+  window.draw(m_displayArea);
+  for(int i = 0; i < m_mapList.size(); i++)
+  {
+    m_mapSelectContainer.setPosition(m_mapContainerList[i]);
+    window.draw(m_mapSelectContainer);
+  }
+  window.draw(m_scrollContainer);
+  window.draw(m_scrollElement);
+}
+
+bool Content::MouseOverScroll(sf::RenderWindow &window)
+{
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+
+  float scrollPosX = m_scrollElement.getPosition().x;
+  float scrollXPosWidth = scrollPosX + m_scrollElement.getGlobalBounds().width;
+
+  if(mouseViewPosition.x < scrollXPosWidth && mouseViewPosition.x > scrollPosX && mouseViewPosition.y < m_scrollElement.getPosition().y + m_scrollElement.getSize().y && mouseViewPosition.y > m_scrollContainer.getPosition().y)
+  {
+    return true;
+  }
+  return false;
+}
 
 void Content::DrawInputField(sf::RenderWindow &window)
 {
