@@ -129,7 +129,7 @@ void Content::AddInputButton(std::string name, sf::RenderWindow& window,
   m_inputButton.SetPosition(area, ratioX, ratioY);
 }
 
-void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
+void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay)
 {
   try
   {
@@ -174,8 +174,9 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName)
           m_map.SetLength(std::stoi(box3));
           m_map.SetWidth(std::stoi(box4));
           m_map.AddToDatabase();
-          m_messageDisplay.SetDisplay(true);
-          m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nMap Name: " + box1 +"\nMap Year : " + box2 + "\nMap Length: " + box3 + "\nMap Width: " + box4);
+          //m_messageDisplay.SetDisplay(true);
+          //m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nMap Name: " + box1 +"\nMap Year : " + box2 + "\nMap Length: " + box3 + "\nMap Width: " + box4);
+          mapDisplay.SetDisplay(true);
         }
         else if(databaseName == "edit_plants")
         {
@@ -418,7 +419,7 @@ sf::View Content::GetView()
   return m_contentView;
 }
 
-void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event)
+void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display)
 {
   window.draw(m_displayArea);
   window.draw(m_scrollContainer);
@@ -432,6 +433,7 @@ void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event)
       if(event.mouseButton.button == sf::Mouse::Left)
       {
         //std::cout << "Container Postion is " << m_mapSelectContainer.getPosition().y << std::endl;
+        display.SetDisplay(true);
         std::cout << m_mapList[i].GetName() << " was clicked" << std::endl;
       }
     }

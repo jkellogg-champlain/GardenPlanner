@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "LeftColumnContent.h"
 #include "ContentContainer.h"
+#include "MapDisplay.h"
 
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -40,7 +41,7 @@ public:
   void MakeInactive();
   void AddInputButton(std::string name, sf::RenderWindow& window,
     sf::Vector2f area, float ratioX, float ratioY);
-  void SubmitData(sf::RenderWindow &window, std::string databaseName);
+  void SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay);
   //void GetPlantVector(std::vector<Plant> plantVector);
   void GetSelectedPlant();
   //void GetCurrentPlantName();
@@ -48,7 +49,7 @@ public:
   void AddScrollArea();
   void AddScrollBar();
   void SetMapContainerVector();
-  void DrawMapMenu(sf::RenderWindow &window, sf::Event &event);
+  void DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display);
   void SetView(sf::View &view);
   sf::View GetView();
   void Scroll(sf::RenderWindow &window);
@@ -100,6 +101,7 @@ private:
   sf::Text m_mapTxtYear;
   sf::Text m_mapTxtLength;
   sf::Text m_mapTxtWidth;
+  //MapDisplay m_mapDisplay;
   //LeftColumnContent m_leftColumnAPI;
   //std::string m_currentPlantName;
   //std::vector<Plant> m_plantList;

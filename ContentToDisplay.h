@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Content.h"
+#include "MapDisplay.h"
 //#include "LeftColumnContent.h"
 
 class ContentToDisplay
@@ -14,7 +15,8 @@ public:
     Content &createmap,
     Content &addplant,
     Content &editplant,
-    sf::Event &event);
+    sf::Event &event,
+    MapDisplay &mapDisplay);
 
 
 private:
