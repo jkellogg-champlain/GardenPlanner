@@ -48,7 +48,7 @@ public:
   void AddScrollArea();
   void AddScrollBar();
   void SetMapContainerVector();
-  void DrawMapMenu(sf::RenderWindow &window);
+  void DrawMapMenu(sf::RenderWindow &window, sf::Event &event);
   void SetView(sf::View &view);
   sf::View GetView();
   void Scroll(sf::RenderWindow &window);
@@ -57,6 +57,7 @@ public:
   void SetFirstClick(bool click);
   bool GetFirstClick();
   bool MouseOverScroll(sf::RenderWindow &window);
+  bool MouseOverMapContainer(sf::RenderWindow &window);
   sf::Vector2f GetScrollPosition(ContentContainer &container);
   void ChangeColor(sf::Color color);
   void DrawInputField(sf::RenderWindow &window);
@@ -95,6 +96,10 @@ private:
   bool m_firstClick;
   float mouseYNew;
   float m_offset;
+  sf::Text m_mapTxtName;
+  sf::Text m_mapTxtYear;
+  sf::Text m_mapTxtLength;
+  sf::Text m_mapTxtWidth;
   //LeftColumnContent m_leftColumnAPI;
   //std::string m_currentPlantName;
   //std::vector<Plant> m_plantList;

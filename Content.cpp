@@ -5,6 +5,22 @@ Content::Content()
   m_isActive = false;
   m_isScrolling = false;
   m_firstClick = false;
+
+  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  {
+    std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
+  };
+  m_mapTxtName.setFont(m_ubuntu);
+  m_mapTxtName.setFillColor(sf::Color::Black);
+  m_mapTxtYear.setFont(m_ubuntu);
+  m_mapTxtYear.setFillColor(sf::Color::Black);
+  //m_mapTxtVariety.setCharacterSize(23);
+  m_mapTxtLength.setFont(m_ubuntu);
+  m_mapTxtLength.setFillColor(sf::Color::Black);
+  //m_mapTxtSpacing.setCharacterSize(15);
+  m_mapTxtWidth.setFont(m_ubuntu);
+  m_mapTxtWidth.setFillColor(sf::Color::Black);
+  //m_mapTxtRow.setCharacterSize(15);
 }
 Content::~Content() { }
 
@@ -281,7 +297,7 @@ void Content::SetMapList()
 void Content::AddScrollArea()
 {
   //std::cout << "AddScrollArea ran" << std::endl;
-  m_mapSelectContainer.setSize({m_contentView.getSize().x, m_contentView.getSize().y / 4});
+  m_mapSelectContainer.setSize({m_contentView.getSize().x - (m_contentView.getSize().x * .02f), m_contentView.getSize().y / 4});
   //m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
   m_mapSelectContainer.setOutlineColor(sf::Color(42, 85, 34, 255));
   m_mapSelectContainer.setOutlineThickness(1.f);
@@ -334,7 +350,7 @@ bool Content::GetFirstClick()
 
 void Content::Scroll(sf::RenderWindow &window)
 {
-  std::cout << "Scroll has tiggered" << std::endl;
+  //std::cout << "Scroll has tiggered" << std::endl;
   sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
   sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
 
@@ -402,16 +418,68 @@ sf::View Content::GetView()
   return m_contentView;
 }
 
-void Content::DrawMapMenu(sf::RenderWindow &window)
+void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event)
 {
   window.draw(m_displayArea);
-  for(int i = 0; i < m_mapList.size(); i++)
-  {
-    m_mapSelectContainer.setPosition(m_mapContainerList[i]);
-    window.draw(m_mapSelectContainer);
-  }
   window.draw(m_scrollContainer);
   window.draw(m_scrollElement);
+  //std::cout << "Map List Size is " << m_mapContainerList.size() << std::endl;
+  for(int i = 0; i < m_mapContainerList.size(); i++)
+  {
+    if(MouseOverMapContainer(window))
+    {
+      m_mapSelectContainer.setFillColor(sf::Color(238, 244, 177, 255));
+      if(event.mouseButton.button == sf::Mouse::Left)
+      {
+        //std::cout << "Container Postion is " << m_mapSelectContainer.getPosition().y << std::endl;
+        std::cout << m_mapList[i].GetName() << " was clicked" << std::endl;
+      }
+    }
+    else
+    {
+      m_mapSelectContainer.setFillColor(sf::Color(228, 243, 127, 255));
+    }
+    m_mapSelectContainer.setPosition(m_mapContainerList[i]);
+
+    m_mapTxtName.setString(m_mapList[i].GetName());
+    m_mapTxtName.setPosition((m_mapSelectContainer.getSize().x / 2) - (m_mapTxtName.getGlobalBounds().width / 2), (m_mapContainerList[i].y + ( m_mapSelectContainer.getSize().y / 4)) - (m_mapTxtName.getGlobalBounds().height));
+    //std::cout << "Map Container is at: " << m_mapSelectContainer.getPosition().y << std::endl;
+
+    m_mapTxtYear.setString("(" + m_mapList[i].GetYear() + ")");
+    m_mapTxtYear.setPosition((m_mapSelectContainer.getSize().x / 2) - (m_mapTxtYear.getGlobalBounds().width / 2), (m_mapContainerList[i].y + ( m_mapSelectContainer.getSize().y / 3))/* + (m_plantTxtVariety.getGlobalBounds().height)*/);
+
+    std::string mapLength = std::to_string(m_mapList[i].GetLength());
+    std::string mapWidth = std::to_string(m_mapList[i].GetWidth());
+    m_mapTxtLength.setString(mapLength + " x " + mapWidth);
+    m_mapTxtLength.setPosition((m_mapSelectContainer.getSize().x / 2) - (m_mapTxtLength.getGlobalBounds().width / 2), (m_mapContainerList[i].y + ( m_mapSelectContainer.getSize().y / 2)) + (m_mapTxtLength.getGlobalBounds().height));
+
+    window.draw(m_mapSelectContainer);
+    window.draw(m_mapTxtName);
+    window.draw(m_mapTxtYear);
+    window.draw(m_mapTxtLength);
+  }
+}
+
+bool Content::MouseOverMapContainer(sf::RenderWindow &window)
+{
+  //std::cout << "Ran" << std::endl;
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+  mouseViewPosition.y -= m_mapSelectContainer.getSize().y;
+
+  //std::cout << "mouseViewPostion Y is: " << mouseViewPosition.y << std::endl;
+
+  float containerPosX = m_mapSelectContainer.getPosition().x;
+  float containerPosY = m_mapSelectContainer.getPosition().y;
+
+  float containerXPosWidth = containerPosX + m_mapSelectContainer.getGlobalBounds().width;
+  float containerYPosHeight = containerPosY + m_mapSelectContainer.getGlobalBounds().height;
+
+  if(mouseViewPosition.x < containerXPosWidth && mouseViewPosition.x > containerPosX && mouseViewPosition.y < containerYPosHeight && mouseViewPosition.y > containerPosY)
+  {
+    return true;
+  }
+  return false;
 }
 
 bool Content::MouseOverScroll(sf::RenderWindow &window)

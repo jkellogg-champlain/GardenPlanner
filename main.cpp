@@ -214,7 +214,7 @@ int main()
 		}
 
 		mainWindow.clear(background);
-		mainWindow.setView(mainWindow.getDefaultView());
+		//mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.setView(staticView);
 		topNavBar.Draw(mainWindow);
 		for (Button btn : navButtons)
@@ -233,13 +233,13 @@ int main()
 		mainContent.Draw(mainWindow);
 		mainWindow.draw(leftColumnViewBorder);
 
-		mainWindow.setView(mainWindow.getDefaultView());
+		//mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.setView(contentView);
 		contentView.setCenter(SelectMapScreen.GetScrollPosition(mainContent));
 		contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
-			CreateMapScreen, AddPlantScreen, EditPlantScreen, mainContent);
+			CreateMapScreen, AddPlantScreen, EditPlantScreen, event);
 
-		mainWindow.setView(mainWindow.getDefaultView());
+		//mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.setView(leftColumnView);
 		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
 		if(leftColumnDisplay.GetScrolling())

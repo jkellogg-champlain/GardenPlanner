@@ -14,7 +14,7 @@ public:
     Content &createmap,
     Content &addplant,
     Content &editplant,
-    ContentContainer &container);
+    sf::Event &event);
 
 
 private:

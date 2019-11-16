@@ -8,7 +8,7 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   Content &createmap,
   Content &addplant,
   Content &editplant,
-  ContentContainer &container)
+  sf::Event &event)
 {
   if(welcome.GetActiveStatus())
   {
@@ -23,7 +23,7 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
 		{
 			selectmap.Scroll(window);
 		}
-    selectmap.DrawMapMenu(window);
+    selectmap.DrawMapMenu(window, event);
   }
   else if(createmap.GetActiveStatus())
   {
