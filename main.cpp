@@ -16,6 +16,8 @@ int main()
 	sf::VideoMode currentMode = sf::VideoMode::getDesktopMode();
 	mainWindow.setFramerateLimit(60);
 	mainWindow.create(sf::VideoMode(currentMode), "Garden Space Planner");
+	float deltaTime = 0.f;
+	sf::Clock dtClock;
 	//std::cout << mainWindow.getSize().y << std::endl;
 
 	sf::Color background = sf::Color(228, 243, 127, 255);
@@ -51,6 +53,7 @@ int main()
 
 	sf::View mapView;
 	mapView.setSize(mainContent.GetSize().x, mainContent.GetSize().y);
+	mapView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 	mapView.setViewport(sf::FloatRect(.27f, .223f, .7199, .757f));
 
 	MapDisplay displayMap;
@@ -121,6 +124,8 @@ int main()
 
 	while (mainWindow.isOpen())
 	{
+		deltaTime = dtClock.restart().asSeconds();
+		displayMap.Update(mapView, deltaTime);
 		while (mainWindow.pollEvent (event))
 		{
 			switch(event.type) {
@@ -224,6 +229,9 @@ int main()
 						EditPlantScreen.SubmitData(mainWindow, "edit_plants", displayMap);
 					}
 					break;
+				/*case sf::Event::KeyPressed:
+					displayMap.Update(mapView, deltaTime, event);*/
+
 				case sf::Event::MouseMoved:
 					sf::Vector2i mousePos = sf::Mouse::getPosition();
 					//std::cout << "Mouse X Position: " << mousePos.x << " Mouse Y Position: " << mousePos.y << std::endl;
@@ -255,7 +263,8 @@ int main()
 		{
 			mapNavBar.Draw(mainWindow);
 			mainWindow.setView(mapView);
-			mainWindow.draw(test);
+			displayMap.DrawMap(mainWindow);
+			//mainWindow.draw(test);
 			//std::cout << "Positon x is " << test.getPosition().x << " and y is " << test.getPosition().y << std::endl;
 		}
 		else
@@ -281,6 +290,8 @@ int main()
 		}
 
 		leftColumnDisplay.Draw(mainWindow, event);
+
+		//mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.display();
 }
 }
