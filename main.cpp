@@ -58,9 +58,15 @@ int main()
 
 	MapDisplay displayMap;
 
-	sf::RectangleShape test;
+	Map currentMap;
+	currentMap.SetLength(11);
+	currentMap.SetWidth(25);
+
+	displayMap.GetMap(currentMap);
+
+	/*sf::RectangleShape test;
 	test.setSize({5000.f, 5000.f});
-	test.setFillColor(sf::Color::Red);
+	test.setFillColor(sf::Color::Red);*/
 
 	Content WelcomeScreen;
 	WelcomeScreen.AddText("WelcomeScreen.txt");
@@ -125,7 +131,7 @@ int main()
 	while (mainWindow.isOpen())
 	{
 		deltaTime = dtClock.restart().asSeconds();
-		displayMap.Update(mapView, deltaTime);
+		displayMap.UpdateKeys(mapView, deltaTime);
 		while (mainWindow.pollEvent (event))
 		{
 			switch(event.type) {
@@ -236,6 +242,7 @@ int main()
 					sf::Vector2i mousePos = sf::Mouse::getPosition();
 					//std::cout << "Mouse X Position: " << mousePos.x << " Mouse Y Position: " << mousePos.y << std::endl;
 			}
+			displayMap.UpdateMouse(mainWindow, mapView);
 		}
 
 		mainWindow.clear(background);
