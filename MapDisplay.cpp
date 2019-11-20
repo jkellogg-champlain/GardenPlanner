@@ -7,7 +7,7 @@ MapDisplay::MapDisplay()
   m_gridUnit.setSize({m_gridUnitSize, m_gridUnitSize});
   m_gridUnit.setOutlineColor(sf::Color(86, 225, 58, 255));
   m_gridUnit.setOutlineThickness(1.f);
-  m_viewSpeed = 300.f;
+  m_viewSpeed = 350.f;
   m_tileSelector.setSize({m_gridUnitSize, m_gridUnitSize});
   m_tileSelector.setFillColor(sf::Color::Transparent);
   m_tileSelector.setOutlineColor(sf::Color::Black);
@@ -25,9 +25,14 @@ bool MapDisplay::GetDisplay()
   return m_display;
 }
 
-void MapDisplay::GetMap(Map &map)
+void MapDisplay::SetMap(Map &map)
 {
   m_map = map;
+}
+
+Map MapDisplay::GetMap()
+{
+  return m_map;
 }
 
 void MapDisplay::DrawMap(sf::RenderWindow &window)
@@ -45,11 +50,11 @@ void MapDisplay::DrawMap(sf::RenderWindow &window)
 
 void MapDisplay::UpdateKeys(sf::View &view, float dt)
 {
-  std::cout << "Center Screen X is at: " << view.getCenter().x << std::endl;
+  /*td::cout << "Center Screen X is at: " << view.getCenter().x << std::endl;
   std::cout << "Center Screen Y is at: " << view.getCenter().y << std::endl;
   std::cout << "View Size X is at: " << view.getSize().x << std::endl;
   std::cout << "View Size Y is at: " << view.getSize().y << std::endl;
-  std::cout << "Grid Length is: " << m_map.GetLength() << std::endl;
+  std::cout << "Grid Length is: " << m_map.GetLength() << std::endl;*/
 
   float gridLength = m_gridUnitSize * m_map.GetLength();
   float minGridPosX = view.getSize().x / 2;
@@ -59,7 +64,7 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
   float minGridPosY = view.getSize().y / 2;
   float maxGridPosY = (view.getCenter().y * (gridWidth/view.getCenter().y)) - minGridPosY;
 
-  if(view.getCenter().x >= minGridPosX && view.getCenter().x <= maxGridPosX && view.getCenter().y >= minGridPosY && view.getCenter().y <= maxGridPosY)
+  if(view.getCenter().x >= minGridPosX && view.getCenter().x <= maxGridPosX)
   {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
@@ -77,7 +82,10 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
         view.setCenter(maxGridPosX, view.getCenter().y);
       }
     }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+  }
+  if(view.getCenter().y >= minGridPosY && view.getCenter().y <= maxGridPosY)
+  {
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
       view.move(0.f, -m_viewSpeed * dt);
       if(view.getCenter().y < minGridPosY)
@@ -114,7 +122,8 @@ void MapDisplay::UpdateMouse(sf::RenderWindow &window, sf::View &view)
   {
     m_mousePosGrid.y = m_mousePosView.y / m_gridUnitSize;
   }
-  m_tileSelector.setPosition(m_mousePosGrid.x * m_gridUnitSize, m_mousePosGrid.y * m_gridUnitSize/*m_mousePosView*/);
+  //if(m_mousePosWindow.x >= container.GetPosition().x  && m_mousePosWindow.x <= container.GetPosition().x + container.GetSize().x && m_mousePosWindow.y >= container.GetPosition().y && m_mousePosWindow.y <= container.GetPosition().y + container.GetSize().y)
+  m_tileSelector.setPosition(m_mousePosGrid.x * m_gridUnitSize, m_mousePosGrid.y * m_gridUnitSize);
   /*std::cout << "m_mousePosGrid.x: " << m_mousePosGrid.x << std::endl;
   std::cout << "m_mousePosGrid.y: " << m_mousePosGrid.y << std::endl;
   std::cout << "m_mousePosView.x: " << m_mousePosView.x << std::endl;
@@ -124,13 +133,15 @@ void MapDisplay::UpdateMouse(sf::RenderWindow &window, sf::View &view)
   //m_tileSelector.setPosition(m_mousePosGrid.x * m_gridUnitSize, m_mousePosGrid.y * m_gridUnitSize);
 }
 
-/*void MapDisplay::BuildGridMap()
+bool MapDisplay::MouseInBounds(sf::RenderWindow &window, ContentContainer &container, ContentContainer &navbar)
 {
-  for(int i = 0; i < m_map.GetLength(); i++)
+  m_mousePosWindow = sf::Mouse::getPosition(window);
+  if(m_mousePosWindow.x >= container.GetPosition().x  && m_mousePosWindow.x <= container.GetPosition().x + container.GetSize().x && m_mousePosWindow.y >= container.GetPosition().y + navbar.GetSize().y && m_mousePosWindow.y <= container.GetPosition().y + container.GetSize().y)
   {
-    for(int j = 0; j < m_map.GetWidth(); j++)
-    {
-
-    }
+    return true;
   }
-}*/
+  else
+  {
+    return false;
+  }
+}

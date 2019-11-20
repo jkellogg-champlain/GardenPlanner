@@ -53,6 +53,15 @@ int Map::GetWidth()
   return m_width;
 }
 
+void Map::SetIsSelected(bool selected)
+{
+  m_isSelected = selected;
+}
+bool Map::GetIsSelected()
+{
+  return m_isSelected;
+}
+
 void Map::AddToDatabase()
 {
   driver = get_driver_instance();
@@ -67,3 +76,8 @@ void Map::AddToDatabase()
   delete con;
   delete prep_stmt;
 }
+
+/*void Map::GetFromDatabase()
+{
+
+}*/

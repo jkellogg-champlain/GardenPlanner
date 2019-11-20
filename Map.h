@@ -23,7 +23,10 @@ public:
   int GetLength();
   void SetWidth(int width);
   int GetWidth();
+  void SetIsSelected(bool selected);
+  bool GetIsSelected();
   void AddToDatabase();
+  //void GetMapFromDatabase();
 
 private:
   int m_mapID;
@@ -31,6 +34,7 @@ private:
   std::string m_year;
   int m_length;
   int m_width;
+  bool m_isSelected;
   sql::Driver *driver;
   sql::Connection *con;
   sql::Statement *stmt;

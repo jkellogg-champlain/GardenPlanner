@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Map.h"
+#include "ContentContainer.h"
 
 class MapDisplay
 {
@@ -12,11 +13,13 @@ public:
 
   void SetDisplay(bool display);
   bool GetDisplay();
-  void GetMap(Map &map);
+  void SetMap(Map &map);
+  Map GetMap();
   void DrawMap(sf::RenderWindow &window);
   void UpdateKeys(sf::View &view, float dt);
   void UpdateMouse(sf::RenderWindow &window, sf::View &view);
-  void BuildGridMap();
+  bool MouseInBounds(sf::RenderWindow &window, ContentContainer &container, ContentContainer &navbar);
+  //void BuildGridMap();
 
 private:
   bool m_display;
