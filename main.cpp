@@ -29,6 +29,15 @@ int main()
 	ContentContainer mainContent(mainWindow, .72f, .86f, .54f, .12f, background);
 	ContentContainer mapNavBar(mainWindow, .72f, .1f, .54f, .12f, foreground);
 
+	sf::RectangleShape mapInfoContainer;
+	mapInfoContainer.setFillColor(sf::Color::White);
+	mapInfoContainer.setSize({mapNavBar.GetSize().x * .4f, mapNavBar.GetSize().y * .9f});
+	mapInfoContainer.setPosition(mapNavBar.GetPosition().x * 1.05f, mapNavBar.GetPosition().y * 1.04f);
+
+	Button deleteMapBtn("Delete Map", mainWindow, background, sf::Color::Black);
+	deleteMapBtn.SetPosition(mapNavBar.GetSize(), .85f, 3.5f);
+	Button saveMapBtn("Save Map", mainWindow, background, sf::Color::Black);
+	saveMapBtn.SetPosition(mapNavBar.GetSize(), 1.13f, 3.5f);
 	//std::cout<<"X Size: " << mainContent.GetSize().x << " Y Size: "<< mainContent.GetSize().y << std::endl;
 	//std::cout<<"X Postion: " << mainContent.GetPosition().x << " Y Position " << mainContent.GetPosition().y << std::endl;
 
@@ -58,11 +67,19 @@ int main()
 
 	MapDisplay displayMap;
 
-	Map currentMap;
+	sf::Text mapInfo;
+	sf::Font ubuntu;
+	ubuntu.loadFromFile("Ubuntu-M.ttf");
+	mapInfo.setFont(ubuntu);
+	mapInfo.setFillColor(sf::Color::Black);
+	mapInfo.setCharacterSize(20);
+	mapInfo.setPosition(mapInfoContainer.getPosition().x + 10.f, mapInfoContainer.getPosition().y + 5);
+
+	/*Map currentMap;
 	currentMap.SetLength(11);
 	currentMap.SetWidth(25);
 
-	displayMap.GetMap(currentMap);
+	displayMap.GetMap(currentMap);*/
 
 	/*sf::RectangleShape test;
 	test.setSize({5000.f, 5000.f});
@@ -131,7 +148,12 @@ int main()
 	while (mainWindow.isOpen())
 	{
 		deltaTime = dtClock.restart().asSeconds();
-		displayMap.UpdateKeys(mapView, deltaTime);
+		if(displayMap.GetDisplay())
+		{
+			displayMap.UpdateKeys(mapView, deltaTime);
+			mapInfo.setString("Map: " + displayMap.GetMap().GetName() + "\nYear: " + displayMap.GetMap().GetYear() +
+			"\nSize(feet): " + std::to_string(displayMap.GetMap().GetLength()) + "x" + std::to_string(displayMap.GetMap().GetWidth()));
+		}
 		while (mainWindow.pollEvent (event))
 		{
 			switch(event.type) {
@@ -242,7 +264,13 @@ int main()
 					sf::Vector2i mousePos = sf::Mouse::getPosition();
 					//std::cout << "Mouse X Position: " << mousePos.x << " Mouse Y Position: " << mousePos.y << std::endl;
 			}
-			displayMap.UpdateMouse(mainWindow, mapView);
+			if(displayMap.GetDisplay())
+			{
+				if(displayMap.MouseInBounds(mainWindow, mainContent, mapNavBar))
+				{
+					displayMap.UpdateMouse(mainWindow, mapView);
+				}
+			}
 		}
 
 		mainWindow.clear(background);
@@ -269,6 +297,10 @@ int main()
 		if(displayMap.GetDisplay())
 		{
 			mapNavBar.Draw(mainWindow);
+			mainWindow.draw(mapInfoContainer);
+			deleteMapBtn.Draw(mainWindow);
+			saveMapBtn.Draw(mainWindow);
+			mainWindow.draw(mapInfo);
 			mainWindow.setView(mapView);
 			displayMap.DrawMap(mainWindow);
 			//mainWindow.draw(test);
