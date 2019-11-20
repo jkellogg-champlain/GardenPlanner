@@ -434,7 +434,8 @@ void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay
       {
         //std::cout << "Container Postion is " << m_mapSelectContainer.getPosition().y << std::endl;
         display.SetDisplay(true);
-        std::cout << m_mapList[i].GetName() << " was clicked" << std::endl;
+        display.SetMap(m_mapList[i]);
+        //std::cout << m_mapList[i].GetName() << " was clicked" << std::endl;
       }
     }
     else
