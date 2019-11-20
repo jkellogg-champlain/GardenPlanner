@@ -53,6 +53,26 @@ int Plant::GetID()
   return m_plantID;
 }
 
+void Plant::SetRGBColors(int red, int green, int blue)
+{
+  m_red = red;
+  m_green = green;
+  m_blue = blue;
+}
+
+int Plant::GetRed()
+{
+  return m_red;
+}
+int Plant::GetGreen()
+{
+  return m_green;
+}
+int Plant::GetBlue()
+{
+  return m_blue;
+}
+
 void Plant::SetSelectedDatabase(bool selected, int plantID)
 {
   driver = get_driver_instance();

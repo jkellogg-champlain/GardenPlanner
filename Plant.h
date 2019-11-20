@@ -24,6 +24,10 @@ public:
   int GetRowSpacing();
   void SetID(int id);
   int GetID();
+  void SetRGBColors(int red, int green, int blue);
+  int GetRed();
+  int GetGreen();
+  int GetBlue();
   void SetSelectedDatabase(bool selected, int plantID);
   bool IsSelected();
   void AddToDatabase();

@@ -36,8 +36,36 @@ Map MapDisplay::GetMap()
   return m_map;
 }
 
+void MapDisplay::SetPlant()
+{
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  stmt = con->createStatement();
+  res = stmt->executeQuery("SELECT * FROM plants WHERE is_selected=true");
+  while(res->next())
+  {
+    m_currentPlantID = res->getInt("plant_id");
+    if(m_currentPlantID != m_previousPlantID)
+    {
+      m_plant.SetName(res->getString("plant_name"));
+      m_plant.SetVariety(res->getString("plant_variety"));
+      m_plant.SetSpacing(res->getInt("plant_spacing_width"));
+      m_plant.SetRowSpacing(res->getInt("plant_spacing_length"));
+      m_plant.SetRGBColors(res->getInt("red_color_value"), res->getInt("green_color_value"), res->getInt("blue_color_value"));
+      m_previousPlantID = m_currentPlantID;
+    }
+  }
+
+  delete stmt;
+  delete con;
+}
+
 void MapDisplay::DrawMap(sf::RenderWindow &window)
 {
+  SetPlant();
+  m_tileSelector.setSize({static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize, static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize});
+  //m_tileSelector.setOutlineColor(sf::Color(m_plant.GetRed(), m_plant.GetGreen(), m_plant.GetBlue()));
   for(int i = 0; i < m_map.GetLength(); i++)
   {
     for(int j = 0; j < m_map.GetWidth(); j++)

@@ -3,6 +3,13 @@
 #include <iostream>
 #include "Map.h"
 #include "ContentContainer.h"
+#include "Plant.h"
+
+#include "mysql_connection.h"
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/prepared_statement.h>
 
 class MapDisplay
 {
@@ -15,6 +22,7 @@ public:
   bool GetDisplay();
   void SetMap(Map &map, sf::View &view);
   Map GetMap();
+  void SetPlant();
   void DrawMap(sf::RenderWindow &window);
   void UpdateKeys(sf::View &view, float dt);
   void UpdateMouse(sf::RenderWindow &window, sf::View &view);
@@ -24,6 +32,9 @@ public:
 private:
   bool m_display;
   Map m_map;
+  Plant m_plant;
+  int m_currentPlantID;
+  int m_previousPlantID;
   float m_gridUnitSize;
   sf::RectangleShape m_gridUnit;
   float m_viewSpeed;
@@ -32,6 +43,11 @@ private:
   sf::Vector2i m_mousePosWindow;
   sf::Vector2f m_mousePosView;
   sf::Vector2u m_mousePosGrid;
-  //std::vector<sf::RectangleShape> m_gridMap;
+
+  sql::Driver *driver;
+  sql::Connection *con;
+  sql::Statement *stmt;
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
 
 };
