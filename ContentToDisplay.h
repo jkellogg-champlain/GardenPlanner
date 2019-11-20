@@ -16,7 +16,8 @@ public:
     Content &addplant,
     Content &editplant,
     sf::Event &event,
-    MapDisplay &mapDisplay);
+    MapDisplay &mapDisplay,
+    sf::View &view);
 
 
 private:

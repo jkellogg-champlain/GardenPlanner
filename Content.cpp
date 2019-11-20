@@ -419,7 +419,7 @@ sf::View Content::GetView()
   return m_contentView;
 }
 
-void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display)
+void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display, sf::View &view)
 {
   window.draw(m_displayArea);
   window.draw(m_scrollContainer);
@@ -434,7 +434,7 @@ void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay
       {
         //std::cout << "Container Postion is " << m_mapSelectContainer.getPosition().y << std::endl;
         display.SetDisplay(true);
-        display.SetMap(m_mapList[i]);
+        display.SetMap(m_mapList[i], view);
         //std::cout << m_mapList[i].GetName() << " was clicked" << std::endl;
       }
     }

@@ -13,7 +13,7 @@ public:
 
   void SetDisplay(bool display);
   bool GetDisplay();
-  void SetMap(Map &map);
+  void SetMap(Map &map, sf::View &view);
   Map GetMap();
   void DrawMap(sf::RenderWindow &window);
   void UpdateKeys(sf::View &view, float dt);

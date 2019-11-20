@@ -318,7 +318,7 @@ int main()
 				contentView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 			}
 			contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
-				CreateMapScreen, AddPlantScreen, EditPlantScreen, event, displayMap);
+				CreateMapScreen, AddPlantScreen, EditPlantScreen, event, displayMap, mapView);
 		}
 		//mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.setView(leftColumnView);

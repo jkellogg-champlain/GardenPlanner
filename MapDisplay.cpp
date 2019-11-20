@@ -25,9 +25,10 @@ bool MapDisplay::GetDisplay()
   return m_display;
 }
 
-void MapDisplay::SetMap(Map &map)
+void MapDisplay::SetMap(Map &map, sf::View &view)
 {
   m_map = map;
+  view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
 }
 
 Map MapDisplay::GetMap()
@@ -58,18 +59,18 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
 
   float gridLength = m_gridUnitSize * m_map.GetLength();
   float minGridPosX = view.getSize().x / 2;
-  float maxGridPosX = (view.getCenter().x * (gridLength/view.getCenter().x)) - minGridPosX;
+  float maxGridPosX = (view.getCenter().x * (gridLength/view.getCenter().x)) - minGridPosX + 1;
 
   float gridWidth = m_gridUnitSize * m_map.GetWidth();
   float minGridPosY = view.getSize().y / 2;
-  float maxGridPosY = (view.getCenter().y * (gridWidth/view.getCenter().y)) - minGridPosY;
+  float maxGridPosY = (view.getCenter().y * (gridWidth/view.getCenter().y)) - minGridPosY + 3;
 
   if(view.getCenter().x >= minGridPosX && view.getCenter().x <= maxGridPosX)
   {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
       view.move(-m_viewSpeed * dt, 0.f);
-      if(view.getCenter().x < minGridPosX)
+      if(view.getCenter().x <= minGridPosX)
       {
         view.setCenter(minGridPosX, view.getCenter().y);
       }
@@ -77,7 +78,7 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
       view.move(m_viewSpeed * dt, 0.f);
-      if(view.getCenter().x > maxGridPosX)
+      if(view.getCenter().x >= maxGridPosX)
       {
         view.setCenter(maxGridPosX, view.getCenter().y);
       }
@@ -88,7 +89,7 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
       view.move(0.f, -m_viewSpeed * dt);
-      if(view.getCenter().y < minGridPosY)
+      if(view.getCenter().y <= minGridPosY)
       {
         view.setCenter(view.getCenter().x, minGridPosY);
       }
@@ -96,7 +97,7 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
       view.move(0.f, m_viewSpeed * dt);
-      if(view.getCenter().y > maxGridPosY)
+      if(view.getCenter().y >= maxGridPosY)
       {
         view.setCenter(view.getCenter().x, maxGridPosY);
       }

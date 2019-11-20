@@ -49,7 +49,7 @@ public:
   void AddScrollArea();
   void AddScrollBar();
   void SetMapContainerVector();
-  void DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display);
+  void DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display, sf::View &view);
   void SetView(sf::View &view);
   sf::View GetView();
   void Scroll(sf::RenderWindow &window);
