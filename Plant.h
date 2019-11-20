@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <ctime>
 
 #include "mysql_connection.h"
 #include <cppconn/driver.h>
@@ -34,6 +35,9 @@ private:
   int m_spacing;
   int m_rowSpacing;
   int m_plantID;
+  int m_red;
+  int m_green;
+  int m_blue;
   bool m_isSelected;
   sql::Driver *driver;
   sql::Connection *con;
