@@ -143,6 +143,8 @@ int main()
 	editPlantBtn.SetPosition(topNavBar.GetSize(), .74f, .96f);
 	Button navButtons [4] = {selectMapBtn, createMapBtn, addPlantBtn, editPlantBtn};
 
+	//Tile testTile;
+
 	sf::Event event;
 
 	while (mainWindow.isOpen())
@@ -269,6 +271,11 @@ int main()
 				if(displayMap.MouseInBounds(mainWindow, mainContent, mapNavBar))
 				{
 					displayMap.UpdateMouse(mainWindow, mapView);
+					if(event.mouseButton.button == sf::Mouse::Left)
+					{
+						displayMap.BuildTile();
+						//std::cout << "Build Conditions met" << std::endl;
+					}
 				}
 			}
 		}
@@ -289,6 +296,7 @@ int main()
 			}
 			btn.Draw(mainWindow);
 		}
+		//testTile.Draw(mainWindow);
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
 		mainWindow.draw(leftColumnViewBorder);
@@ -303,6 +311,7 @@ int main()
 			mainWindow.draw(mapInfo);
 			mainWindow.setView(mapView);
 			displayMap.DrawMap(mainWindow);
+			displayMap.DrawTiles(mainWindow);
 			//mainWindow.draw(test);
 			//std::cout << "Positon x is " << test.getPosition().x << " and y is " << test.getPosition().y << std::endl;
 		}

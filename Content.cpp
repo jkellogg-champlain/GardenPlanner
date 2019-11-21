@@ -281,11 +281,11 @@ void Content::SetMapList()
     m_map.SetLength(res->getInt("map_length"));
     m_map.SetWidth(res->getInt("map_width"));
 
-    std::cout << m_map.GetMapID() << std::endl;
+    /*std::cout << m_map.GetMapID() << std::endl;
     std::cout << m_map.GetName() << std::endl;
     std::cout << m_map.GetYear() << std::endl;
     std::cout << m_map.GetLength() << std::endl;
-    std::cout << m_map.GetWidth() << std::endl;
+    std::cout << m_map.GetWidth() << std::endl;*/
 
     m_mapList.push_back(m_map);
   }
