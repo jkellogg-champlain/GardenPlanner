@@ -72,7 +72,7 @@ int main()
 	ubuntu.loadFromFile("Ubuntu-M.ttf");
 	mapInfo.setFont(ubuntu);
 	mapInfo.setFillColor(sf::Color::Black);
-	mapInfo.setCharacterSize(20);
+	mapInfo.setCharacterSize(mapNavBar.GetSize().y * .25);
 	mapInfo.setPosition(mapInfoContainer.getPosition().x + 10.f, mapInfoContainer.getPosition().y + 5);
 
 	/*Map currentMap;
@@ -224,6 +224,13 @@ int main()
 							SelectMapScreen.SetFirstClick(true);
 							//std::cout << "Scrolling is true" << std::endl;
 						}
+						if(displayMap.GetDisplay())
+						{
+							if(displayMap.MouseInBounds(mainWindow, mainContent, mapNavBar))
+							{
+								displayMap.BuildTile();
+							}
+						}
 					}
 					break;
 				//case sf::Event::MouseButtonPressed:
@@ -271,11 +278,6 @@ int main()
 				if(displayMap.MouseInBounds(mainWindow, mainContent, mapNavBar))
 				{
 					displayMap.UpdateMouse(mainWindow, mapView);
-					if(event.mouseButton.button == sf::Mouse::Left)
-					{
-						displayMap.BuildTile();
-						//std::cout << "Build Conditions met" << std::endl;
-					}
 				}
 			}
 		}
@@ -312,6 +314,7 @@ int main()
 			mainWindow.setView(mapView);
 			displayMap.DrawMap(mainWindow);
 			displayMap.DrawTiles(mainWindow);
+			//displayMap.DrawSelector(mainWindow);
 			//mainWindow.draw(test);
 			//std::cout << "Positon x is " << test.getPosition().x << " and y is " << test.getPosition().y << std::endl;
 		}

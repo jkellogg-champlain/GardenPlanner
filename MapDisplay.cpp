@@ -74,7 +74,6 @@ void MapDisplay::DrawMap(sf::RenderWindow &window)
       window.draw(m_gridUnit);
     }
   }
-
   window.draw(m_tileSelector);
 }
 
@@ -89,6 +88,13 @@ void MapDisplay::DrawTiles(sf::RenderWindow &window)
     }
   }
 }
+
+/*void MapDisplay::DrawSelector(sf::RenderWindow &window)
+{
+  SetPlant();
+  m_tileSelector.setSize({static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize, static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize});
+  window.draw(m_tileSelector);
+}*/
 
 void MapDisplay::UpdateKeys(sf::View &view, float dt)
 {
@@ -191,9 +197,11 @@ bool MapDisplay::MouseInBounds(sf::RenderWindow &window, ContentContainer &conta
 void MapDisplay::BuildTile()
 {
   SetPlant();
+  int plantNumber = (m_plant.GetRowSpacing() * 12) / m_plant.GetSpacing();
   m_tile.SetTileSize(m_tileSelector.getSize());
   m_tile.SetTilePosition(m_tileSelector.getPosition());
   m_tile.SetTileColor(sf::Color(m_plant.GetRed(), m_plant.GetGreen(), m_plant.GetBlue()));
+  m_tile.SetText(m_plant.GetVariety(), m_plant.GetName(), plantNumber);
 
   //std::cout << "BuildTile ran" << std::endl;
 

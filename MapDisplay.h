@@ -25,6 +25,7 @@ public:
   Map GetMap();
   void DrawMap(sf::RenderWindow &window);
   void DrawTiles(sf::RenderWindow &window);
+  void DrawSelector(sf::RenderWindow &window);
   void UpdateKeys(sf::View &view, float dt);
   void UpdateMouse(sf::RenderWindow &window, sf::View &view);
   bool MouseInBounds(sf::RenderWindow &window, ContentContainer &container, ContentContainer &navbar);
