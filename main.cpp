@@ -155,6 +155,8 @@ int main()
 			displayMap.UpdateKeys(mapView, deltaTime);
 			mapInfo.setString("Map: " + displayMap.GetMap().GetName() + "\nYear: " + displayMap.GetMap().GetYear() +
 			"\nSize(feet): " + std::to_string(displayMap.GetMap().GetLength()) + "x" + std::to_string(displayMap.GetMap().GetWidth()));
+
+			//displayMap.RemoveTile(mainWindow);
 		}
 		while (mainWindow.pollEvent (event))
 		{
@@ -230,6 +232,13 @@ int main()
 							{
 								displayMap.BuildTile();
 							}
+						}
+					}
+					else if(event.mouseButton.button == sf::Mouse::Right)
+					{
+						if(displayMap.GetDisplay())
+						{
+							displayMap.RemoveTile(mainWindow, mapView);
 						}
 					}
 					break;

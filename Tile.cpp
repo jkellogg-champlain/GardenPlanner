@@ -41,6 +41,11 @@ void Tile::SetTilePosition(sf::Vector2f tileposition)
   m_tileContainer.setPosition(tileposition);
 }
 
+sf::Vector2f Tile::GetTilePosition()
+{
+  return m_tilePosition;
+}
+
 void Tile::SetTileColor(sf::Color color)
 {
   m_tileContainer.setFillColor(color);
@@ -67,6 +72,41 @@ void Tile::SetText(std::string plantvariety, std::string plantname, int number)
   }
   m_plantNumber.setString(std::to_string(number) + " plants");
   m_plantName.setString(plantname);
+}
+
+bool Tile::MouseOverTile(sf::RenderWindow &window, sf::View &view)
+{
+  //std::cout << "Ran" << std::endl;
+  window.setView(view);
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+
+  float containerPosX = m_tileContainer.getPosition().x;
+  float containerPosY = m_tileContainer.getPosition().y;
+
+  float containerXPosWidth = containerPosX + m_tileContainer.getGlobalBounds().width;
+  float containerYPosHeight = containerPosY + m_tileContainer.getGlobalBounds().height;
+
+  if(mouseViewPosition.x < containerXPosWidth && mouseViewPosition.x > containerPosX && mouseViewPosition.y < containerYPosHeight && mouseViewPosition.y > containerPosY)
+  {
+    return true;
+  }
+  return false;
+}
+
+void Tile::SubmitToDb(int parentmapid, int plantid, int xpos, int ypos)
+{
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("INSERT INTO tiles(map_id, plant_id, xpos, ypos) VALUES (?, ?, ?, ?)");
+  prep_stmt->setInt(1, parentmapid);
+  prep_stmt->setInt(2, plantid);
+  prep_stmt->setInt(3, xpos);
+  prep_stmt->setInt(4, ypos);
+  prep_stmt->execute();
+  delete con;
+  delete prep_stmt;
 }
 
 void Tile::Draw(sf::RenderWindow &window)

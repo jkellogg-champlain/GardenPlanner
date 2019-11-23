@@ -7,7 +7,7 @@ MapDisplay::MapDisplay()
   m_gridUnit.setSize({m_gridUnitSize, m_gridUnitSize});
   m_gridUnit.setOutlineColor(sf::Color(86, 225, 58, 255));
   m_gridUnit.setOutlineThickness(1.f);
-  m_viewSpeed = 350.f;
+  m_viewSpeed = 450.f;
   m_tileSelector.setSize({m_gridUnitSize, m_gridUnitSize});
   m_tileSelector.setFillColor(sf::Color::Transparent);
   m_tileSelector.setOutlineColor(sf::Color::Black);
@@ -28,6 +28,7 @@ bool MapDisplay::GetDisplay()
 void MapDisplay::SetMap(Map &map, sf::View &view)
 {
   m_map = map;
+  SetTiles(m_map.GetMapID());
   view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
 }
 
@@ -48,6 +49,7 @@ void MapDisplay::SetPlant()
     m_currentPlantID = res->getInt("plant_id");
     if(m_currentPlantID != m_previousPlantID)
     {
+      m_plant.SetID(res->getInt("plant_id"));
       m_plant.SetName(res->getString("plant_name"));
       m_plant.SetVariety(res->getString("plant_variety"));
       m_plant.SetSpacing(res->getInt("plant_spacing_width"));
@@ -59,6 +61,31 @@ void MapDisplay::SetPlant()
 
   delete stmt;
   delete con;
+}
+
+void MapDisplay::SetTiles(int mapID)
+{
+  m_tileList.clear();
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("SELECT * FROM tiles JOIN maps ON tiles.map_id = ? JOIN plants ON tiles.plant_id = plants.plant_id");
+  prep_stmt->setInt(1, mapID);
+  res = prep_stmt->executeQuery();
+
+  while(res->next())
+  {
+    int plantNumber = (res->getInt("plant_spacing_width") * 12) / res->getInt("plant_spacing_length");
+    m_tileSelector.setSize({static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize, static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize});
+    m_tile.SetTileSize({static_cast<float>(res->getInt("plant_spacing_length")) * m_gridUnitSize, static_cast<float>(res->getInt("plant_spacing_length")) * m_gridUnitSize}/*m_tileSelector.getSize()*/);
+    m_tile.SetTilePosition({static_cast<float>(res->getInt("xpos")), static_cast<float>(res->getInt("ypos"))});
+    m_tile.SetTileColor(sf::Color(res->getInt("red_color_value"), res->getInt("green_color_value"), res->getInt("blue_color_value")));
+    m_tile.SetText(res->getString("plant_variety"), res->getString("plant_variety"), plantNumber);
+
+    m_tileList.push_back(m_tile);
+  }
+  delete con;
+  delete prep_stmt;
 }
 
 void MapDisplay::DrawMap(sf::RenderWindow &window)
@@ -83,7 +110,7 @@ void MapDisplay::DrawTiles(sf::RenderWindow &window)
   {
     for(int i = 0; i < m_tileList.size(); i++)
     {
-      std::cout << i << ": " << m_tileList[i].GetTileSize().x << std::endl;
+      //std::cout << i << ": " << m_tileList[i].GetTileSize().x << std::endl;
       m_tileList[i].Draw(window);
     }
   }
@@ -204,6 +231,18 @@ void MapDisplay::BuildTile()
   m_tile.SetText(m_plant.GetVariety(), m_plant.GetName(), plantNumber);
 
   //std::cout << "BuildTile ran" << std::endl;
-
+  std::cout << m_tileSelector.getPosition().x << std::endl;
+  m_tile.SubmitToDb(m_map.GetMapID(), m_plant.GetID(), m_tileSelector.getPosition().x, m_tileSelector.getPosition().y);
   m_tileList.push_back(m_tile);
+}
+
+void MapDisplay::RemoveTile(sf::RenderWindow &window, sf::View &view)
+{
+  for(int i = 0; i < m_tileList.size(); i++)
+  {
+    if (m_tileList[i].MouseOverTile(window, view))
+    {
+      m_tileList.erase(m_tileList.begin()+i);
+    }
+  }
 }

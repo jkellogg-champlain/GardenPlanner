@@ -30,6 +30,7 @@ public:
   void UpdateMouse(sf::RenderWindow &window, sf::View &view);
   bool MouseInBounds(sf::RenderWindow &window, ContentContainer &container, ContentContainer &navbar);
   void BuildTile();
+  void RemoveTile(sf::RenderWindow &window, sf::View &view);
   //void BuildGridMap();
 
 private:
@@ -56,5 +57,6 @@ private:
   sql::ResultSet *res;
 
   void SetPlant();
+  void SetTiles(int mapID);
 
 };
