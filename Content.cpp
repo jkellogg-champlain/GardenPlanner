@@ -153,7 +153,7 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, Map
       else if (std::stoi(box3) > 120 || std::stoi(box4) > 120)
       {
         m_messageDisplay.SetDisplay(true);
-        m_messageDisplay.AddMessage("This program can't process gardens larger\nthan 120 square feet.  Therefore all numerical\nvalues must be less than 100");
+        m_messageDisplay.AddMessage("This program can't process gardens larger\nthan 120 square feet.  Therefore all numerical\nvalues must be less than 120");
       }
       else
       {
