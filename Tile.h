@@ -22,6 +22,8 @@ public:
   void SetText(std::string plantvariety, std::string plantname, int number);
   bool MouseOverTile(sf::RenderWindow &window, sf::View &view);
   void SubmitToDb(int parentmapid, int plantid, int xpos, int ypos);
+  int GetTileID();
+  void SetTileID(int id);
   void Draw(sf::RenderWindow &window);
 
 
@@ -36,6 +38,7 @@ private:
   sf::Vector2f m_tilePosition;
   sf::Color m_tileColor;
   sf::Font m_tahoma;
+  int m_tileID;
 
   sql::Driver *driver;
   sql::Connection *con;

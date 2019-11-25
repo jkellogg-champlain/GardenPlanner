@@ -22,6 +22,7 @@ public:
   void SetDisplay(bool display);
   bool GetDisplay();
   void SetMap(Map &map, sf::View &view);
+  Map GetNewMap();
   Map GetMap();
   void DrawMap(sf::RenderWindow &window);
   void DrawTiles(sf::RenderWindow &window);
@@ -31,6 +32,7 @@ public:
   bool MouseInBounds(sf::RenderWindow &window, ContentContainer &container, ContentContainer &navbar);
   void BuildTile();
   void RemoveTile(sf::RenderWindow &window, sf::View &view);
+  void DeleteMap();
   //void BuildGridMap();
 
 private:
@@ -58,5 +60,6 @@ private:
 
   void SetPlant();
   void SetTiles(int mapID);
+  void RemoveFromDb(int tileid);
 
 };

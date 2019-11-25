@@ -41,12 +41,13 @@ public:
   void MakeInactive();
   void AddInputButton(std::string name, sf::RenderWindow& window,
     sf::Vector2f area, float ratioX, float ratioY);
-  void SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay);
+  void SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay, sf::View &view);
   //void GetPlantVector(std::vector<Plant> plantVector);
   void GetSelectedPlant();
   //void GetCurrentPlantName();
   void SetMapList();
   void AddScrollArea();
+  void UpdateScrollArea();
   void AddScrollBar();
   void SetMapContainerVector();
   void DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display, sf::View &view);

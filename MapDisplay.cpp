@@ -32,6 +32,28 @@ void MapDisplay::SetMap(Map &map, sf::View &view)
   view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
 }
 
+Map MapDisplay::GetNewMap()
+{
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  stmt = con->createStatement();
+  res = stmt->executeQuery("SELECT * FROM maps ORDER BY map_id DESC LIMIT 1;");
+
+  while (res->next()) {
+    m_map.SetMapID(res->getInt("map_id"));
+    m_map.SetName(res->getString("map_name"));
+    m_map.SetYear(res->getString("map_year"));
+    m_map.SetLength(res->getInt("map_length"));
+    m_map.SetWidth(res->getInt("map_width"));
+  }
+  delete con;
+  delete stmt;
+  delete res;
+
+  return m_map;
+}
+
 Map MapDisplay::GetMap()
 {
   return m_map;
@@ -80,7 +102,8 @@ void MapDisplay::SetTiles(int mapID)
     m_tile.SetTileSize({static_cast<float>(res->getInt("plant_spacing_length")) * m_gridUnitSize, static_cast<float>(res->getInt("plant_spacing_length")) * m_gridUnitSize}/*m_tileSelector.getSize()*/);
     m_tile.SetTilePosition({static_cast<float>(res->getInt("xpos")), static_cast<float>(res->getInt("ypos"))});
     m_tile.SetTileColor(sf::Color(res->getInt("red_color_value"), res->getInt("green_color_value"), res->getInt("blue_color_value")));
-    m_tile.SetText(res->getString("plant_variety"), res->getString("plant_variety"), plantNumber);
+    m_tile.SetText(res->getString("plant_variety"), res->getString("plant_name"), plantNumber);
+    m_tile.SetTileID(res->getInt("tile_id"));
 
     m_tileList.push_back(m_tile);
   }
@@ -133,13 +156,13 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
 
   float gridLength = m_gridUnitSize * m_map.GetLength();
   float minGridPosX = view.getSize().x / 2;
-  float maxGridPosX = (view.getCenter().x * (gridLength/view.getCenter().x)) - minGridPosX + 1;
+  float maxGridPosX = (view.getCenter().x * (gridLength/view.getCenter().x)) - minGridPosX;
 
   float gridWidth = m_gridUnitSize * m_map.GetWidth();
   float minGridPosY = view.getSize().y / 2;
-  float maxGridPosY = (view.getCenter().y * (gridWidth/view.getCenter().y)) - minGridPosY + 3;
+  float maxGridPosY = (view.getCenter().y * (gridWidth/view.getCenter().y)) - minGridPosY;
 
-  if(view.getCenter().x >= minGridPosX && view.getCenter().x <= maxGridPosX)
+  if(view.getCenter().x >= minGridPosX && view.getCenter().x <= maxGridPosX + 30)
   {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
@@ -158,7 +181,7 @@ void MapDisplay::UpdateKeys(sf::View &view, float dt)
       }
     }
   }
-  if(view.getCenter().y >= minGridPosY && view.getCenter().y <= maxGridPosY)
+  if(view.getCenter().y >= minGridPosY && view.getCenter().y <= maxGridPosY + 30)
   {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
@@ -233,7 +256,21 @@ void MapDisplay::BuildTile()
   //std::cout << "BuildTile ran" << std::endl;
   std::cout << m_tileSelector.getPosition().x << std::endl;
   m_tile.SubmitToDb(m_map.GetMapID(), m_plant.GetID(), m_tileSelector.getPosition().x, m_tileSelector.getPosition().y);
+
   m_tileList.push_back(m_tile);
+}
+
+void MapDisplay::RemoveFromDb(int tileid)
+{
+  //std::cout << "Removing " << tileid << " from database" << std::endl;
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("DELETE FROM tiles WHERE tile_id=? LIMIT 1");
+  prep_stmt->setInt(1, tileid);
+  prep_stmt->executeUpdate();
+  delete con;
+  delete prep_stmt;
 }
 
 void MapDisplay::RemoveTile(sf::RenderWindow &window, sf::View &view)
@@ -242,7 +279,30 @@ void MapDisplay::RemoveTile(sf::RenderWindow &window, sf::View &view)
   {
     if (m_tileList[i].MouseOverTile(window, view))
     {
+      //std::cout << "Tile ID is: " << m_tileList[i].GetTileID();
+      RemoveFromDb(m_tileList[i].GetTileID());
       m_tileList.erase(m_tileList.begin()+i);
     }
   }
+}
+
+void MapDisplay::DeleteMap()
+{
+  std::cout << m_map.GetMapID() << " " << m_map.GetName() << "would have been deleted" << std::endl;
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("DELETE FROM tiles WHERE map_id=?");
+  prep_stmt->setInt(1, m_map.GetMapID());
+  prep_stmt->executeUpdate();
+  delete con;
+  delete prep_stmt;
+  m_tileList.clear();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  prep_stmt = con->prepareStatement("DELETE FROM maps WHERE map_id=? LIMIT 1");
+  prep_stmt->setInt(1, m_map.GetMapID());
+  prep_stmt->execute();
+  delete con;
+  delete prep_stmt;
 }

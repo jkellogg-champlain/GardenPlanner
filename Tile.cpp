@@ -109,6 +109,15 @@ void Tile::SubmitToDb(int parentmapid, int plantid, int xpos, int ypos)
   delete prep_stmt;
 }
 
+int Tile::GetTileID()
+{
+  return m_tileID;
+}
+void Tile::SetTileID(int id)
+{
+  m_tileID = id;
+}
+
 void Tile::Draw(sf::RenderWindow &window)
 {
   m_textContainer.setSize({m_tileContainer.getSize().x * .8f, m_tileContainer.getSize().y * .5f});

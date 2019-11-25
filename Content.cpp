@@ -129,7 +129,7 @@ void Content::AddInputButton(std::string name, sf::RenderWindow& window,
   m_inputButton.SetPosition(area, ratioX, ratioY);
 }
 
-void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay)
+void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay, sf::View &view)
 {
   try
   {
@@ -174,6 +174,8 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, Map
           m_map.SetLength(std::stoi(box3));
           m_map.SetWidth(std::stoi(box4));
           m_map.AddToDatabase();
+          Map newMap = mapDisplay.GetNewMap();
+          mapDisplay.SetMap(newMap, view);
           //m_messageDisplay.SetDisplay(true);
           //m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nMap Name: " + box1 +"\nMap Year : " + box2 + "\nMap Length: " + box3 + "\nMap Width: " + box4);
           mapDisplay.SetDisplay(true);
@@ -267,6 +269,7 @@ void Content::GetSelectedPlant()
 
 void Content::SetMapList()
 {
+  m_mapList.clear();
   driver = get_driver_instance();
   con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
   con->setSchema("garden_space_planner");
@@ -308,6 +311,19 @@ void Content::AddScrollArea()
   m_displayArea.setPosition({0.f, 0.f});
   m_displayArea.setOutlineColor(sf::Color::Red);
   m_displayArea.setOutlineThickness(1.f);
+}
+
+void Content::UpdateScrollArea()
+{
+  m_mapSelectContainer.setSize({m_contentView.getSize().x - (m_contentView.getSize().x * .02f), m_contentView.getSize().y / 4});
+  m_displayArea.setSize({m_contentView.getSize().x, m_mapSelectContainer.getSize().y * m_mapList.size()/*m_contentView.getSize().y * 2.995f*/});
+  m_scrollContainer.setSize({m_contentView.getSize().x * .02f, m_displayArea.getSize().y});
+  m_scrollElement.setSize({m_scrollContainer.getSize().x * .75f, m_contentView.getSize().y / m_screenToViewRatio});
+  m_scrollMinimum.x = m_scrollContainer.getPosition().x * 1.0032f;
+  m_scrollMinimum.y =  m_scrollContainer.getPosition().y;
+  m_scrollMaximum.x = m_scrollContainer.getPosition().x * 1.01f;
+  m_scrollMaximum.y = m_scrollContainer.getGlobalBounds().height;
+
 }
 
 void Content::SetScrolling(bool toScroll)
@@ -393,6 +409,7 @@ void Content::Scroll(sf::RenderWindow &window)
 
 void Content::SetMapContainerVector()
 {
+  m_mapContainerList.clear();
   m_mapContainerDisplayPos = (m_displayArea.getPosition());
   //float plantBoxPosX = m_displayArea.getPosition().x;
   //float plantBoxPosY = m_displayArea.getPosition().y;
@@ -421,6 +438,9 @@ sf::View Content::GetView()
 
 void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display, sf::View &view)
 {
+  SetMapList();
+  UpdateScrollArea();
+  SetMapContainerVector();
   window.draw(m_displayArea);
   window.draw(m_scrollContainer);
   window.draw(m_scrollElement);

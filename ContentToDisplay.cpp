@@ -25,6 +25,10 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
 		{
 			selectmap.Scroll(window);
 		}
+    //selectmap.SetMapList();
+    //selectmap.AddScrollArea();
+  	//selectmap.AddScrollBar();
+    //selectmap.SetMapContainerVector();
     selectmap.DrawMapMenu(window, event, mapDisplay, view);
   }
   else if(createmap.GetActiveStatus())

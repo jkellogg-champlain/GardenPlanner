@@ -35,9 +35,9 @@ int main()
 	mapInfoContainer.setPosition(mapNavBar.GetPosition().x * 1.05f, mapNavBar.GetPosition().y * 1.04f);
 
 	Button deleteMapBtn("Delete Map", mainWindow, background, sf::Color::Black);
-	deleteMapBtn.SetPosition(mapNavBar.GetSize(), .85f, 3.5f);
-	Button saveMapBtn("Save Map", mainWindow, background, sf::Color::Black);
-	saveMapBtn.SetPosition(mapNavBar.GetSize(), 1.13f, 3.5f);
+	deleteMapBtn.SetPosition(mapNavBar.GetSize(), 1.13f, 3.5f);
+	/*Button saveMapBtn("Save Map", mainWindow, background, sf::Color::Black);
+	saveMapBtn.SetPosition(mapNavBar.GetSize(), 1.13f, 3.5f);*/
 	//std::cout<<"X Size: " << mainContent.GetSize().x << " Y Size: "<< mainContent.GetSize().y << std::endl;
 	//std::cout<<"X Postion: " << mainContent.GetPosition().x << " Y Position " << mainContent.GetPosition().y << std::endl;
 
@@ -173,6 +173,17 @@ int main()
 						EditPlantScreen.FocusOnBox(mainWindow);
 						EditPlantScreen.MessageDismissed(mainWindow);
 
+						if(deleteMapBtn.mouseOver(mainWindow))
+						{
+							displayMap.DeleteMap();
+							SelectMapScreen.MakeActive();
+							SelectMapScreen.SetMapList();
+							CreateMapScreen.MakeInactive();
+							AddPlantScreen.MakeInactive();
+							WelcomeScreen.MakeInactive();
+							EditPlantScreen.MakeInactive();
+							displayMap.SetDisplay(false);
+						}
 						if(selectMapBtn.mouseOver(mainWindow))
 						{
 							SelectMapScreen.MakeActive();
@@ -210,6 +221,13 @@ int main()
 							CreateMapScreen.MakeInactive();
 							displayMap.SetDisplay(false);
 						}
+						/*else if(deleteMapBtn.mouseOver(mainWindow))
+						{
+							displayMap.DeleteMap();
+							displayMap.SetDisplay(false);
+							SelectMapScreen.MakeActive();
+							SelectMapScreen.SetMapList();
+						}*/
 						else if(leftColumnDisplay.MouseOverScroll(mainWindow/*, leftColumnViewBorder*/))
 						{
 							//leftColumnDisplay.Scroll(mainWindow);
@@ -264,15 +282,15 @@ int main()
 					SelectMapScreen.ChangeColor(sf::Color(175, 175, 175, 255));
 					if(AddPlantScreen.GetActiveStatus())
 					{
-						AddPlantScreen.SubmitData(mainWindow, "plants", displayMap);
+						AddPlantScreen.SubmitData(mainWindow, "plants", displayMap, contentView);
 					}
 					else if(CreateMapScreen.GetActiveStatus())
 					{
-						CreateMapScreen.SubmitData(mainWindow, "maps", displayMap);
+						CreateMapScreen.SubmitData(mainWindow, "maps", displayMap, contentView);
 					}
 					else if(EditPlantScreen.GetActiveStatus())
 					{
-						EditPlantScreen.SubmitData(mainWindow, "edit_plants", displayMap);
+						EditPlantScreen.SubmitData(mainWindow, "edit_plants", displayMap, contentView);
 					}
 					break;
 				/*case sf::Event::KeyPressed:
@@ -315,10 +333,18 @@ int main()
 		//mainWindow.setView(mainWindow.getDefaultView());
 		if(displayMap.GetDisplay())
 		{
+			if(deleteMapBtn.mouseOver(mainWindow))
+			{
+				deleteMapBtn.SetColor(onHover);
+			}
+			else
+			{
+				deleteMapBtn.SetColor(background);
+			}
 			mapNavBar.Draw(mainWindow);
 			mainWindow.draw(mapInfoContainer);
 			deleteMapBtn.Draw(mainWindow);
-			saveMapBtn.Draw(mainWindow);
+			//saveMapBtn.Draw(mainWindow);
 			mainWindow.draw(mapInfo);
 			mainWindow.setView(mapView);
 			displayMap.DrawMap(mainWindow);
