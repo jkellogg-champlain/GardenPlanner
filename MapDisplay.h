@@ -33,6 +33,8 @@ public:
   void BuildTile();
   void RemoveTile(sf::RenderWindow &window, sf::View &view);
   void DeleteMap();
+  void SetMapDeleted(bool deleted);
+  bool GetMapDeleted();
   //void BuildGridMap();
 
 private:
@@ -51,6 +53,7 @@ private:
   sf::Vector2u m_mousePosGrid;
   Tile m_tile;
   std::vector<Tile> m_tileList;
+  bool m_mapDeleted;
 
   sql::Driver *driver;
   sql::Connection *con;

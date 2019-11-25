@@ -306,3 +306,12 @@ void MapDisplay::DeleteMap()
   delete con;
   delete prep_stmt;
 }
+
+void MapDisplay::SetMapDeleted(bool deleted)
+{
+  m_mapDeleted = deleted;
+}
+bool MapDisplay::GetMapDeleted()
+{
+  return m_mapDeleted;
+}

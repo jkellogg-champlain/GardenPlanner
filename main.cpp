@@ -176,15 +176,16 @@ int main()
 						if(deleteMapBtn.mouseOver(mainWindow))
 						{
 							displayMap.DeleteMap();
-							SelectMapScreen.MakeActive();
-							SelectMapScreen.SetMapList();
+							SelectMapScreen.MakeInactive();
+							//SelectMapScreen.SetMapList();
 							CreateMapScreen.MakeInactive();
 							AddPlantScreen.MakeInactive();
-							WelcomeScreen.MakeInactive();
+							WelcomeScreen.MakeActive();
 							EditPlantScreen.MakeInactive();
 							displayMap.SetDisplay(false);
+							//displayMap.SetMapDeleted(true);
 						}
-						if(selectMapBtn.mouseOver(mainWindow))
+						else if(selectMapBtn.mouseOver(mainWindow))
 						{
 							SelectMapScreen.MakeActive();
 							SelectMapScreen.SetMapList();
