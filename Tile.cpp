@@ -64,6 +64,10 @@ void Tile::SetText(std::string plantvariety, std::string plantname, int number)
         m_plantVariety.setString(str1 + "\n" + str2);
         i = plantvariety.size();
       }
+      else
+      {
+        m_plantVariety.setString(plantvariety);
+      }
     }
   }
   else
