@@ -1,7 +1,9 @@
 #include "Content.h"
 
+//Default Constructor.
 Content::Content()
 {
+  //New objects should not be active, scrolling or clicked until user selects them
   m_isActive = false;
   m_isScrolling = false;
   m_firstClick = false;
@@ -10,40 +12,39 @@ Content::Content()
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
   };
+  //Default settings for sf::Text objects
   m_mapTxtName.setFont(m_ubuntu);
   m_mapTxtName.setFillColor(sf::Color::Black);
   m_mapTxtYear.setFont(m_ubuntu);
   m_mapTxtYear.setFillColor(sf::Color::Black);
-  //m_mapTxtVariety.setCharacterSize(23);
   m_mapTxtLength.setFont(m_ubuntu);
   m_mapTxtLength.setFillColor(sf::Color::Black);
-  //m_mapTxtSpacing.setCharacterSize(15);
   m_mapTxtWidth.setFont(m_ubuntu);
   m_mapTxtWidth.setFillColor(sf::Color::Black);
-  //m_mapTxtRow.setCharacterSize(15);
+  m_contentText.setFont(m_ubuntu);
+  m_contentText.setPosition(30.f, 10.f);
+  m_contentText.setCharacterSize(27);
+  m_contentText.setFillColor(sf::Color::Black);
 }
+
+//Default Destructor.
 Content::~Content() { }
 
+//Add text from a file to display in the Content window.
 void Content::AddText(std::string fileName)
 {
   m_inputFile.open(fileName);
 
+  //Get text from file line by line and concantenate to m_contentString for full block of text
   while (std::getline(m_inputFile, m_stringSection))
   {
     m_contentString += m_stringSection + "\n";
   }
 
   m_contentText.setString(m_contentString);
-  m_contentText.setFillColor(sf::Color::Black);
-  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
-  {
-    std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
-  };
-  m_contentText.setFont(m_ubuntu);
-  m_contentText.setPosition(30.f, 10.f);
-  m_contentText.setCharacterSize(27);
 }
 
+//Add a section of the Content display for user input boxes.
 void Content::AddInputArea(float width, float height, float posX, float posY)
 {
   m_input_container.setSize(sf::Vector2f(width, height));
@@ -53,6 +54,13 @@ void Content::AddInputArea(float width, float height, float posX, float posY)
 	m_input_container.setOutlineThickness(1.0f);
 }
 
+//Draw all Content text to the window.
+void Content::DrawText(sf::RenderWindow &window)
+{
+  window.draw(m_contentText);
+}
+
+//Add InputBox objects to the Content object for user input.
 void Content::AddInputBoxes(std::string header1, sf::Vector2f pos1,
   std::string header2, sf::Vector2f pos2,
   std::string header3, sf::Vector2f pos3,
@@ -68,7 +76,7 @@ void Content::AddInputBoxes(std::string header1, sf::Vector2f pos1,
   m_inputBox4.SetHeader(header4 + ":");
 }
 
-
+//Focus on InputBox object the user has selected for inputing data.
 void Content::FocusOnBox(sf::RenderWindow &window)
 {
   m_inputBox1.clickedOn(window);
@@ -77,11 +85,13 @@ void Content::FocusOnBox(sf::RenderWindow &window)
   m_inputBox4.clickedOn(window);
 }
 
+//Dismiss pop-ups called by the Content object to convey important messages to the user.
 void Content::MessageDismissed(sf::RenderWindow &window)
 {
   m_messageDisplay.clickedOn(window);
 }
 
+//Checks to see if user is typing, and if so displays text the user is typing into the InputBox object.
 void Content::EnterText(sf::Event input)
 {
   if(m_inputBox1.m_isSelected)
@@ -102,26 +112,25 @@ void Content::EnterText(sf::Event input)
   }
 }
 
+//Returns whether or not a Content object is the most current content selected to view by the user.
 bool Content::GetActiveStatus()
 {
   return m_isActive;
 }
 
+//Makes a Content object the most current selected by the user to view and display in the main content area.
 void Content::MakeActive()
 {
   m_isActive = true;
 }
 
+//Makes a Content objects not currently selected by the user inactive so they don't display to the main content view.
 void Content::MakeInactive()
 {
   m_isActive = false;
 }
 
-void Content::DrawText(sf::RenderWindow &window)
-{
-  window.draw(m_contentText);
-}
-
+//Adds a Button object to the Content display so users can submit data they've entered into InputBox objects.
 void Content::AddInputButton(std::string name, sf::RenderWindow& window,
   sf::Vector2f area, float ratioX, float ratioY)
 {
@@ -129,6 +138,7 @@ void Content::AddInputButton(std::string name, sf::RenderWindow& window,
   m_inputButton.SetPosition(area, ratioX, ratioY);
 }
 
+//Submits user input to the specified MySQL database.
 void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, MapDisplay &mapDisplay, sf::View &view)
 {
   try
@@ -140,6 +150,7 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, Map
       std::string box3 = m_inputBox3.GetText();
       std::string box4 = m_inputBox4.GetText();
 
+      //Input validation
       if(box1.length() < 1 || box2.length() < 1 || box3.length() < 1 || box4.length() < 1)
       {
         m_messageDisplay.SetDisplay(true);
@@ -176,8 +187,6 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, Map
           m_map.AddToDatabase();
           Map newMap = mapDisplay.GetNewMap();
           mapDisplay.SetMap(newMap, view);
-          //m_messageDisplay.SetDisplay(true);
-          //m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nMap Name: " + box1 +"\nMap Year : " + box2 + "\nMap Length: " + box3 + "\nMap Width: " + box4);
           mapDisplay.SetDisplay(true);
         }
         else if(databaseName == "edit_plants")
@@ -190,31 +199,20 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, Map
           m_messageDisplay.SetDisplay(true);
           m_messageDisplay.AddMessage("The Database has been successfully updated\nwith the following info\nPlant Name: " + box1 +"\nPlant Variety: " + box2 + "\nPlant Spacing: " + box3 + "\nRow Spacing: " + box4);
         }
-        /*driver = get_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
-        con->setSchema("garden_space_planner");
-        prep_stmt = con->prepareStatement("INSERT INTO plants(plant_name, plant_variety, plant_spacing_width, plant_spacing_length) VALUES (?, ?, ?, ?)");
-        prep_stmt->setString(1, m_inputBox1.GetText());
-        prep_stmt->setString(2, m_inputBox2.GetText());
-        prep_stmt->setInt(3, std::stoi(m_inputBox3.GetText()));
-        prep_stmt->setInt(4, std::stoi(m_inputBox4.GetText()));
-        prep_stmt->execute();*/
         m_inputBox1.ClearContent();
         m_inputBox2.ClearContent();
         m_inputBox3.ClearContent();
         m_inputBox4.ClearContent();
-        /*delete con;
-        delete prep_stmt;
-        m_messageDisplay.SetDisplay(true);
-        m_messageDisplay.AddMessage("The Database has been updated!");*/
       }
     }
   }
+  //catch invalid arguments when users try to enter chars to int fields
   catch(std::invalid_argument)
   {
     m_messageDisplay.SetDisplay(true);
     m_messageDisplay.AddMessage("You entered text into a field that requires a number!");
   }
+  //catch unanticipated errors
   catch(...)
   {
     m_messageDisplay.SetDisplay(true);
@@ -222,6 +220,7 @@ void Content::SubmitData(sf::RenderWindow &window, std::string databaseName, Map
   }
 }
 
+//Finds the currently selected Plant in the garden_space_planner.plants MySQL table;
 void Content::GetSelectedPlant()
 {
   driver = get_driver_instance();
@@ -245,28 +244,8 @@ void Content::GetSelectedPlant()
   delete stmt;
   delete con;
 }
-/*void Content::GetPlantVector(std::vector<Plant> plantVector)
-{
-  for(int i = 0; i < plantVector.size(); i++)
-  {
-    m_plant.SetName(plantVector[i].GetName());
-    m_plant.SetVariety(plantVector[i].GetVariety());
-    m_plant.SetSpacing(plantVector[i].GetSpacing());
-    m_plant.SetRowSpacing(plantVector[i].GetRowSpacing());
 
-    std::cout << m_plant.GetName() << " was added" << std::endl;
-
-    m_plantList.push_back(m_plant);
-  }
-}
-*/
-
-/*void Content::GetCurrentPlantName()
-{
-  m_currentPlantName = m_leftColumnAPI.GetCurrentPlantName();
-  std::cout << "Current plant is: " + m_currentPlantName << std::endl;
-}*/
-
+//Populates the m_mapList vector with a list of maps from the MySQL database.
 void Content::SetMapList()
 {
   m_mapList.clear();
@@ -284,12 +263,6 @@ void Content::SetMapList()
     m_map.SetLength(res->getInt("map_length"));
     m_map.SetWidth(res->getInt("map_width"));
 
-    /*std::cout << m_map.GetMapID() << std::endl;
-    std::cout << m_map.GetName() << std::endl;
-    std::cout << m_map.GetYear() << std::endl;
-    std::cout << m_map.GetLength() << std::endl;
-    std::cout << m_map.GetWidth() << std::endl;*/
-
     m_mapList.push_back(m_map);
   }
 
@@ -298,25 +271,26 @@ void Content::SetMapList()
   delete con;
 }
 
+/*Sets the size of m_mapSelectContainer data member and sets the size and position of the m_displayArea data member
+  based on the m_contentView data member sf::View object.*/
 void Content::AddScrollArea()
 {
-  //std::cout << "AddScrollArea ran" << std::endl;
   m_mapSelectContainer.setSize({m_contentView.getSize().x - (m_contentView.getSize().x * .02f), m_contentView.getSize().y / 4});
-  //m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
   m_mapSelectContainer.setOutlineColor(sf::Color(42, 85, 34, 255));
   m_mapSelectContainer.setOutlineThickness(1.f);
 
-  m_displayArea.setFillColor(sf::Color::White/*(228, 243, 127, 255)*/);
-  m_displayArea.setSize({m_contentView.getSize().x, m_mapSelectContainer.getSize().y * m_mapList.size()/*m_contentView.getSize().y * 2.995f*/});
+  m_displayArea.setFillColor(sf::Color::White);
+  m_displayArea.setSize({m_contentView.getSize().x, m_mapSelectContainer.getSize().y * m_mapList.size()});
   m_displayArea.setPosition({0.f, 0.f});
   m_displayArea.setOutlineColor(sf::Color::Red);
   m_displayArea.setOutlineThickness(1.f);
 }
 
+//Updates size and position of scroll area when a new Map object is added to or removed from the m_mapsList vector.
 void Content::UpdateScrollArea()
 {
   m_mapSelectContainer.setSize({m_contentView.getSize().x - (m_contentView.getSize().x * .02f), m_contentView.getSize().y / 4});
-  m_displayArea.setSize({m_contentView.getSize().x, m_mapSelectContainer.getSize().y * m_mapList.size()/*m_contentView.getSize().y * 2.995f*/});
+  m_displayArea.setSize({m_contentView.getSize().x, m_mapSelectContainer.getSize().y * m_mapList.size()});
   m_scrollContainer.setSize({m_contentView.getSize().x * .02f, m_displayArea.getSize().y});
   m_scrollElement.setSize({m_scrollContainer.getSize().x * .75f, m_contentView.getSize().y / m_screenToViewRatio});
   m_scrollMinimum.x = m_scrollContainer.getPosition().x * 1.0032f;
@@ -326,16 +300,7 @@ void Content::UpdateScrollArea()
 
 }
 
-void Content::SetScrolling(bool toScroll)
-{
-  m_isScrolling = toScroll;
-}
-
-bool Content::GetScrolling()
-{
-  return m_isScrolling;
-}
-
+//Adds scrollbar functionality and objects to the screen users can select maps from.
 void Content::AddScrollBar()
 {
   m_scrollContainer.setSize({m_contentView.getSize().x * .02f, m_displayArea.getSize().y});
@@ -351,100 +316,35 @@ void Content::AddScrollBar()
   m_scrollMaximum.y = m_scrollContainer.getGlobalBounds().height;
   m_scrollElement.setPosition(m_scrollMinimum);
   m_scrollElement.setFillColor(sf::Color(175, 175, 175, 255));
-  //std::cout << "Element size is: " << m_scrollElement.getSize().y << std::endl;
   m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f));
 }
 
-void Content::SetFirstClick(bool click)
-{
-  m_firstClick = click;
-}
-
-bool Content::GetFirstClick()
-{
-  return m_firstClick;
-}
-
-void Content::Scroll(sf::RenderWindow &window)
-{
-  //std::cout << "Scroll has tiggered" << std::endl;
-  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
-
-  mouseYNew = mouseViewPosition.y;
-
-  /*std::cout << "Scroll Element is at: " << m_scrollElement.getPosition().y  << std::endl;
-  std::cout << "Scroll Element size is: " << m_scrollElement.getSize().y << std::endl;
-  std::cout << "m_centerScreen is at : " << m_centerScreen.getPosition().y << std::endl;
-  std::cout << "m_scrollMinimum is " << m_scrollMinimum.y << std::endl;
-  std::cout << "mouseYNew is: " << mouseYNew << std::endl;
-  std::cout << "m_scrollContainer is: " << m_scrollContainer.getSize().y << std::endl;
-  std::cout << "m_offset is: " << m_offset << std::endl;
-  std::cout << "View Size is: " << m_leftColumnView.getSize().y << std::endl;*/
-
-  if(m_firstClick)
-  {
-    m_offset = mouseYNew - m_scrollElement.getPosition().y;
-  }
-
-  float viewScrollSpeed = (m_scrollContainer.getSize().y - m_contentView.getSize().y) / (m_scrollContainer.getSize().y - m_scrollElement.getSize().y);
-
-  if(mouseYNew - m_offset > m_scrollContainer.getPosition().y && mouseYNew - m_offset < m_scrollContainer.getSize().y - m_scrollElement.getSize().y)
-  {
-    m_scrollElement.setPosition(m_scrollElement.getPosition().x, mouseYNew - m_offset);
-    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, m_contentView.getSize().y / 2 + m_scrollElement.getPosition().y * viewScrollSpeed);
-  }
-  else if(mouseYNew - m_offset > m_scrollContainer.getSize().y)
-  {
-    m_scrollElement.setPosition(m_scrollMaximum);
-    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f) + m_scrollMaximum.y);
-  }
-  else if (mouseYNew - m_offset < m_scrollContainer.getPosition().y)
-  {
-    m_scrollElement.setPosition(m_scrollMinimum);
-    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f));
-  }
-  m_firstClick = false;
-}
-
+//Add clickable containers that hold map data to the m_mapContainerList vector.
 void Content::SetMapContainerVector()
 {
   m_mapContainerList.clear();
   m_mapContainerDisplayPos = (m_displayArea.getPosition());
-  //float plantBoxPosX = m_displayArea.getPosition().x;
-  //float plantBoxPosY = m_displayArea.getPosition().y;
+
   for(int i = 0; i < m_mapList.size(); i++)
   {
     m_mapContainerList.push_back(m_mapContainerDisplayPos);
-    /*std::cout << m_plants[i].GetID() << "   ";
-    std::cout << m_plants[i].GetName() << "   ";
-    std::cout << m_plants[i].GetVariety() << "   ";
-    std::cout << m_plants[i].GetSpacing() << "   ";
-    std::cout << m_plants[i].GetRowSpacing() << std::endl;*/
     m_mapContainerDisplayPos.y += m_mapSelectContainer.getSize().y;
   }
 }
 
-void Content::SetView(sf::View &view)
-{
-  m_contentView = view;
-  //std::cout << "SetView ran" << std::endl;
-}
-
-sf::View Content::GetView()
-{
-  return m_contentView;
-}
-
+//Draws the list of user created maps the user can choose from to the sf::View contentView object in the sf::RenderWindow mainWindow object.
 void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display, sf::View &view)
 {
+  //Update lists and sizes in case a map was added or deleted
   SetMapList();
   UpdateScrollArea();
   SetMapContainerVector();
+
   window.draw(m_displayArea);
   window.draw(m_scrollContainer);
   window.draw(m_scrollElement);
-  //std::cout << "Map List Size is " << m_mapContainerList.size() << std::endl;
+
+  //Loop through map list and draw available maps to the window
   for(int i = 0; i < m_mapContainerList.size(); i++)
   {
     if(MouseOverMapContainer(window))
@@ -452,24 +352,22 @@ void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay
       m_mapSelectContainer.setFillColor(sf::Color(238, 244, 177, 255));
       if(event.mouseButton.button == sf::Mouse::Left)
       {
-        //std::cout << "Container Postion is " << m_mapSelectContainer.getPosition().y << std::endl;
         display.SetDisplay(true);
         display.SetMap(m_mapList[i], view);
-        //std::cout << m_mapList[i].GetName() << " was clicked" << std::endl;
       }
     }
     else
     {
       m_mapSelectContainer.setFillColor(sf::Color(228, 243, 127, 255));
     }
+
     m_mapSelectContainer.setPosition(m_mapContainerList[i]);
 
     m_mapTxtName.setString(m_mapList[i].GetName());
     m_mapTxtName.setPosition((m_mapSelectContainer.getSize().x / 2) - (m_mapTxtName.getGlobalBounds().width / 2), (m_mapContainerList[i].y + ( m_mapSelectContainer.getSize().y / 4)) - (m_mapTxtName.getGlobalBounds().height));
-    //std::cout << "Map Container is at: " << m_mapSelectContainer.getPosition().y << std::endl;
 
     m_mapTxtYear.setString("(" + m_mapList[i].GetYear() + ")");
-    m_mapTxtYear.setPosition((m_mapSelectContainer.getSize().x / 2) - (m_mapTxtYear.getGlobalBounds().width / 2), (m_mapContainerList[i].y + ( m_mapSelectContainer.getSize().y / 3))/* + (m_plantTxtVariety.getGlobalBounds().height)*/);
+    m_mapTxtYear.setPosition((m_mapSelectContainer.getSize().x / 2) - (m_mapTxtYear.getGlobalBounds().width / 2), (m_mapContainerList[i].y + ( m_mapSelectContainer.getSize().y / 3)));
 
     std::string mapLength = std::to_string(m_mapList[i].GetLength());
     std::string mapWidth = std::to_string(m_mapList[i].GetWidth());
@@ -483,14 +381,101 @@ void Content::DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay
   }
 }
 
-bool Content::MouseOverMapContainer(sf::RenderWindow &window)
+//Set the view the Content object is associated with.
+void Content::SetView(sf::View &view)
 {
-  //std::cout << "Ran" << std::endl;
+  m_contentView = view;
+}
+
+//Updates position of scroll bar and centered position of the view on each loop.
+void Content::Scroll(sf::RenderWindow &window)
+{
   sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
   sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
-  mouseViewPosition.y -= m_mapSelectContainer.getSize().y;
 
-  //std::cout << "mouseViewPostion Y is: " << mouseViewPosition.y << std::endl;
+  mouseYNew = mouseViewPosition.y;
+
+  if(m_firstClick)
+  {
+    m_offset = mouseYNew - m_scrollElement.getPosition().y;
+  }
+
+  //Algorithm for determining how fast the view should scroll in relation to scrollbar movement
+  float viewScrollSpeed = (m_scrollContainer.getSize().y - m_contentView.getSize().y) / (m_scrollContainer.getSize().y - m_scrollElement.getSize().y);
+
+  //Instructions for when mouse and scrollbar are in bounds of the scrollbar container
+  if(mouseYNew - m_offset > m_scrollContainer.getPosition().y && mouseYNew - m_offset < m_scrollContainer.getSize().y - m_scrollElement.getSize().y)
+  {
+    m_scrollElement.setPosition(m_scrollElement.getPosition().x, mouseYNew - m_offset);
+    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, m_contentView.getSize().y / 2 + m_scrollElement.getPosition().y * viewScrollSpeed);
+  }
+  //Instructions for stopping scrollbar from going past the max position of the scrollbar container
+  else if(mouseYNew - m_offset > m_scrollContainer.getSize().y)
+  {
+    m_scrollElement.setPosition(m_scrollMaximum);
+    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f) + m_scrollMaximum.y);
+  }
+  //Instructions for stopping scrollbar from going past the min position of the scrollbar container
+  else if (mouseYNew - m_offset < m_scrollContainer.getPosition().y)
+  {
+    m_scrollElement.setPosition(m_scrollMinimum);
+    m_centerScreen.setPosition(m_contentView.getSize().x / 2.f, (m_contentView.getSize().y / 2.f));
+  }
+
+  m_firstClick = false; //First click has done it's job after first loop so it's set to false
+}
+
+//Sets whether or not the user is currently using the scroll bar.
+void Content::SetScrolling(bool toScroll)
+{
+  m_isScrolling = toScroll;
+}
+
+//Returns the value for the boolean data member m_isScrolling to indicate whether a user is trying to scroll or not.
+bool Content::GetScrolling()
+{
+  return m_isScrolling;
+}
+
+/*Sets whether or not the user is initializing scroll functionality from a state where they were not using the scrollbar.
+  This value is saved to the boolean data member m_firstClick.*/
+void Content::SetFirstClick(bool click)
+{
+  m_firstClick = click;
+}
+
+//Returns the value for the boolean data member m_firstClick to indicate whether a user has clicked on the scrollbar or not.
+bool Content::GetFirstClick()
+{
+  return m_firstClick;
+}
+
+//Returns a boolean value indicating whether or not the user's mouse is hovering over the scrollbar.
+bool Content::MouseOverScroll(sf::RenderWindow &window)
+{
+  sf::Vector2i mouseWindowPosition = sf::Mouse::getPosition(window);  //Mouse position in relation to the screen, does not account for accurate mouse view positions
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPosition); //This is necessary for getting accurate mouse view positions, which have their own coordinates
+  //Accounts for weird offset that was happening for currently undetermined reasons
+  float offset = window.getSize().x * .304;
+  mouseViewPosition.x -= offset;
+
+  float scrollPosX = m_scrollElement.getPosition().x;
+  float scrollXPosWidth = scrollPosX + m_scrollElement.getGlobalBounds().width;
+
+  if(mouseViewPosition.x < scrollXPosWidth && mouseViewPosition.x > scrollPosX && mouseViewPosition.y < m_scrollElement.getPosition().y + m_scrollElement.getSize().y && mouseViewPosition.y > m_scrollContainer.getPosition().y)
+  {
+    return true;
+  }
+  return false;
+}
+
+/*Returns a boolean value indicating whether or not the user's mouse is hovering over an sf::RectangleShape m_mapContainer object
+  that's used to contain map data for listing in the select map screen.*/
+bool Content::MouseOverMapContainer(sf::RenderWindow &window)
+{
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);  //Mouse position in relation to the screen, does not account for accurate mouse view positions
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion); //This is necessary for getting accurate mouse view positions, which have their own coordinates
+  mouseViewPosition.y -= m_mapSelectContainer.getSize().y;
 
   float containerPosX = m_mapSelectContainer.getPosition().x;
   float containerPosY = m_mapSelectContainer.getPosition().y;
@@ -505,51 +490,21 @@ bool Content::MouseOverMapContainer(sf::RenderWindow &window)
   return false;
 }
 
-bool Content::MouseOverScroll(sf::RenderWindow &window)
-{
-  //std::cout << "MouseOverScroll triggered" << std::endl;
-  sf::Vector2i mouseWindowPosition = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPosition);
-  //std::cout << "Mouse view postion x before: " << mouseViewPosition.x << std::endl;
-  float offset = window.getSize().x * .304;
-  mouseViewPosition.x -= offset;
-  //std::cout << "offset is " << offset << std::endl;
-  //mouseViewPosition.y += 128.f;
-  //mouseWindowPosition.y -= 115.f;
-  //std::cout << "window sie: " << window.getSize().x << std::endl;
-
-
-  float scrollPosX = m_scrollElement.getPosition().x;
-  float scrollXPosWidth = scrollPosX + m_scrollElement.getGlobalBounds().width;
-  //m_scrollElement.setFillColor(sf::Color::Red);
-  /*std::cout << "Mouse Window X Postion is: " << mouseWindowPosition.x << " Y postion is: " << mouseWindowPosition.y << std::endl;
-  std::cout << "Mouse View X Postion is: " << mouseViewPosition.x << " Y postion is: " << mouseViewPosition.y << std::endl;
-  std::cout << "Scroll X Postion is: " << scrollPosX << std::endl;
-  std::cout << "Scroll Y Postion is: " << m_scrollElement.getPosition().y << std::endl;
-  std::cout << "Scroll Y Size is: " << m_scrollElement.getSize().y << std::endl;
-  std::cout << "Scroll Container postion is: " << m_scrollContainer.getPosition().y << std::endl;
-  std::cout << "Display area x is:  " << m_displayArea.getPosition().x << std::endl;*/
-
-  if(mouseViewPosition.x < scrollXPosWidth && mouseViewPosition.x > scrollPosX && mouseViewPosition.y < m_scrollElement.getPosition().y + m_scrollElement.getSize().y && mouseViewPosition.y > m_scrollContainer.getPosition().y)
-  {
-    return true;
-  }
-  return false;
-}
-
-void Content::ChangeColor(sf::Color color)
-{
-  m_scrollElement.setFillColor(color);
-}
-
+//Returns sf::Vector2f object containing x and y coordinate for the current scrollbar position.
 sf::Vector2f Content::GetScrollPosition(ContentContainer &container)
 {
   return {m_centerScreen.getPosition().x, m_centerScreen.getPosition().y};
 }
 
+//Sets the color of the scrollbar (used for changing color when the user clicks on the scrollbar).
+void Content::ChangeColor(sf::Color color)
+{
+  m_scrollElement.setFillColor(color);
+}
+
+//Draws InputBox objects to the sf::Renderwindow object.
 void Content::DrawInputField(sf::RenderWindow &window)
 {
-  //int loopOnce = 0;
   window.draw(m_input_container);
   m_inputBox1.Draw(window);
   m_inputBox2.Draw(window);

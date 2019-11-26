@@ -140,7 +140,7 @@ public:
 
   /**
     Sets the size of m_mapSelectContainer data member and sets the size and position of the m_displayArea data member
-	based on the m_contentView data member sf::View object.
+	   based on the m_contentView data member sf::View object.
   */
   void AddScrollArea();
 
@@ -150,7 +150,7 @@ public:
   void UpdateScrollArea();
 
   /**
-    Adds scrollbar functinality and objects to the screen users can select maps from.
+    Adds scrollbar functionality and objects to the screen users can select maps from.
   */
   void AddScrollBar();
 
@@ -158,62 +158,133 @@ public:
     Add clickable containers that hold map data to the m_mapContainerList vector.
   */
   void SetMapContainerVector();
+
+  /**
+    Draws the list of user created maps the user can choose from to the sf::View contentView object in the sf::RenderWindow mainWindow object.
+
+  	@param &window References the RenderWindow mainWindow object.
+  	@param &event References user input events to track mouse movement and clicks.
+  	@param &display Reference to a MapDisplay object for importing map data based on user selection.
+  	@param &view Reference to an sf::View object to ensure mouse movement is picked up by a specific view and not just the main window.
+  */
   void DrawMapMenu(sf::RenderWindow &window, sf::Event &event, MapDisplay &display, sf::View &view);
+
+  /**
+    Set the view the Content object is associated with.
+
+  	@param &view Reference to an sf::View object the Content object should be drawn to in the mainWindow object.
+  */
   void SetView(sf::View &view);
-  sf::View GetView();
+
+  /**
+    Updates position of scroll bar and centered position of the view on each loop.
+
+  	@param &window Reference to the sf::RenderWindow object the scroll bar appears in.
+  */
   void Scroll(sf::RenderWindow &window);
+
+  /**
+    Sets whether or not the user is currently using the scroll bar.
+
+  	@param toScroll A boolean that indicates whether the user is using scroll functionality or not.
+  */
   void SetScrolling(bool toScroll);
+
+  /**
+    Returns the value for the boolean data member m_isScrolling to indicate whether a user is trying to scroll or not.
+  */
   bool GetScrolling();
+
+  /**
+    Sets whether or not the user is initializing scroll functionality from a state where they were not using the scrollbar.
+	   This value is saved to the boolean data member m_firstClick.
+
+  	@param click A boolean that indicates whether the user has clicked on the scrollbar to initializeze scrolling.
+  */
   void SetFirstClick(bool click);
+
+  /**
+    Returns the value for the boolean data member m_firstClick to indicate whether a user has clicked on the scrollbar or not.
+  */
   bool GetFirstClick();
+
+  /**
+    Returns a boolean value indicating whether or not the user's mouse is hovering over the scrollbar.
+
+  	@param &window References what window the mouse and scrollbar live in.
+  */
   bool MouseOverScroll(sf::RenderWindow &window);
+
+  /**
+    Returns a boolean value indicating whether or not the user's mouse is hovering over an sf::RectangleShape m_mapContainer object
+	   that's used to contain map data for listing in the select map screen.
+
+  	@param &window References what window the mouse and m_mapContainer object live in.
+  */
   bool MouseOverMapContainer(sf::RenderWindow &window);
+
+  /**
+    Returns sf::Vector2f object containing x and y coordinate for the current scrollbar position.
+
+  	@param &container References the ContentContainer object the scrollbar is located in for setting the scrollbar's location
+		in relation to the ContentContainer object it lives in.
+  */
   sf::Vector2f GetScrollPosition(ContentContainer &container);
+
+  /**
+    Sets the color of the scrollbar (used for changing color when the user clicks on the scrollbar).
+
+  	@param color An sf::Color value for changing the color of the sf::RectangleShape m_scrollElement data member.
+  */
   void ChangeColor(sf::Color color);
+
+  /**
+    Draws InputBox objects to the sf::Renderwindow object.
+
+  	@param &window References an sf::RenderWindow object to draw to.
+  */
   void DrawInputField(sf::RenderWindow &window);
 
 private:
-  sf::Text m_contentText;
-  std::string m_contentString;
-  std::ifstream m_inputFile;
-  std::string m_stringSection;
-  sf::Font m_ubuntu;
-  sf::RectangleShape m_input_container;
-  InputBox m_inputBox1;
-  InputBox m_inputBox2;
-  InputBox m_inputBox3;
-  InputBox m_inputBox4;
-  bool m_isActive;
-  Button m_inputButton;
-  MessageWindow m_messageDisplay;
-  Plant m_plant;
-  int m_currentPlantID;
-  int m_previousPlantID;
-  Map m_map;
-  sf::RectangleShape m_mapSelectContainer;
-  sf::View m_contentView;
-  sf::RectangleShape m_displayArea;
-  std::vector<Map> m_mapList;
-  std::vector<sf::Vector2f> m_mapContainerList;
-  sf::Vector2f m_mapContainerDisplayPos;
-  sf::RectangleShape m_scrollContainer;
-  sf::RectangleShape m_scrollElement;
-  sf::Vector2f m_scrollMinimum;
-  sf::Vector2f m_scrollMaximum;
-  sf::RectangleShape m_centerScreen;
-  float m_screenToViewRatio;
-  bool m_isScrolling;
-  bool m_firstClick;
-  float mouseYNew;
-  float m_offset;
-  sf::Text m_mapTxtName;
-  sf::Text m_mapTxtYear;
-  sf::Text m_mapTxtLength;
-  sf::Text m_mapTxtWidth;
-  //MapDisplay m_mapDisplay;
-  //LeftColumnContent m_leftColumnAPI;
-  //std::string m_currentPlantName;
-  //std::vector<Plant> m_plantList;
+  sf::Text m_contentText; //Object for storing text relating to content selected.
+  std::string m_contentString; //Variable for storing strings in text files to be set in the m_contentText object.
+  std::ifstream m_inputFile; //Variable for grabbing contents of a text file for displaying in a Content object.
+  std::string m_stringSection; //Variable for storing individual lines in a text file (used for concantnating to m_contentString for full block of text).
+  sf::Font m_ubuntu; //Font to be used for text in Content objects.
+  sf::RectangleShape m_input_container; //Object for containing InputBox objects for the Content object.
+  InputBox m_inputBox1;  //Object for input box users can enter data in.
+  InputBox m_inputBox2;  //Object for input box users can enter data in.
+  InputBox m_inputBox3;  //Object for input box users can enter data in.
+  InputBox m_inputBox4;  //Object for input box users can enter data in.
+  bool m_isActive;  //Variable for determining what Content object a user has selected to view.
+  Button m_inputButton; //Object for configuring buttons for submitting user input to MySQL database.
+  MessageWindow m_messageDisplay;  //Object for displaying messages to the user.
+  Plant m_plant; //Object for storing plant data.
+  int m_currentPlantID; //Variable for storing the currently selected m_plant object MySQL ID.
+  int m_previousPlantID; //Variable for storing the m_plant ID selected previous to the current selection.
+  Map m_map; //Object for storing Map object data.
+  sf::RectangleShape m_mapSelectContainer; //Object for area containing a list of maps the user can select.
+  sf::View m_contentView;  //Object for storing what view the Content object should be contained in.
+  sf::RectangleShape m_displayArea; //Object for storing the size of the area the content needs to be displayed in.
+  std::vector<Map> m_mapList;  //A list of maps available in the MySQL database.
+  std::vector<sf::Vector2f> m_mapContainerList;  //A list of container positions for displaying available maps in the MySQL database.
+  sf::Vector2f m_mapContainerDisplayPos;  //A Variable for a map container position that's pushed to the m_mapContainerList vector.
+  sf::RectangleShape m_scrollContainer;  //Object that holds the scrollbar element the user interacts with.
+  sf::RectangleShape m_scrollElement;  //Object for the scrollbar the user can interact with.
+  sf::Vector2f m_scrollMinimum;  //Object holding the x and y coordinates the scroll bar element can go below.
+  sf::Vector2f m_scrollMaximum;  //Object holding the x and y coordinates the scrollbar can't go above.
+  sf::RectangleShape m_centerScreen;  //Object that determines where the camera focuses in the view object.
+  float m_screenToViewRatio;  //Variable determining the ratio between the view size and the content size.
+  bool m_isScrolling;  //Variable indicating if the user is scrolling in the Content Object or not.
+  bool m_firstClick;  //Variable determining if a user has clicked on the scrollbar to initiate scrolling functionality.
+  float mouseYNew;  //Variable holding the most current mouse position.
+  float m_offset;  //Variable holding the difference between where the user clicked on the scrollbar and the current position of the scrollbar.
+  sf::Text m_mapTxtName;  //Object holding the name of an m_map object.
+  sf::Text m_mapTxtYear;  //Object holding the year of an m_map object.
+  sf::Text m_mapTxtLength;  //Object holding the length of an m_map object.
+  sf::Text m_mapTxtWidth;  //Object holding the width of an m_map object.
+
+  //Pointers to MySQL Connector/C++ objects (needed for communicating with MySQL database)
   sql::Driver *driver;
   sql::Connection *con;
   sql::Statement *stmt;
