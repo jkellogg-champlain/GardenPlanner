@@ -1,8 +1,10 @@
 #include "Button.h"
 //#include <iostream>
 
+//Default Constructor.
 Button::Button() { }
 
+//Constructor.
 Button::Button(std::string name, sf::RenderWindow& window, sf::Color color, sf::Color textColor)
 {
   m_text.setString(name);
@@ -18,8 +20,10 @@ Button::Button(std::string name, sf::RenderWindow& window, sf::Color color, sf::
   m_text.setFont(m_ubuntu);
 }
 
+//Default Destructor
 Button::~Button() { }
 
+//Set Button data for Button objects created with Default Constructor.
 void Button::SetButton(std::string name, sf::RenderWindow& window)
 {
   m_text.setString(name);
@@ -35,17 +39,31 @@ void Button::SetButton(std::string name, sf::RenderWindow& window)
   m_text.setFont(m_ubuntu);
 }
 
+//Draw Button object to a Window object.
 void Button::Draw(sf::RenderWindow& window)
 {
   window.draw(m_button);
   window.draw(m_text);
 }
 
+//Position a Button object in relation to a ContentContainer object.
+void Button::SetPosition(sf::Vector2f area, float ratioX, float ratioY)
+{
+  sf::Vector2f position = {area.x * ratioX, (area.y * ratioY) / 2.5f};
+  m_button.setPosition(position);
+
+  float xPos = position.x + ((m_button.getGlobalBounds().width - m_text.getGlobalBounds().width) / 2);
+  float yPos = position.y + ((m_button.getGlobalBounds().height - m_text.getGlobalBounds().height)) * .25;
+  m_text.setPosition(xPos, yPos);
+}
+
+//Set the background color of the button.
 void Button::SetColor(sf::Color color)
 {
   m_button.setFillColor(color);
 }
 
+//Return whether mouse is over a button object created in main.cpp.
 bool Button::mouseOver(sf::RenderWindow &window)
 {
   float mouseX = sf::Mouse::getPosition(window).x;
@@ -64,6 +82,7 @@ bool Button::mouseOver(sf::RenderWindow &window)
   return false;
 }
 
+//Return whether mouse is over a button object created in a Content object.
 bool Button::ContentBtnMouseOver(sf::RenderWindow &window)
 {
   float mouseX = sf::Mouse::getPosition(window).x;
@@ -80,14 +99,4 @@ bool Button::ContentBtnMouseOver(sf::RenderWindow &window)
     return true;
   }
   return false;
-}
-
-void Button::SetPosition(sf::Vector2f area, float ratioX, float ratioY)
-{
-  sf::Vector2f position = {area.x * ratioX, (area.y * ratioY) / 2.5f};
-  m_button.setPosition(position);
-
-  float xPos = position.x + ((m_button.getGlobalBounds().width - m_text.getGlobalBounds().width) / 2);
-  float yPos = position.y + ((m_button.getGlobalBounds().height - m_text.getGlobalBounds().height)) * .25;
-  m_text.setPosition(xPos, yPos);
 }
