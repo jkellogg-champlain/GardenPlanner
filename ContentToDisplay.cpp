@@ -1,8 +1,12 @@
 #include "ContentToDisplay.h"
 
+//Default Constructor.
 ContentToDisplay::ContentToDisplay() { }
+
+//Default Destructor.
 ContentToDisplay::~ContentToDisplay() { }
 
+//Displays the most current Content object the user has selected.
 void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome,
   Content &selectmap,
   Content &createmap,
@@ -18,17 +22,11 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   }
   else if(selectmap.GetActiveStatus())
   {
-    //selectmap.DrawText(window);
-    //selectmap.GetView().setCenter(selectmap.GetScrollPosition(container));
-    //std::cout << "Get Scrolling is: " << std::endl;
     if(selectmap.GetScrolling())
 		{
 			selectmap.Scroll(window);
 		}
-    //selectmap.SetMapList();
-    //selectmap.AddScrollArea();
-  	//selectmap.AddScrollBar();
-    //selectmap.SetMapContainerVector();
+
     selectmap.DrawMapMenu(window, event, mapDisplay, view);
   }
   else if(createmap.GetActiveStatus())
@@ -43,9 +41,6 @@ void ContentToDisplay::DisplayContent(sf::RenderWindow &window, Content &welcome
   }
   else if (editplant.GetActiveStatus())
   {
-    /*editplant.GetPlantVector(m_leftColumnAPI.GetPlantVector());
-    editplant.EnterPlantData();*/
-    //editplant.GetCurrentPlantName();
     editplant.GetSelectedPlant();
     editplant.DrawText(window);
     editplant.DrawInputField(window);
