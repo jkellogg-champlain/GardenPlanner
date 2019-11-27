@@ -355,5 +355,5 @@ int main()
 
 		mainWindow.display();
 		//End render all objects to window.
-}
+	}//End main program loop
 }
