@@ -1,7 +1,9 @@
 #include "InputBox.h"
 
+//Default Constructor
 InputBox::InputBox()
 {
+  //Default settings
   m_isSelected = false;
   m_hasLimit = true;
   m_limit = 30;
@@ -10,6 +12,7 @@ InputBox::InputBox()
   m_container.setOutlineColor(sf::Color::Black);
   m_container.setOutlineThickness(1);
 
+  //Add cursor to textbox.
   if(m_isSelected == true)
   {
     m_textBox.setString("_");
@@ -22,22 +25,26 @@ InputBox::InputBox()
   if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
-  };
+  }
+
   m_inputHeader.setFont(m_ubuntu);
-  //m_inputHeader.setString("Plants per Sqr Ft:");
   m_inputHeader.setFillColor(sf::Color::Black);
 
   if(!a_Futurica.loadFromFile("a_Futurica.ttf"))
   {
     std::cout << "Unable to load a_Futurica.ttf font file" << std::endl;
-  };
+  }
+
   m_textBox.setFont(a_Futurica);
   m_textBox.setCharacterSize(20);
 }
 
+//Default Destructor
 InputBox::~InputBox() { }
 
 /******Public Functions******/
+
+//Sets postions for m_inputHeader sf::Text object, m_container sf::RectangleShape object, and m_textBox sf::Text object.
 void InputBox::SetPosition(sf::Vector2f pos)
 {
   m_inputHeader.setPosition(pos);
@@ -45,6 +52,7 @@ void InputBox::SetPosition(sf::Vector2f pos)
   m_textBox.setPosition(pos.x + 275, pos.y + 10);
 }
 
+//Sets whether or not the user has selected the input box to enter data.
 void InputBox::setSelected(bool sel)
 {
   m_isSelected = sel;
@@ -61,45 +69,45 @@ void InputBox::setSelected(bool sel)
   }
 }
 
-void InputBox::SetHeader(std::string header)
-{
-  m_inputHeader.setString(header);
-}
-
+//Returns text currently held in the m_text sf::Text ostringstream object.
 std::string InputBox::GetText()
 {
   return m_text.str();
 }
 
+//Sets the string for the m_text ostringstream object and the m_textBox sf::Text object.
 void InputBox::AddText(std::string s)
 {
   m_textBox.setString(s);
   m_text.str(s);
 }
 
-/*void InputBox::AddInt(int i)
-{
-  m_textBox.setInt(i);
-}*/
-
+//Removes all text from the m_text ostringstream object and the m_textBox sf::Text object.
 void InputBox::ClearContent()
 {
   m_textBox.setString("");
   m_text.str("");
 }
 
+//Sets the string for the m_inputHeader sf::Text object.
+void InputBox::SetHeader(std::string header)
+{
+  m_inputHeader.setString(header);
+}
+
+//Displays user input in the InputBox object as the user is typing.
 void InputBox::typedOn(sf::Event input)
 {
   if(m_isSelected)
   {
-    int charTyped = input.text.unicode;
-    if(charTyped < 128)
+    int charTyped = input.text.unicode; //Gets the unicode value for the keyboard char the user typed.
+    if(charTyped < 128) //Anything above Unicode 128 is unnecessary
     {
-      if(m_hasLimit)
+      if(m_hasLimit)//Only accept characters when the text box hasn't exceeded this limit.
       {
         if(m_text.str().length() <= m_limit)
         {
-          inputLogic(charTyped);
+          inputLogic(charTyped);//Private inputLogic function takes the key the user pressed and displays it to the text box.
         }
         else if(m_text.str().length() > m_limit  && charTyped == DELETE_KEY)
         {
@@ -114,15 +122,14 @@ void InputBox::typedOn(sf::Event input)
   }
 }
 
+//Checks to see if InputBox object has a mouse positioned over it and if clicked on changes the backgound color of the input box.
 void InputBox::clickedOn(sf::RenderWindow &window)
 {
-  //std::cout << "Clicked on Function Ran" << std::endl;
   float mouseX = sf::Mouse::getPosition(window).x;
   float mouseY = sf::Mouse::getPosition(window).y;
 
   float boxPosX = m_container.getPosition().x * 2;
   float boxPosY = m_container.getPosition().y + window.getSize().y / 8.523;
-  //std::cout << window.getSize().y << std::endl;
 
   float boxXPosWidth = boxPosX + m_container.getGlobalBounds().width;
   float boxYPosHeight = boxPosY + m_container.getGlobalBounds().height;
@@ -131,28 +138,15 @@ void InputBox::clickedOn(sf::RenderWindow &window)
   {
     m_isSelected = true;
     m_container.setFillColor(sf::Color(223, 223, 223));
-    /*std::cout << "isSelected is true" << std::endl;
-    std::cout << "Mouse is at position x: " << mouseX << std::endl;
-    std::cout << "Mouse is at position y: " << mouseY << std::endl;
-    std::cout << "Box is at position x: " << boxPosX << std::endl;
-    std::cout << "Box is at position y: " << boxPosY << std::endl;
-    std::cout << "Box Width is : " << boxXPosWidth << std::endl;
-    std::cout << "Box Height is: " << boxYPosHeight << std::endl;*/
   }
   else
   {
     m_isSelected = false;
     m_container.setFillColor(sf::Color::White);
-    /*std::cout << "isSelected is false" << std::endl;
-    std::cout << "Mouse is at position x: " << mouseX << std::endl;
-    std::cout << "Mouse is at position y: " << mouseY << std::endl;
-    std::cout << "Box is at position x: " << boxPosX << std::endl;
-    std::cout << "Box is at position y: " << boxPosY << std::endl;
-    std::cout << "Box Width is : " << boxXPosWidth << std::endl;
-    std::cout << "Box Height is: " << boxYPosHeight << std::endl;*/
   }
 }
 
+//Draws the sf::RectangleShape m_container, sf::Text m_textBox, and sf::Text m_inputHeader text objects to the window.
 void InputBox::Draw(sf::RenderWindow &window)
 {
   window.draw(m_container);
@@ -161,6 +155,8 @@ void InputBox::Draw(sf::RenderWindow &window)
 }
 
 /******Private Functions****/
+
+//Logic that sets the cursor in the input box, deletes characters when user presses backspace, and adds text to the m_texBox object through the stringstream object.
 void InputBox::inputLogic(int charTyped)
 {
   if (charTyped != DELETE_KEY && charTyped != ENTER_KEY && charTyped != ESCAPE_KEY)
@@ -177,6 +173,7 @@ void InputBox::inputLogic(int charTyped)
   m_textBox.setString(m_text.str() + "_");
 }
 
+//Removes the last character in the text box (used with DELETE_KEY).
 void InputBox::deleteLastChar()
 {
   std::string t = m_text.str();
