@@ -12,45 +12,45 @@
 
 int main()
 {
+	//Create Window to display program and set clock object for timing updates
 	sf::RenderWindow mainWindow;
 	sf::VideoMode currentMode = sf::VideoMode::getDesktopMode();
 	mainWindow.setFramerateLimit(60);
 	mainWindow.create(sf::VideoMode(currentMode), "Garden Space Planner");
 	float deltaTime = 0.f;
 	sf::Clock dtClock;
-	//std::cout << mainWindow.getSize().y << std::endl;
 
+	//Set values for program color palate variables
 	sf::Color background = sf::Color(228, 243, 127, 255);
 	sf::Color foreground = sf::Color(86, 225, 58, 255);
 	sf::Color onHover = sf::Color(238, 244, 177, 255);
 
+	//Set Container objects for containing main display areas
 	ContentContainer topNavBar(mainWindow, .98f, .08f, .02f, .02f, foreground);
 	ContentContainer leftColumn(mainWindow, .25f, .86f, .02f, .12f, foreground);
 	ContentContainer mainContent(mainWindow, .72f, .86f, .54f, .12f, background);
 	ContentContainer mapNavBar(mainWindow, .72f, .1f, .54f, .12f, foreground);
 
+	//Display in mapNavBar providing current map information
 	sf::RectangleShape mapInfoContainer;
 	mapInfoContainer.setFillColor(sf::Color::White);
 	mapInfoContainer.setSize({mapNavBar.GetSize().x * .4f, mapNavBar.GetSize().y * .9f});
 	mapInfoContainer.setPosition(mapNavBar.GetPosition().x * 1.05f, mapNavBar.GetPosition().y * 1.04f);
 
+	//Button for deleting maps that lives in the mapNavBar ContentContainer.
 	Button deleteMapBtn("Delete Map", mainWindow, background, sf::Color::Black);
 	deleteMapBtn.SetPosition(mapNavBar.GetSize(), 1.13f, 3.5f);
-	/*Button saveMapBtn("Save Map", mainWindow, background, sf::Color::Black);
-	saveMapBtn.SetPosition(mapNavBar.GetSize(), 1.13f, 3.5f);*/
-	//std::cout<<"X Size: " << mainContent.GetSize().x << " Y Size: "<< mainContent.GetSize().y << std::endl;
-	//std::cout<<"X Postion: " << mainContent.GetPosition().x << " Y Position " << mainContent.GetPosition().y << std::endl;
 
+	//Instantiate views for displaying all kinds of content.
 	sf::View staticView;
 	staticView.reset(sf::FloatRect(0, 0, (float)mainWindow.getSize().x, (float)mainWindow.getSize().y));
 
 	sf::View leftColumnView;
 	leftColumnView.setSize(leftColumn.GetSize().x * .99f, leftColumn.GetSize().y * .99f);
-	//leftColumnView.setCenter(leftColumn.GetSize().x / 2, leftColumn.GetSize().y / 2);
 	leftColumnView.setViewport(sf::FloatRect(.0172f, .133f, .235f, .835f));
+	//Instantiate border for containing the leftColumnView.
 	sf::RectangleShape leftColumnViewBorder;
 	leftColumnViewBorder.setSize({leftColumn.GetSize().x * .94f, leftColumn.GetSize().y * .968f});
-	//std::cout << "X border size: " << leftColumnViewBorder.getSize().x << "\nY border size: " << leftColumnViewBorder.getSize().y << std::endl;
 	leftColumnViewBorder.setPosition({leftColumn.GetPosition().x * 1.7f, leftColumn.GetPosition().y * 1.13f});
 	leftColumnViewBorder.setOutlineColor(sf::Color(42, 85, 34, 255));
 	leftColumnViewBorder.setOutlineThickness(1);
@@ -65,8 +65,8 @@ int main()
 	mapView.setCenter(mainContent.GetSize().x / 2, mainContent.GetSize().y / 2);
 	mapView.setViewport(sf::FloatRect(.27f, .223f, .7199, .757f));
 
+	//Instantiate an interactive map display.
 	MapDisplay displayMap;
-
 	sf::Text mapInfo;
 	sf::Font ubuntu;
 	ubuntu.loadFromFile("Ubuntu-M.ttf");
@@ -75,22 +75,12 @@ int main()
 	mapInfo.setCharacterSize(mapNavBar.GetSize().y * .25);
 	mapInfo.setPosition(mapInfoContainer.getPosition().x + 10.f, mapInfoContainer.getPosition().y + 5);
 
-	/*Map currentMap;
-	currentMap.SetLength(11);
-	currentMap.SetWidth(25);
-
-	displayMap.GetMap(currentMap);*/
-
-	/*sf::RectangleShape test;
-	test.setSize({5000.f, 5000.f});
-	test.setFillColor(sf::Color::Red);*/
-
+	//Instantiate Content objects for each screen the user can select.
 	Content WelcomeScreen;
 	WelcomeScreen.AddText("WelcomeScreen.txt");
 	WelcomeScreen.MakeActive();
 
 	Content SelectMapScreen;
-	//SelectMapScreen.AddText("SelectMapScreen.txt");
 	SelectMapScreen.SetView(contentView);
 	SelectMapScreen.SetMapList();
 	SelectMapScreen.AddScrollArea();
@@ -125,14 +115,17 @@ int main()
 	"Row Spacing/foot", {70.f, mainContent.GetSize().y * .32f + 230.f});
 	EditPlantScreen.AddInputButton("SUBMIT EDIT", mainWindow, mainContent.GetSize(), .4f, 1.96f);
 
+	//Instantiate object that handles what content should be displayed.
 	ContentToDisplay contentDisplay;
 
+	//Instantiate object for displaying left column content.
 	LeftColumnContent leftColumnDisplay(leftColumnView);
 	leftColumnDisplay.SetPlantVector();
 	leftColumnDisplay.AddDisplayArea();
 	leftColumnDisplay.AddScrollBar();
 	leftColumnDisplay.SetPlantContainerVector();
 
+	//Instantiate button objects for the topNavBar ContentContainer object and add them to an array.
 	Button selectMapBtn("Select Map", mainWindow, background, sf::Color::Black);
 	selectMapBtn.SetPosition(topNavBar.GetSize(), .08f, .96f);
 	Button createMapBtn("Create Map", mainWindow, background, sf::Color::Black);
@@ -143,27 +136,30 @@ int main()
 	editPlantBtn.SetPosition(topNavBar.GetSize(), .74f, .96f);
 	Button navButtons [4] = {selectMapBtn, createMapBtn, addPlantBtn, editPlantBtn};
 
-	//Tile testTile;
-
+	//Instantiate an event object for polling events.
 	sf::Event event;
 
+	//Begin main program loop.
 	while (mainWindow.isOpen())
 	{
+		//Set delta time to circumvent differences between computer processor speeds
 		deltaTime = dtClock.restart().asSeconds();
+
+		//Check to see if a map has been selected by the user.
 		if(displayMap.GetDisplay())
 		{
 			displayMap.UpdateKeys(mapView, deltaTime);
 			mapInfo.setString("Map: " + displayMap.GetMap().GetName() + "\nYear: " + displayMap.GetMap().GetYear() +
 			"\nSize(feet): " + std::to_string(displayMap.GetMap().GetLength()) + "x" + std::to_string(displayMap.GetMap().GetWidth()));
-
-			//displayMap.RemoveTile(mainWindow);
 		}
+		//Begin Polling for user initiated events.
 		while (mainWindow.pollEvent (event))
 		{
 			switch(event.type) {
 				case sf::Event::Closed:
 					mainWindow.close();
 				case sf::Event::MouseButtonPressed:
+					//Begin left mouse button events.
 					if(event.mouseButton.button == sf::Mouse::Left)
 					{
 						CreateMapScreen.FocusOnBox(mainWindow);
@@ -177,13 +173,11 @@ int main()
 						{
 							displayMap.DeleteMap();
 							SelectMapScreen.MakeInactive();
-							//SelectMapScreen.SetMapList();
 							CreateMapScreen.MakeInactive();
 							AddPlantScreen.MakeInactive();
 							WelcomeScreen.MakeActive();
 							EditPlantScreen.MakeInactive();
 							displayMap.SetDisplay(false);
-							//displayMap.SetMapDeleted(true);
 						}
 						else if(selectMapBtn.mouseOver(mainWindow))
 						{
@@ -222,28 +216,17 @@ int main()
 							CreateMapScreen.MakeInactive();
 							displayMap.SetDisplay(false);
 						}
-						/*else if(deleteMapBtn.mouseOver(mainWindow))
+						else if(leftColumnDisplay.MouseOverScroll(mainWindow))
 						{
-							displayMap.DeleteMap();
-							displayMap.SetDisplay(false);
-							SelectMapScreen.MakeActive();
-							SelectMapScreen.SetMapList();
-						}*/
-						else if(leftColumnDisplay.MouseOverScroll(mainWindow/*, leftColumnViewBorder*/))
-						{
-							//leftColumnDisplay.Scroll(mainWindow);
 							leftColumnDisplay.ChangeColor(sf::Color(150, 150, 150, 255));
 							leftColumnDisplay.SetScrolling(true);
 							leftColumnDisplay.SetFirstClick(true);
-							//std::cout << "Scrolling is true" << std::endl;
 						}
 						else if(SelectMapScreen.MouseOverScroll(mainWindow))
 						{
-							//leftColumnDisplay.Scroll(mainWindow);
 							SelectMapScreen.ChangeColor(sf::Color(150, 150, 150, 255));
 							SelectMapScreen.SetScrolling(true);
 							SelectMapScreen.SetFirstClick(true);
-							//std::cout << "Scrolling is true" << std::endl;
 						}
 						if(displayMap.GetDisplay())
 						{
@@ -252,7 +235,7 @@ int main()
 								displayMap.BuildTile();
 							}
 						}
-					}
+					}  //End left mouse button events.
 					else if(event.mouseButton.button == sf::Mouse::Right)
 					{
 						if(displayMap.GetDisplay())
@@ -261,7 +244,6 @@ int main()
 						}
 					}
 					break;
-				//case sf::Event::MouseButtonPressed:
 				case sf::Event::TextEntered:
 					if(AddPlantScreen.GetActiveStatus())
 						{
@@ -294,13 +276,8 @@ int main()
 						EditPlantScreen.SubmitData(mainWindow, "edit_plants", displayMap, contentView);
 					}
 					break;
-				/*case sf::Event::KeyPressed:
-					displayMap.Update(mapView, deltaTime, event);*/
-
-				case sf::Event::MouseMoved:
-					sf::Vector2i mousePos = sf::Mouse::getPosition();
-					//std::cout << "Mouse X Position: " << mousePos.x << " Mouse Y Position: " << mousePos.y << std::endl;
 			}
+			//Update mouse postion if an interactive map is being displayed
 			if(displayMap.GetDisplay())
 			{
 				if(displayMap.MouseInBounds(mainWindow, mainContent, mapNavBar))
@@ -308,10 +285,11 @@ int main()
 					displayMap.UpdateMouse(mainWindow, mapView);
 				}
 			}
-		}
+		}//End Polling for user initiated events.
 
+		//Begin Render all objects to the window.
 		mainWindow.clear(background);
-		//mainWindow.setView(mainWindow.getDefaultView());
+		//Render proper objects to the static view (main view of program).
 		mainWindow.setView(staticView);
 		topNavBar.Draw(mainWindow);
 		for (Button btn : navButtons)
@@ -326,12 +304,11 @@ int main()
 			}
 			btn.Draw(mainWindow);
 		}
-		//testTile.Draw(mainWindow);
 		leftColumn.Draw(mainWindow);
 		mainContent.Draw(mainWindow);
 		mainWindow.draw(leftColumnViewBorder);
 
-		//mainWindow.setView(mainWindow.getDefaultView());
+		//Render logic if a map has been selected by user and is being viewed
 		if(displayMap.GetDisplay())
 		{
 			if(deleteMapBtn.mouseOver(mainWindow))
@@ -345,17 +322,15 @@ int main()
 			mapNavBar.Draw(mainWindow);
 			mainWindow.draw(mapInfoContainer);
 			deleteMapBtn.Draw(mainWindow);
-			//saveMapBtn.Draw(mainWindow);
 			mainWindow.draw(mapInfo);
+			//Draw selected map to the mapView.
 			mainWindow.setView(mapView);
 			displayMap.DrawMap(mainWindow);
 			displayMap.DrawTiles(mainWindow);
-			//displayMap.DrawSelector(mainWindow);
-			//mainWindow.draw(test);
-			//std::cout << "Positon x is " << test.getPosition().x << " and y is " << test.getPosition().y << std::endl;
 		}
 		else
 		{
+			//Draw selected content to view to the contentView
 			mainWindow.setView(contentView);
 			if(SelectMapScreen.GetActiveStatus())
 			{
@@ -368,7 +343,7 @@ int main()
 			contentDisplay.DisplayContent(mainWindow, WelcomeScreen, SelectMapScreen,
 				CreateMapScreen, AddPlantScreen, EditPlantScreen, event, displayMap, mapView);
 		}
-		//mainWindow.setView(mainWindow.getDefaultView());
+		//Left column Content to display in leftColumnView.
 		mainWindow.setView(leftColumnView);
 		leftColumnView.setCenter(leftColumnDisplay.GetScrollPosition(leftColumn));
 		if(leftColumnDisplay.GetScrolling())
@@ -378,7 +353,7 @@ int main()
 
 		leftColumnDisplay.Draw(mainWindow, event);
 
-		//mainWindow.setView(mainWindow.getDefaultView());
 		mainWindow.display();
+		//End render all objects to window.
 }
 }
