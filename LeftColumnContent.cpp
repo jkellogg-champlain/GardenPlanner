@@ -1,12 +1,17 @@
 #include "LeftColumnContent.h"
 
+//Default Constructor
 LeftColumnContent::LeftColumnContent() { }
+
+//Constructor
 LeftColumnContent::LeftColumnContent(sf::View &view)
 {
+  //Scrolling and first click on scrollbar should not be true on instantiation of the object.
   m_isScrolling = false;
   m_firstClick = false;
   m_leftColumnView = view;
 
+  //Set defaults for sf::Text objects
   if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
@@ -23,8 +28,11 @@ LeftColumnContent::LeftColumnContent(sf::View &view)
   m_plantTxtRow.setFillColor(sf::Color::Black);
   m_plantTxtRow.setCharacterSize(15);
 }
+
+//Default Destructor.
 LeftColumnContent::~LeftColumnContent() { }
 
+//Add a Scrollbar in the left column.
 void LeftColumnContent::AddScrollBar()
 {
 
@@ -32,7 +40,7 @@ void LeftColumnContent::AddScrollBar()
   m_scrollContainer.setPosition({m_displayArea.getPosition().x + (m_displayArea.getSize().x - m_scrollContainer.getSize().x), m_displayArea.getPosition().y});
   m_scrollContainer.setFillColor(sf::Color(220, 220, 220, 255));
 
-  m_screenToViewRatio = m_displayArea.getSize().y / m_leftColumnView.getSize().y;
+  m_screenToViewRatio = m_displayArea.getSize().y / m_leftColumnView.getSize().y; //Used for properly sizing scrollbar slider.
 
   m_scrollElement.setSize({m_scrollContainer.getSize().x * .75f, m_leftColumnView.getSize().y / m_screenToViewRatio});
   m_scrollMinimum.x = m_scrollContainer.getPosition().x * 1.015f;
@@ -41,85 +49,64 @@ void LeftColumnContent::AddScrollBar()
   m_scrollMaximum.y = m_scrollContainer.getGlobalBounds().height;
   m_scrollElement.setPosition(m_scrollMinimum);
   m_scrollElement.setFillColor(sf::Color(175, 175, 175, 255));
-  //std::cout << "Element size is: " << m_scrollElement.getSize().y << std::endl;
   m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
 }
 
+//Sets the m_firstClick member variable to true or false.
 void LeftColumnContent::SetFirstClick(bool click)
 {
   m_firstClick = click;
 }
 
+//Returns the value of the m_firstClick member variable.
 bool LeftColumnContent::GetFirstClick()
 {
   return m_firstClick;
 }
 
+//Implements the logic behind scroll functionality
 void LeftColumnContent::Scroll(sf::RenderWindow &window, sf::RectangleShape &viewborder)
 {
-  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window); //Grabs position of mouse in the window.
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);  //Translates mouse position in window to mouse position in the view.
 
   mouseYNew = mouseViewPosition.y;
 
-  /*std::cout << "Scroll Element is at: " << m_scrollElement.getPosition().y  << std::endl;
-  std::cout << "Scroll Element size is: " << m_scrollElement.getSize().y << std::endl;
-  std::cout << "m_centerScreen is at : " << m_centerScreen.getPosition().y << std::endl;
-  std::cout << "m_scrollMinimum is " << m_scrollMinimum.y << std::endl;
-  std::cout << "mouseYNew is: " << mouseYNew << std::endl;
-  std::cout << "m_scrollContainer is: " << m_scrollContainer.getSize().y << std::endl;
-  std::cout << "m_offset is: " << m_offset << std::endl;
-  std::cout << "View Size is: " << m_leftColumnView.getSize().y << std::endl;*/
-
+  //Establish difference between scroll bar slider position and where the user clicked in the scroll bar slider.
   if(m_firstClick)
   {
     m_offset = mouseYNew - m_scrollElement.getPosition().y;
   }
 
+  //Algorithm for determining how fast the view should scroll in relation to scroll bar slider movement.
   float viewScrollSpeed = (m_scrollContainer.getSize().y - m_leftColumnView.getSize().y) / (m_scrollContainer.getSize().y - m_scrollElement.getSize().y);
 
+  //What to do if scroll bar slider is within bounds of scroll bar container.
   if(mouseYNew - m_offset > m_scrollContainer.getPosition().y && mouseYNew - m_offset < m_scrollContainer.getSize().y - m_scrollElement.getSize().y)
   {
     m_scrollElement.setPosition(m_scrollElement.getPosition().x, mouseYNew - m_offset);
     m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, m_leftColumnView.getSize().y / 2 + m_scrollElement.getPosition().y * viewScrollSpeed);
   }
+  //What to do if scroll bar slider is outside the max bounds of scrollbar container.
   else if(mouseYNew - m_offset > m_scrollContainer.getSize().y)
   {
     m_scrollElement.setPosition(m_scrollMaximum);
     m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f) + m_scrollMaximum.y);
   }
+  //What to do if scrollbar slider is below the minimum bounds of scrollbar container.
   else if (mouseYNew - m_offset < m_scrollContainer.getPosition().y)
   {
     m_scrollElement.setPosition(m_scrollMinimum);
     m_centerScreen.setPosition(m_leftColumnView.getSize().x / 2.f, (m_leftColumnView.getSize().y / 2.f));
   }
-  m_firstClick = false;
+  m_firstClick = false;//first click is no longer true after the program loop runs once after scrollbar is clicked.
 }
 
-sf::Vector2f LeftColumnContent::GetScrollPosition(ContentContainer &container)
+//Returns true or false depending on whether the mouse is positioned over the scrollbar or not.
+bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window)
 {
-  return {m_centerScreen.getPosition().x, m_centerScreen.getPosition().y};
-}
-
-void LeftColumnContent::SetScrolling(bool toScroll)
-{
-  m_isScrolling = toScroll;
-}
-
-bool LeftColumnContent::GetScrolling()
-{
-  return m_isScrolling;
-}
-
-void LeftColumnContent::ChangeColor(sf::Color color)
-{
-  m_scrollElement.setFillColor(color);
-}
-
-bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window/*, sf::RectangleShape &border*/)
-{
-  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window); //Grabs position of mouse in the window.
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion); //Translates mouse position in window to mouse position in the view.
 
   float scrollPosX = m_scrollElement.getPosition().x;
   float scrollXPosWidth = scrollPosX + m_scrollElement.getGlobalBounds().width;
@@ -131,11 +118,11 @@ bool LeftColumnContent::MouseOverScroll(sf::RenderWindow &window/*, sf::Rectangl
   return false;
 }
 
+//Returns true or false dependig on whether the mouse is positioned over a container listing plant info.
 bool LeftColumnContent::MouseOverPlantContainer(sf::RenderWindow &window)
 {
-  //std::cout << "Ran" << std::endl;
-  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window); //Grabs position of mouse in the window.
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);  //Translates mouse position in window to mouse position in the view.
 
   float containerPosX = m_plantContainer.getPosition().x;
   float containerPosY = m_plantContainer.getPosition().y;
@@ -150,20 +137,44 @@ bool LeftColumnContent::MouseOverPlantContainer(sf::RenderWindow &window)
   return false;
 }
 
+//Returns an sf::Vector2f object containing x and y axis position coordinates of the scrollbar.
+sf::Vector2f LeftColumnContent::GetScrollPosition(ContentContainer &container)
+{
+  return {m_centerScreen.getPosition().x, m_centerScreen.getPosition().y};
+}
+
+//Sets whether or not the user is utilizing scroll functionality by passing the right value to the m_isScrolling member variable.
+void LeftColumnContent::SetScrolling(bool toScroll)
+{
+  m_isScrolling = toScroll;
+}
+
+//Returns the value of the m_isScrolling member variable to determine if user is scrolling or not.
+bool LeftColumnContent::GetScrolling()
+{
+  return m_isScrolling;
+}
+
+//Sets the color of the scrollbar (used for changing scrollbar color when user clicks on it).
+void LeftColumnContent::ChangeColor(sf::Color color)
+{
+  m_scrollElement.setFillColor(color);
+}
+
+//Sets the size of the content area that the view can scroll over and sets the size of plant data containers.
 void LeftColumnContent::AddDisplayArea()
 {
   m_plantContainer.setSize({m_leftColumnView.getSize().x - (m_leftColumnView.getSize().x * .07f), m_leftColumnView.getSize().y / 4});
-  //m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
   m_plantContainer.setOutlineColor(sf::Color(42, 85, 34, 255));
   m_plantContainer.setOutlineThickness(1.f);
 
   m_displayArea.setFillColor(sf::Color(228, 243, 127, 255));
-  m_displayArea.setSize({m_leftColumnView.getSize().x * .995f, m_plantContainer.getSize().y * m_plants.size()/*m_leftColumnView.getSize().y * 2.995f*/});
+  m_displayArea.setSize({m_leftColumnView.getSize().x * .995f, m_plantContainer.getSize().y * m_plants.size()});
   m_displayArea.setPosition({1, 3});
-  //m_displayArea.setOutlineColor(sf::Color::Red);
   m_displayArea.setOutlineThickness(1.f);
 }
 
+//Grabs all plants from the MySQL garden_space_planner database in the plants table and stores them in the m_plants vector.
 void LeftColumnContent::SetPlantVector()
 {
   driver = get_driver_instance();
@@ -173,22 +184,6 @@ void LeftColumnContent::SetPlantVector()
   res = stmt->executeQuery("SELECT * FROM plants");
 
   while (res->next()) {
-    /* Access column data by alias or column name */
-    /*std::cout << res->getInt("plant_id") << "   ";
-    std::cout << res->getString("plant_name") << "   ";
-    std::cout << res->getString("plant_variety") << "   ";
-    std::cout << res->getInt("plant_spacing_width") << "   ";
-    std::cout << res->getInt("plant_spacing_length") << std::endl;*/
-
-    /*int id =  res->getInt("plant_id");
-    std::string name = res->getString("plant_name");
-    std::string variety = res->getString("plant_variety");
-    int spacing = res->getInt("plant_spacing_width");
-    int rowspace = res->getInt("plant_spacing_length");*/
-
-    //cout << "\t... MySQL says it again: ";
-    /* Access column data by numeric offset, 1 is the first column */
-    //cout << res->getString(1) << endl;
     m_plant.SetID(res->getInt("plant_id"));
     m_plant.SetName(res->getString("plant_name"));
     m_plant.SetVariety(res->getString("plant_variety"));
@@ -203,56 +198,18 @@ void LeftColumnContent::SetPlantVector()
   delete con;
 }
 
-/*void LeftColumnContent::GetPlants()
-{
-
-}*/
-
+//Builds and positions a container for each plant in the m_plants vector and stores position values in the m_plantDisplayPos vector.
 void LeftColumnContent::SetPlantContainerVector()
 {
   m_plantDisplayPos = (m_displayArea.getPosition());
-  //float plantBoxPosX = m_displayArea.getPosition().x;
-  //float plantBoxPosY = m_displayArea.getPosition().y;
   for(int i = 0; i < m_plants.size(); i++)
   {
     m_plantDisplayList.push_back(m_plantDisplayPos);
-    /*std::cout << m_plants[i].GetID() << "   ";
-    std::cout << m_plants[i].GetName() << "   ";
-    std::cout << m_plants[i].GetVariety() << "   ";
-    std::cout << m_plants[i].GetSpacing() << "   ";
-    std::cout << m_plants[i].GetRowSpacing() << std::endl;*/
     m_plantDisplayPos.y += m_plantContainer.getSize().y;
   }
 }
 
-/*void LeftColumnContent::CheckContainerHover(sf::RenderWindow &window)
-{
-  for (container : )
-  if(MouseOverPlantContainer(window))
-  {
-    m_plantContainer.setFillColor(sf::Color::Red);
-  }
-  else
-  {
-    m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
-  }
-}*/
-
-/*void SetPlantContainerColor(sf::Color color)
-{
-  m_plantContainer.setFillColor(color);
-}*/
-
-/*std::vector<Plant> LeftColumnContent::GetPlantVector()
-{
-  return m_plants;
-}*/
-
-std::string LeftColumnContent::GetCurrentPlantName()
-{
-  return m_currentPlant.GetName();
-}
-
+//Draws the m_displayArea, m_scrollElement, m_scrollContainer, m_plantContainer, m_plantTxtName, m_plantTxtVariety, and m_plantTxtSpacing object to the window.
 void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
 {
   window.draw(m_displayArea);
@@ -266,7 +223,6 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
       m_plantContainer.setFillColor(sf::Color(238, 244, 177, 255));
       if(event.mouseButton.button == sf::Mouse::Left)
       {
-        //m_plantContainer.setFillColor(sf::Color::White);
         m_plants[i].SetSelectedDatabase(true, m_plants[i].GetID());
         m_currentPlant.SetName(m_plants[i].GetName());
         m_currentPlant.SetVariety(m_plants[i].GetVariety());
@@ -281,12 +237,7 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
         {
           m_plants[k].SetSelectedDatabase(false, m_plants[k].GetID());
         }
-        //std::cout << m_plants[i].GetName() << " is " << m_plants[i].GetSelectedDatabase() << std::endl;
       }
-      /*else
-      {
-        m_plants[i].SetSelectedDatabase(false);
-      }*/
     }
     else
     {
@@ -307,7 +258,6 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
     std::string blockSize = std::to_string(m_plants[i].GetRowSpacing());
     m_plantTxtSpacing.setString(numberOfPlants + " plants per " + blockSize + "x" + blockSize + " foot space");
     m_plantTxtSpacing.setPosition((m_plantContainer.getSize().x / 2) - (m_plantTxtSpacing.getGlobalBounds().width / 2), (m_plantDisplayList[i].y + ( m_plantContainer.getSize().y / 2)) + (m_plantTxtSpacing.getGlobalBounds().height));
-
 
     window.draw(m_plantContainer);
     window.draw(m_plantTxtName);
