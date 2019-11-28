@@ -1,5 +1,6 @@
 #include "MessageWindow.h"
 
+//Default Constructor that sets default values for sf::Text objects and sf::RectangleShape objects.
 MessageWindow::MessageWindow()
 {
   m_isDisplayed = false;
@@ -44,28 +45,45 @@ MessageWindow::MessageWindow()
   m_messageButtonText.setPosition({370.f, 305.f});
 }
 
+//Default Destructor.
 MessageWindow::~MessageWindow() { }
 
+//Assigns string to the sf::Text m_messageText object to display a message to the user.
 void MessageWindow::AddMessage(std::string message)
 {
   m_messageText.setString(message);
 }
 
+//Renders the m_windowHeader, m_headerText, m_messageWindow, m_messageText, m_messageButton, & m_messageButtonText object to the window.
+void MessageWindow::Draw(sf::RenderWindow &window)
+{
+  window.draw(m_windowHeader);
+  window.draw(m_headerText);
+  window.draw(m_messageWindow);
+  window.draw(m_messageText);
+  window.draw(m_messageButton);
+  window.draw(m_messageButtonText);
+}
+
+//Returns the m_isDisplayed member variable to determine if a message window is being displayed.
 bool MessageWindow::GetDisplay()
 {
   return m_isDisplayed;
 }
 
+//Sets true or false to the m_isDisplayed member variable for determining if a message window should be displayed or not.
 void MessageWindow::SetDisplay(bool display)
 {
   m_isDisplayed = display;
 }
 
+//Sets the fill collor for sf::RectangleShape m_messageButton object (used for changing color of button on hover).
 void MessageWindow::SetButtonColor(sf::Color color)
 {
   m_messageButton.setFillColor(color);
 }
 
+//Returns whether or not the mouse is hovering over the Message window dismiss button.
 bool MessageWindow::MessageDismissHover(sf::RenderWindow &window)
 {
   float mouseX = sf::Mouse::getPosition(window).x;
@@ -73,7 +91,6 @@ bool MessageWindow::MessageDismissHover(sf::RenderWindow &window)
 
   float boxPosX = m_messageButton.getPosition().x + window.getSize().x / 3.7f;
   float boxPosY = m_messageButton.getPosition().y + window.getSize().y / 8.523;
-  //std::cout << window.getSize().y << std::endl;
 
   float boxXPosWidth = boxPosX + m_messageButton.getGlobalBounds().width;
   float boxYPosHeight = boxPosY + m_messageButton.getGlobalBounds().height;
@@ -88,15 +105,14 @@ bool MessageWindow::MessageDismissHover(sf::RenderWindow &window)
   }
 }
 
+//Used to detect if the mouse is over the dismiss button when left mouse button is clicked.
 void MessageWindow::clickedOn(sf::RenderWindow &window)
 {
-  //std::cout << "Clicked on Function Ran" << std::endl;
   float mouseX = sf::Mouse::getPosition(window).x;
   float mouseY = sf::Mouse::getPosition(window).y;
 
   float boxPosX = m_messageButton.getPosition().x + window.getSize().x / 3.7f;
   float boxPosY = m_messageButton.getPosition().y + window.getSize().y / 8.523;
-  //std::cout << window.getSize().y << std::endl;
 
   float boxXPosWidth = boxPosX + m_messageButton.getGlobalBounds().width;
   float boxYPosHeight = boxPosY + m_messageButton.getGlobalBounds().height;
@@ -110,14 +126,4 @@ void MessageWindow::clickedOn(sf::RenderWindow &window)
   {
     m_messageButton.setFillColor(sf::Color(200, 200, 200, 255));
   }
-}
-
-void MessageWindow::Draw(sf::RenderWindow &window)
-{
-  window.draw(m_windowHeader);
-  window.draw(m_headerText);
-  window.draw(m_messageWindow);
-  window.draw(m_messageText);
-  window.draw(m_messageButton);
-  window.draw(m_messageButtonText);
 }
