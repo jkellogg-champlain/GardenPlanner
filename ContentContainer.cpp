@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    ContentContainer.cpp
+    Purpose: Code file for the ContentContainer class.  This class
+      is used to create content areas within the program.  Content
+      can then be added to these areas.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "ContentContainer.h"
 
 //Constructor

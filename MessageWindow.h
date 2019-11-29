@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    MessageWindow.h
+    Purpose: Header file for the MessageWindow class.  This class
+      creates objects for displaying important messages to the
+      user, which the user can dismiss after reading.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>

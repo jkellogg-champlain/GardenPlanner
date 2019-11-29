@@ -1,5 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    Button.cpp
+    Purpose: Code file for the Button class, which allows for
+      the creation of objects that act like buttons users can
+      click on the screen to navigate from page to page and submit data.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "Button.h"
-//#include <iostream>
 
 //Default Constructor.
 Button::Button() { }

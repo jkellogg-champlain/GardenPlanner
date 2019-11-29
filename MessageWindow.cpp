@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    MessageWindow.cpp
+    Purpose: Code file for the MessageWindow class.  This class
+      creates objects for displaying important messages to the
+      user, which the user can dismiss after reading. 
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "MessageWindow.h"
 
 //Default Constructor that sets default values for sf::Text objects and sf::RectangleShape objects.

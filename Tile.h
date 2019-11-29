@@ -1,3 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    Plant.h
+    Purpose: Header file for the Tile class.  This class creates tile
+      objects associated with specific maps.  Each object has its
+      data stored in the tiles table of the MySQL garden_space_planner
+      database.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>

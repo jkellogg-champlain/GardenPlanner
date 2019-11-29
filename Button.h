@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    Button.h
+    Purpose: Header file for the Button class, which allows for
+      the creation of objects that act like buttons users can
+      click on the screen to navigate from page to page and submit data.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>

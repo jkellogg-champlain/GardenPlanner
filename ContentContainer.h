@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    ContentContainer.h
+    Purpose: Header file for the ContentContainer class.  This class
+      is used to create content areas within the program.  Content
+      can then be added to these areas.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 

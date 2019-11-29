@@ -1,3 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    Content.cpp
+    Purpose: Code file for the Content class.  This class provides
+      functionality for creating varioius types of content that can
+      be selected and viewed by the user.  It's focus is more on the
+      main content display of the Garden Space Planner program.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "Content.h"
 
 //Default Constructor.

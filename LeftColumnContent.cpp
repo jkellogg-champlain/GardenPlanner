@@ -1,3 +1,16 @@
+/**
+    SDEV435-81 Capstone Project
+    LeftColumnContent.cpp
+    Purpose: Code file for the LeftColumnContent class.  This class
+      creates a space for creating and displaying content in the
+      left column of the Garden Space Planner program's GUI.  This
+      area holds a list of plants user can select to edit or drop
+      into a garden map.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "LeftColumnContent.h"
 
 //Default Constructor

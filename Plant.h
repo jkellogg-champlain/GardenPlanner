@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    Plant.h
+    Purpose: Header file for the Plant class.  This class creates objects
+      for plants in the plants table of the MySQL garden_space_planner
+      database.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <ctime>

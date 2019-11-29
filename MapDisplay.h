@@ -1,3 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    MapDisplay.h
+    Purpose: Header file for the MapDisplay class.  This class
+      creates an object that can be used to handle what user
+      selected map should be displayed and what tiles should
+      be displayed on that map.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>

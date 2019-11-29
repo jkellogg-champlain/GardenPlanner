@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    ContentToDisplay.h
+    Purpose: Header file for the ContentToDisplay class.  This class
+      manages and handles what content should actually be drawn to
+      the window.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Content.h"

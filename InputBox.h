@@ -1,3 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    InputBox.h
+    Purpose: Header file for the InputBox class.  This class creates
+      objects used for user input boxes.  Each InputBox object 
+      has a header that identifies what input should go into the
+      box and allows users to type data into that box.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>

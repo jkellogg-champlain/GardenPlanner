@@ -1,3 +1,14 @@
+/**
+    SDEV435-81 Capstone Project
+    main.cpp
+    Purpose: Allows users to create grids representing garden space
+			that they can drop plant tiles into to help plan their garden.
+			It allows users to add new plants and edit existing plants as needed.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include <stdlib.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -8,7 +19,6 @@
 #include "ContentToDisplay.h"
 #include "LeftColumnContent.h"
 #include "MapDisplay.h"
-
 
 int main()
 {

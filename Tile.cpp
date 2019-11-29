@@ -1,3 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    Plant.cpp
+    Purpose: Code file for the Tile class.  This class creates tile 
+      objects associated with specific maps.  Each object has its
+      data stored in the tiles table of the MySQL garden_space_planner
+      database.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "Tile.h"
 
 //Default Constructor that sets default for all sf::RectangleShape and sf::Text objects.

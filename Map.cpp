@@ -1,3 +1,15 @@
+/**
+    SDEV435-81 Capstone Project
+    Map.cpp
+    Purpose: Code file for the Map class.  This class
+      creates objects for user defined maps.  The data
+      held by these map objects is stored in the maps
+      table of the MySQL garden_space_planner database.
+
+    @author Jeremiah Kellogg
+    @version 1.0 12/08/19
+*/
+
 #include "Map.h"
 
 //Default Constructor.
