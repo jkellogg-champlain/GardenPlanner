@@ -1,58 +1,72 @@
 #include "Plant.h"
 
+//Default Constructor.
 Plant::Plant() { }
+
+//Default Destructor.
 Plant::~Plant() { }
 
+//Set the name of the plant object.
 void Plant::SetName(std::string name)
 {
   m_name = name;
 }
 
+//Returns the m_name value of the plant.
 std::string Plant::GetName()
 {
   return m_name;
 }
 
+//Set the variety of the plant object.
 void Plant::SetVariety(std::string variety)
 {
   m_variety = variety;
 }
 
+//Returns the m_variety value of the plant.
 std::string Plant::GetVariety()
 {
   return m_variety;
 }
 
+//Set the value for spacing between each plant in the m_spacing variable.
 void Plant::SetSpacing(int spacing)
 {
   m_spacing = spacing;
 }
 
+//Returns the space between plants stored in the m_spacing value of the plant.
 int Plant::GetSpacing()
 {
   return m_spacing;
 }
 
+//Set the value for spacing between each row in the m_rowSpacing variable.
 void Plant::SetRowSpacing(int rowSpacing)
 {
   m_rowSpacing = rowSpacing;
 }
 
+//Returns the row space between plants stored in the m_rowSpacing value of the plant.
 int Plant::GetRowSpacing()
 {
   return m_rowSpacing;
 }
 
+//Set the value for the m_plantID member variable.
 void Plant::SetID(int id)
 {
   m_plantID = id;
 }
 
+//Returns the plant's ID stored in the m_plantID member variable.
 int Plant::GetID()
 {
   return m_plantID;
 }
 
+//Assign the RGB color value to the plant that will be used to set the fill color of the plant's tile.
 void Plant::SetRGBColors(int red, int green, int blue)
 {
   m_red = red;
@@ -60,19 +74,25 @@ void Plant::SetRGBColors(int red, int green, int blue)
   m_blue = blue;
 }
 
+//Returns the plant's red color value stored in m_red member variable.
 int Plant::GetRed()
 {
   return m_red;
 }
+
+//Returns the plant's green color value stored in m_green member variable.
 int Plant::GetGreen()
 {
   return m_green;
 }
+
+//Returns the plant's blue color value stored in m_blue member variable.
 int Plant::GetBlue()
 {
   return m_blue;
 }
 
+//Updates whether or not the plant is currently selected by the user and stores that value in the database.
 void Plant::SetSelectedDatabase(bool selected, int plantID)
 {
   driver = get_driver_instance();
@@ -87,11 +107,13 @@ void Plant::SetSelectedDatabase(bool selected, int plantID)
   m_isSelected = selected;
 }
 
+//Returns the m_isSelected variable to indicate whether or not the plant is currently selected by the user.
 bool Plant::IsSelected()
 {
   return m_isSelected;
 }
 
+//Sets all user inputed data to required member variables and then pushes them to the proper database table columns.
 void Plant::AddToDatabase()
 {
   std::srand(time(NULL));
@@ -115,6 +137,7 @@ void Plant::AddToDatabase()
   delete prep_stmt;
 }
 
+//Updates a plant's info in the plants table of the MySQL garden_space_planner database.
 void Plant::UpdateDatabase()
 {
   try
