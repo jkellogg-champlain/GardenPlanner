@@ -1,10 +1,8 @@
 #include "Tile.h"
 
+//Default Constructor that sets default for all sf::RectangleShape and sf::Text objects.
 Tile::Tile()
 {
-  //m_tileContainer.setSize(sf::Vector2f(100.f, 100.f));
-  //m_tileContainer.setPosition(0.f, 0.f);
-  //m_tileContainer.setFillColor(sf::Color::Red);
   m_tileContainer.setOutlineColor(sf::Color::Black);
   m_tileContainer.setOutlineThickness(1);
   m_textContainer.setFillColor(sf::Color::White);
@@ -23,36 +21,44 @@ Tile::Tile()
   m_plantNumber.setFont(m_tahoma);
   m_plantNumber.setFillColor(sf::Color::Black);
 }
+
+//Default Destructor.
 Tile::~Tile() { }
 
-
+//Set the size of a tile.
 void Tile::SetTileSize(sf::Vector2f tilesize)
 {
   m_tileContainer.setSize(tilesize);
 }
 
-sf::Vector2f Tile::GetTileSize()
-{
-  return m_tileSize;
-}
-
+//Set the position of a tile.
 void Tile::SetTilePosition(sf::Vector2f tileposition)
 {
   m_tileContainer.setPosition(tileposition);
 }
 
+//Returns an sf::Vector2f with the x and y coordinates of a tile's position.
 sf::Vector2f Tile::GetTilePosition()
 {
   return m_tilePosition;
 }
 
+//Returns an sf::Vector2f with the length and width of a tile.
+sf::Vector2f Tile::GetTileSize()
+{
+  return m_tileSize;
+}
+
+//Set's the color of the tile container m_tileContainer.
 void Tile::SetTileColor(sf::Color color)
 {
   m_tileContainer.setFillColor(color);
 }
 
+//Set's the values for the m_plantName, m_plantVariety, and m_plantNumber object for displaying plant info on the tile.
 void Tile::SetText(std::string plantvariety, std::string plantname, int number)
 {
+  //Check to see if the variety is more than 15 chars long to split the text so it will fit in the tile.
   if(plantvariety.size() > 15)
   {
     for(int i = 15; i < plantvariety.size(); i++)
@@ -78,12 +84,12 @@ void Tile::SetText(std::string plantvariety, std::string plantname, int number)
   m_plantName.setString(plantname);
 }
 
+//Returns true or false depending on where the mouse is hovering over the tile or not.
 bool Tile::MouseOverTile(sf::RenderWindow &window, sf::View &view)
 {
-  //std::cout << "Ran" << std::endl;
   window.setView(view);
-  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window);
-  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);
+  sf::Vector2i mouseWindowPostion = sf::Mouse::getPosition(window); //Grab mouse position in the content of the window.
+  sf::Vector2f mouseViewPosition = window.mapPixelToCoords(mouseWindowPostion);  //Map mouse coordinate from the window to the view.
 
   float containerPosX = m_tileContainer.getPosition().x;
   float containerPosY = m_tileContainer.getPosition().y;
@@ -98,6 +104,7 @@ bool Tile::MouseOverTile(sf::RenderWindow &window, sf::View &view)
   return false;
 }
 
+//Submit newly instantiated tile to the MySQL garden_space_planner database tiles table.
 void Tile::SubmitToDb(int parentmapid, int plantid, int xpos, int ypos)
 {
   driver = get_driver_instance();
@@ -113,15 +120,19 @@ void Tile::SubmitToDb(int parentmapid, int plantid, int xpos, int ypos)
   delete prep_stmt;
 }
 
+//Returns the database id stored in the m_tileID member variable.
 int Tile::GetTileID()
 {
   return m_tileID;
 }
+
+//Stores a value for the tile id in the m_tileID member variable.
 void Tile::SetTileID(int id)
 {
   m_tileID = id;
 }
 
+//Draws the sf::RectangleShape m_tileContainer and m_textContainer objects, and sf::Text m_plantVariety, m_plantName and m_plantName objects to the window.
 void Tile::Draw(sf::RenderWindow &window)
 {
   m_textContainer.setSize({m_tileContainer.getSize().x * .8f, m_tileContainer.getSize().y * .5f});
@@ -137,5 +148,4 @@ void Tile::Draw(sf::RenderWindow &window)
   window.draw(m_plantVariety);
   window.draw(m_plantName);
   window.draw(m_plantNumber);
-  //std::cout << "Draw function ran" << std::endl;
 }
