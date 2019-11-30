@@ -3,10 +3,10 @@
     Plant.cpp
     Purpose: Code file for the Plant class.  This class creates objects
       for plants in the plants table of the MySQL garden_space_planner
-      database. 
+      database.
 
     @author Jeremiah Kellogg
-    @version 1.0 12/08/19
+    @version 1.0.1 12/08/19
 */
 
 #include "Plant.h"
@@ -122,6 +122,11 @@ void Plant::SetSelectedDatabase(bool selected, int plantID)
 bool Plant::IsSelected()
 {
   return m_isSelected;
+}
+
+void Plant::SetSelected(bool selected)
+{
+  m_isSelected = selected;
 }
 
 //Sets all user inputed data to required member variables and then pushes them to the proper database table columns.

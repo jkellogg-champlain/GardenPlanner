@@ -8,7 +8,7 @@
       into a garden map.
 
     @author Jeremiah Kellogg
-    @version 1.0 12/08/19
+    @version 1.0.1 12/08/19
 */
 
 #pragma once
@@ -157,4 +157,7 @@ private:
   sql::Connection *con;
   sql::Statement *stmt;
   sql::ResultSet *res;
+
+  //Finds the currently selected Plant in the garden_space_planner.plants MySQL table;
+  void GetSelectedPlant();
 };

@@ -8,10 +8,12 @@
       into a garden map.
 
     @author Jeremiah Kellogg
-    @version 1.0 12/08/19
+    @version 1.0.1 12/08/19
 */
 
 #include "LeftColumnContent.h"
+
+/*************Public Functions************/
 
 //Default Constructor
 LeftColumnContent::LeftColumnContent() { }
@@ -40,6 +42,8 @@ LeftColumnContent::LeftColumnContent(sf::View &view)
   m_plantTxtRow.setFont(m_ubuntu);
   m_plantTxtRow.setFillColor(sf::Color::Black);
   m_plantTxtRow.setCharacterSize(15);
+
+  GetSelectedPlant();
 }
 
 //Default Destructor.
@@ -202,6 +206,7 @@ void LeftColumnContent::SetPlantVector()
     m_plant.SetVariety(res->getString("plant_variety"));
     m_plant.SetSpacing(res->getInt("plant_spacing_width"));
     m_plant.SetRowSpacing(res->getInt("plant_spacing_length"));
+    m_plant.SetSelected(res->getBoolean("is_selected"));
 
     m_plants.push_back(m_plant);
   }
@@ -233,32 +238,36 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
     m_plantContainer.setPosition(m_plantDisplayList[i]);
     if(MouseOverPlantContainer(window))
     {
-      m_plantContainer.setFillColor(sf::Color(238, 244, 177, 255));
+      if(m_plants[i].GetID() != m_currentPlant.GetID())
+      {
+        m_plantContainer.setFillColor(sf::Color(238, 244, 177, 255));
+      }
+      else if(m_plants[i].GetID() == m_currentPlant.GetID())
+      {
+        m_plantContainer.setFillColor(sf::Color(86, 225, 58, 255));
+      }
+
       if(event.mouseButton.button == sf::Mouse::Left)
       {
+        m_currentPlant.SetSelectedDatabase(false, m_currentPlant.GetID());
         m_plants[i].SetSelectedDatabase(true, m_plants[i].GetID());
+        m_currentPlant.SetID(m_plants[i].GetID());
         m_currentPlant.SetName(m_plants[i].GetName());
         m_currentPlant.SetVariety(m_plants[i].GetVariety());
         m_currentPlant.SetSpacing(m_plants[i].GetSpacing());
         m_currentPlant.SetRowSpacing(m_plants[i].GetRowSpacing());
-
-        for(int j = i + 1; j < m_plantDisplayList.size(); j++)
-        {
-          m_plants[j].SetSelectedDatabase(false, m_plants[j].GetID());
-        }
-        for(int k = i - 1; k >= 0; k--)
-        {
-          m_plants[k].SetSelectedDatabase(false, m_plants[k].GetID());
-        }
       }
     }
     else
     {
-      m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
-    }
-    if(m_plants[i].IsSelected())
-    {
-      m_plantContainer.setFillColor(sf::Color(86, 225, 58, 255));
+      if(m_plants[i].GetID() == m_currentPlant.GetID())
+      {
+        m_plantContainer.setFillColor(sf::Color(86, 225, 58, 255));
+      }
+      else
+      {
+        m_plantContainer.setFillColor(sf::Color(228, 243, 127, 255));
+      }
     }
 
     m_plantTxtName.setString(m_plants[i].GetName());
@@ -276,5 +285,26 @@ void LeftColumnContent::Draw(sf::RenderWindow &window, sf::Event event)
     window.draw(m_plantTxtName);
     window.draw(m_plantTxtVariety);
     window.draw(m_plantTxtSpacing);
+  }
+}
+
+
+/**********Private Functions**********/
+
+//Finds the currently selected Plant in the garden_space_planner.plants MySQL table;
+void LeftColumnContent::GetSelectedPlant()
+{
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "garden_planner_user", "spaceplanner");
+  con->setSchema("garden_space_planner");
+  stmt = con->createStatement();
+  res = stmt->executeQuery("SELECT * FROM plants WHERE is_selected=true");
+  while(res->next())
+  {
+      m_currentPlant.SetName(res->getString("plant_name"));
+      m_currentPlant.SetVariety(res->getString("plant_variety"));
+      m_currentPlant.SetSpacing(res->getInt("plant_spacing_width"));
+      m_currentPlant.SetRowSpacing(res->getInt("plant_spacing_length"));
+      m_currentPlant.SetID(res->getInt("plant_id"));
   }
 }

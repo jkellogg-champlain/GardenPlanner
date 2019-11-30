@@ -6,7 +6,7 @@
       database.
 
     @author Jeremiah Kellogg
-    @version 1.0 12/08/19
+    @version 1.0.1 12/08/19
 */
 
 #pragma once
@@ -124,6 +124,8 @@ public:
     Returns the m_isSelected variable to indicate whether or not the plant is currently selected by the user.
   */
   bool IsSelected();
+
+  void SetSelected(bool selected);
 
   /**
     Sets all user inputed data to required member variables and then pushes them to the proper database table columns.
