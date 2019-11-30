@@ -20,7 +20,7 @@ Content::Content()
   m_isScrolling = false;
   m_firstClick = false;
 
-  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  if(!m_ubuntu.loadFromFile("Fonts/Ubuntu-M.ttf"))
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
   };

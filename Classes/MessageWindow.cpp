@@ -3,7 +3,7 @@
     MessageWindow.cpp
     Purpose: Code file for the MessageWindow class.  This class
       creates objects for displaying important messages to the
-      user, which the user can dismiss after reading. 
+      user, which the user can dismiss after reading.
 
     @author Jeremiah Kellogg
     @version 1.0 12/08/19
@@ -33,7 +33,7 @@ MessageWindow::MessageWindow()
   m_messageButton.setOutlineThickness(1);
   m_messageButton.setPosition(m_messageWindow.getPosition().x + 150 - (m_messageButtonText.getGlobalBounds().width / 2), 300.f);
 
-  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  if(!m_ubuntu.loadFromFile("Fonts/Ubuntu-M.ttf"))
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
   };

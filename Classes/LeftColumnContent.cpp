@@ -25,7 +25,7 @@ LeftColumnContent::LeftColumnContent(sf::View &view)
   m_leftColumnView = view;
 
   //Set defaults for sf::Text objects
-  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  if(!m_ubuntu.loadFromFile("Fonts/Ubuntu-M.ttf"))
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
   };

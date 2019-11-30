@@ -1,7 +1,7 @@
 /**
     SDEV435-81 Capstone Project
     Plant.cpp
-    Purpose: Code file for the Tile class.  This class creates tile 
+    Purpose: Code file for the Tile class.  This class creates tile
       objects associated with specific maps.  Each object has its
       data stored in the tiles table of the MySQL garden_space_planner
       database.
@@ -20,7 +20,7 @@ Tile::Tile()
   m_textContainer.setFillColor(sf::Color::White);
   m_textContainer.setOutlineColor(sf::Color::Black);
   m_textContainer.setOutlineThickness(1);
-  if(!m_tahoma.loadFromFile("Tahoma.ttf"))
+  if(!m_tahoma.loadFromFile("Fonts/Tahoma.ttf"))
   {
     std::cout << "Unable to load Tahoma.ttf font file" << std::endl;
   };

@@ -34,7 +34,7 @@ InputBox::InputBox()
     m_textBox.setString(" ");
   }
 
-  if(!m_ubuntu.loadFromFile("Ubuntu-M.ttf"))
+  if(!m_ubuntu.loadFromFile("Fonts/Ubuntu-M.ttf"))
   {
     std::cout << "Unable to load Ubuntu-M.ttf font file" << std::endl;
   }
@@ -42,7 +42,7 @@ InputBox::InputBox()
   m_inputHeader.setFont(m_ubuntu);
   m_inputHeader.setFillColor(sf::Color::Black);
 
-  if(!a_Futurica.loadFromFile("a_Futurica.ttf"))
+  if(!a_Futurica.loadFromFile("Fonts/a_Futurica.ttf"))
   {
     std::cout << "Unable to load a_Futurica.ttf font file" << std::endl;
   }
