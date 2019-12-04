@@ -283,7 +283,7 @@ void MapDisplay::SetTiles(int mapID)
 
   while(res->next())
   {
-    int plantNumber = (res->getInt("plant_spacing_width") * 12) / res->getInt("plant_spacing_length");
+    int plantNumber = (res->getInt("plant_spacing_length") * 12) / res->getInt("plant_spacing_width");
     m_tileSelector.setSize({static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize, static_cast<float>(m_plant.GetRowSpacing()) * m_gridUnitSize});
     m_tile.SetTileSize({static_cast<float>(res->getInt("plant_spacing_length")) * m_gridUnitSize, static_cast<float>(res->getInt("plant_spacing_length")) * m_gridUnitSize}/*m_tileSelector.getSize()*/);
     m_tile.SetTilePosition({static_cast<float>(res->getInt("xpos")), static_cast<float>(res->getInt("ypos"))});
